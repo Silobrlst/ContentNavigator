@@ -327,6 +327,7 @@ public class MainWIndow extends Application {
         if(filteredPaths != null){
             searchedPaths.getItems().removeAll(searchedPaths.getItems());
             searchedPaths.getItems().addAll(filteredPaths);
+            searchedPaths.getItems().sort(Comparator.naturalOrder());
 
             String tagsStr = "";
             for(String tagName: tagsListView.getSelectionModel().getSelectedItems()){
@@ -400,7 +401,13 @@ public class MainWIndow extends Application {
 
             @Override
             public void change(String path, List<String> tagNamesIn) {
-
+                removeSelectedPathsFromSelectedTags();
+                System.out.println(tagNamesIn);
+                for(String tagName: tagNamesIn){
+                    tags.getJSONArray(tagName).put(path);
+                    System.out.println(tagName + ": " + path);
+                }
+                saveContentInfo(contenetInfoFile);
             }
         });
         SettingsWindow settingsWindow = new SettingsWindow();

@@ -211,7 +211,7 @@ public class AddEditPathDialog extends Stage {
     private void onOK() {
         if(new File(path.getText()).exists()){
             if(editing){
-                addEditPathInterface.change(oldPath, addedTags.getSelectionModel().getSelectedItems());
+                addEditPathInterface.change(oldPath, addedTags.getItems());
             }else{
                 addEditPathInterface.add(path.getText(), addedTags.getItems());
             }
