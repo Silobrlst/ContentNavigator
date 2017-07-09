@@ -14,6 +14,8 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
@@ -187,6 +189,9 @@ public class MainWIndow extends Application {
         tagsList.add(tagNameIn);
         tagsList.sort(Comparator.naturalOrder());
         saveContentInfo(contenetInfoFile);
+
+        tagsListView.getSelectionModel().clearSelection();
+        tagsListView.getSelectionModel().select(tagNameIn);
     }
 
     private void renameTag(String oldTagNameIn, String newTagNameIn) {
@@ -618,6 +623,18 @@ public class MainWIndow extends Application {
             }
         });
         //</menu events>====================================
+
+        tagsListView.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if (event.getCode() == KeyCode.DELETE){
+                removeSelectedTags();
+            }
+        });
+
+        searchedPaths.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if (event.getCode() == KeyCode.DELETE){
+                removeSelectedPathsFromSelectedTags();
+            }
+        });
 
         menuBar.getMenus().add(menuFile);
         menuBar.getMenus().add(menuEdit);

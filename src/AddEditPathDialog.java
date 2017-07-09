@@ -119,6 +119,8 @@ public class AddEditPathDialog extends Stage {
                     availableTags.getItems().removeAll(addedTags.getItems());
                 }
             }
+
+            path.requestFocus();
         });
 
         setAddPath();
