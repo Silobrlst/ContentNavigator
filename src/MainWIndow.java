@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class MainWIndow extends Application {
     private Stage primaryStage;
@@ -192,6 +193,7 @@ public class MainWIndow extends Application {
 
         tagsListView.getSelectionModel().clearSelection();
         tagsListView.getSelectionModel().select(tagNameIn);
+        tagsListView.requestFocus();
     }
 
     private void renameTag(String oldTagNameIn, String newTagNameIn) {
@@ -209,12 +211,20 @@ public class MainWIndow extends Application {
     }
 
     private void removeSelectedTags() {
-        ObservableList<String> selectedTags = tagsListView.getSelectionModel().getSelectedItems();
-        for(String selTag: selectedTags){
-            tags.remove(selTag);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Remove Tags");
+        alert.setHeaderText("Remove selected tags?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            ObservableList<String> selectedTags = tagsListView.getSelectionModel().getSelectedItems();
+            for(String selTag: selectedTags){
+                tags.remove(selTag);
+            }
+            tagsList.removeAll(tagsListView.getSelectionModel().getSelectedItems());
+            byTagsSearch.setText("");
+            saveContentInfo(contenetInfoFile);
         }
-        tagsList.removeAll(tagsListView.getSelectionModel().getSelectedItems());
-        saveContentInfo(contenetInfoFile);
     }
 
     private void addPath(String pathIn, List<String> tagNamesIn) {
@@ -238,19 +248,26 @@ public class MainWIndow extends Application {
     }
 
     private void removeSelectedPathsFromSelectedTags() {
-        for(String selectedTag: tagsListView.getSelectionModel().getSelectedItems()){
-            for(String selectedPath: searchedPaths.getSelectionModel().getSelectedItems()){
-                JSONArray tagJSON = tags.getJSONArray(selectedTag);
-                for (int i = 0; i < tagJSON.length(); i++) {
-                    if (tagJSON.getString(i).equals(selectedPath)) {
-                        tagJSON.remove(i);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Remove Paths");
+        alert.setHeaderText("Remove selected paths from selected tags?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            for(String selectedTag: tagsListView.getSelectionModel().getSelectedItems()){
+                for(String selectedPath: searchedPaths.getSelectionModel().getSelectedItems()){
+                    JSONArray tagJSON = tags.getJSONArray(selectedTag);
+                    for (int i = 0; i < tagJSON.length(); i++) {
+                        if (tagJSON.getString(i).equals(selectedPath)) {
+                            tagJSON.remove(i);
+                        }
                     }
                 }
             }
-        }
-        saveContentInfo(contenetInfoFile);
+            saveContentInfo(contenetInfoFile);
 
-        searchedPaths.getItems().removeAll(searchedPaths.getSelectionModel().getSelectedItems());
+            searchedPaths.getItems().removeAll(searchedPaths.getSelectionModel().getSelectedItems());
+        }
     }
     //</editing>==============================
 
