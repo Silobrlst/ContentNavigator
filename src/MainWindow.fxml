@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <VBox prefHeight="400.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <TitledPane animated="false" collapsible="false" text="Search Paths">
+               <content>
+                  <AnchorPane>
+                     <children>
+                        <GridPane layoutX="168.0" layoutY="38.0" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label text="By name:" GridPane.halignment="RIGHT">
+                                 <GridPane.margin>
+                                    <Insets right="5.0" />
+                                 </GridPane.margin></Label>
+                              <Label text="By tags:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets right="5.0" />
+                                 </GridPane.margin></Label>
+                              <TextField fx:id="byNameSearch" GridPane.columnIndex="1" />
+                              <TextField fx:id="byTagsSearch" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" />
+                                  <ColumnConstraints hgrow="NEVER" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Button fx:id="search" mnemonicParsing="false" text="Search" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
+                                    <Label fx:id="searchValidation" textFill="RED" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                           <columnConstraints>
+                              <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
+                              <ColumnConstraints hgrow="SOMETIMES" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                           </rowConstraints>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </TitledPane>
+            <SplitPane fx:id="tagsPathsSpliter" dividerPositions="0.2" prefHeight="160.0" VBox.vgrow="ALWAYS">
+               <items>
+                  <AnchorPane minHeight="0.0" minWidth="0.0">
+                     <children>
+                        <TitledPane animated="false" collapsible="false" layoutX="-23.0" text="Tags" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0">
+                                 <children>
+                                    <ListView fx:id="tagsList" layoutX="-58.0" layoutY="19.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                     </children></AnchorPane>
+                  <AnchorPane>
+                     <children>
+                        <TitledPane animated="false" collapsible="false" layoutX="14.0" text="Searched Paths" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0">
+                                 <children>
+                                    <ListView fx:id="searchedPaths" layoutX="27.0" layoutY="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                     </children></AnchorPane>
+               </items>
+            </SplitPane>
+         </children>
+      </VBox>
+   </center>
+   <top>
+      <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER" />
+   </top>
+</BorderPane>
