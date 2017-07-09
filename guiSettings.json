@@ -1,18 +1,18 @@
 {
      "settingsWindow": {
-          "exploreCurrentDirectory": "/media/q/3Q HDD External",
-          "x": 599,
+          "exploreCurrentDirectory": "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor",
+          "x": 592,
           "width": 736,
-          "y": 120,
+          "y": 165,
           "height": 559
      },
      "mainWindow": {
-          "x": 658,
-          "width": 604,
-          "selectedTags": [],
-          "y": 208,
-          "tagsPathsSplitPosition": 0.20066889632107024,
-          "height": 430
+          "x": 463,
+          "width": 1037,
+          "selectedTags": ["Alternative"],
+          "y": 42,
+          "tagsPathsSplitPosition": 0.22987390882638215,
+          "height": 909
      },
-     "recent": []
+     "recent": ["/home/q/music.json"]
 }

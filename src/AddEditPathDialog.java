@@ -69,7 +69,7 @@ public class AddEditPathDialog extends Stage {
             if(file != null){
                 path.setText(file.getAbsolutePath());
                 pathValidation.setText("");
-                initialDirectory = new File(file.getAbsolutePath().split("(\\\\|\\/)[^\\\\|\\/]*$")[0]);
+                initialDirectory = new File(file.getAbsolutePath().split("[/\\\\][^\\\\/]*$")[0]);
             }
         });
 
@@ -78,7 +78,7 @@ public class AddEditPathDialog extends Stage {
             if(file != null){
                 path.setText(file.getAbsolutePath());
                 pathValidation.setText("");
-                initialDirectory = new File(file.getAbsolutePath().split("(\\\\|\\/)[^\\\\|\\/]*$")[0]);
+                initialDirectory = new File(file.getAbsolutePath().split("[/\\\\][^\\\\/]*$")[0]);
             }
         });
 
@@ -110,6 +110,14 @@ public class AddEditPathDialog extends Stage {
                 addedTags.getItems().removeAll(addedTags.getItems());
                 addedTags.getItems().addAll(tagNamesTemp);
                 availableTags.getItems().removeAll(addedTags.getItems());
+            }else{
+                path.setText("");
+                addedTags.getItems().removeAll(addedTags.getItems());
+
+                if(tagNamesTemp != null){
+                    addedTags.getItems().addAll(tagNamesTemp);
+                    availableTags.getItems().removeAll(addedTags.getItems());
+                }
             }
         });
 
@@ -177,10 +185,16 @@ public class AddEditPathDialog extends Stage {
     }
     //</GUI settings i/o>=====================
 
-    public void setAddPath(){
+    public void setAddPath(List<String> tagNamesIn){
         this.setTitle("Add Path");
         apply.setDisable(true);
         editing = false;
+
+        tagNamesTemp = tagNamesIn;
+    }
+
+    public void setAddPath(){
+        setAddPath(null);
     }
 
     public void setEditPath(String pathIn, List<String> tagNamesIn){

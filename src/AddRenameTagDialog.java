@@ -11,10 +11,10 @@ public class AddRenameTagDialog extends Stage {
     private boolean renaming;
     private String oldTagName;
 
-    private AddChangeInterface addChangeInterface;
+    private AddRenameInterface addRenameInterface;
 
-    AddRenameTagDialog(AddChangeInterface addChangeInterfaceIn)throws Exception{
-        addChangeInterface = addChangeInterfaceIn;
+    AddRenameTagDialog(AddRenameInterface addRenameInterfaceIn)throws Exception{
+        addRenameInterface = addRenameInterfaceIn;
 
         Parent root = FXMLLoader.load(getClass().getResource("AddRenameTagDialog.fxml"));
         Scene scene = new Scene(root);
@@ -28,17 +28,10 @@ public class AddRenameTagDialog extends Stage {
             }
         });
 
-        ((Button)scene.lookup("#ok")).setOnAction(event -> {
-            onOK();
-        });
+        ((Button)scene.lookup("#ok")).setOnAction(event -> onOK());
+        ((Button)scene.lookup("#cancel")).setOnAction(event -> onCancel());
 
-        ((Button)scene.lookup("#cancel")).setOnAction(event -> {
-            onCancel();
-        });
-
-        this.setOnShown(event -> {
-            tagName.requestFocus();
-        });
+        this.setOnShown(event -> tagName.requestFocus());
 
         this.setScene(scene);
     }
@@ -52,14 +45,16 @@ public class AddRenameTagDialog extends Stage {
     public void setRenameTag(String tagNameIn){
         this.setTitle("Rename Tag");
         renaming = true;
+        oldTagName = tagNameIn;
         tagName.setText(tagNameIn);
+        tagName.selectAll();
     }
 
     private void onOK() {
         if(renaming){
-            addChangeInterface.change(oldTagName, tagName.getText());
+            addRenameInterface.change(oldTagName, tagName.getText());
         }else{
-            addChangeInterface.add(tagName.getText());
+            addRenameInterface.add(tagName.getText());
         }
 
         this.hide();

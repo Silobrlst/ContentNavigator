@@ -13,6 +13,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
@@ -22,14 +23,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class MainWIndow extends Application {
@@ -46,7 +43,6 @@ public class MainWIndow extends Application {
     private MenuItem editPathItem;
     private TextField byTagsSearch;
 
-
     private final String appName = "Content navigator";
 
     private File contenetInfoFile;
@@ -54,8 +50,7 @@ public class MainWIndow extends Application {
     private JSONObject paths;
 
     private AddRenameTagDialog addRenameTagDialog;
-    private AddEditPathDialog addPathDialog;
-
+    private AddEditPathDialog addEditPathDialog;
 
     //<GUI settings i/o>======================
     private void validateGuiSettings(JSONObject jsonIn) {
@@ -110,10 +105,8 @@ public class MainWIndow extends Application {
         new Timeline(new KeyFrame(Duration.millis(1000), e -> {
             splitPane.setDividerPositions(mainWindowJSON.getDouble("tagsPathsSplitPosition"));
 
-            ArrayList<String> selectedTags = new ArrayList<>();
             JSONArray selectedTagsJSON = mainWindowJSON.getJSONArray("selectedTags");
             for(int i=0; i<selectedTagsJSON.length(); i++){
-                selectedTags.add(selectedTagsJSON.getString(i));
                 tagsListView.getSelectionModel().select(selectedTagsJSON.getString(i));
             }
             filterPathsBySelectedTags();
@@ -147,6 +140,114 @@ public class MainWIndow extends Application {
     }
     //</GUI settings i/o>=====================
 
+    //<Content info i/o>======================
+    private void validateContentInfo(JSONObject jsonIn) {
+        if (!jsonIn.has("tags")) {
+            jsonIn.put("tags", new JSONObject());
+        }
+    }
+
+    private void loadContentInfo(File fileIn) {
+        JSONObject json = JSONLoader.loadJSON(fileIn);
+        validateContentInfo(json);
+
+        tags = json.getJSONObject("tags");
+
+        tagsList.removeAll(tagsList);
+        tagsList.addAll(tags.keySet());
+        tagsList.sort(Comparator.naturalOrder());
+        searchedPaths.getItems().removeAll(searchedPaths.getItems());
+
+        menuEdit.setDisable(false);
+
+        contenetInfoFile = fileIn;
+        primaryStage.setTitle(appName + " [" + fileIn.getName() + "]");
+    }
+
+    private void saveContentInfo(File fileIn) {
+        JSONObject json = new JSONObject();
+        json.put("tags", tags);
+        JSONLoader.saveJSON(fileIn, json);
+    }
+
+    private void newContentInfo(File fileIn) {
+        tags = new JSONObject();
+        menuEdit.setDisable(false);
+        searchedPaths.getItems().removeAll(searchedPaths.getItems());
+        tagsListView.getItems().removeAll(tagsListView.getItems());
+
+        contenetInfoFile = fileIn;
+        primaryStage.setTitle(appName + " [" + fileIn.getName() + "]");
+    }
+    //</Content info i/o>=====================
+
+    //<editing>===============================
+    private void addTag(String tagNameIn) {
+        tags.put(tagNameIn, new JSONArray());
+        tagsList.add(tagNameIn);
+        tagsList.sort(Comparator.naturalOrder());
+        saveContentInfo(contenetInfoFile);
+    }
+
+    private void renameTag(String oldTagNameIn, String newTagNameIn) {
+        tags.put(newTagNameIn, tags.get(oldTagNameIn));
+        tags.remove(oldTagNameIn);
+
+        for (int i = 0; i < tagsListView.getItems().size(); i++) {
+            if (tagsList.get(i).equals(oldTagNameIn)) {
+                tagsList.set(i, newTagNameIn);
+                tagsList.sort(Comparator.naturalOrder());
+                saveContentInfo(contenetInfoFile);
+                return;
+            }
+        }
+    }
+
+    private void removeSelectedTags() {
+        ObservableList<String> selectedTags = tagsListView.getSelectionModel().getSelectedItems();
+        for(String selTag: selectedTags){
+            tags.remove(selTag);
+        }
+        tagsList.removeAll(tagsListView.getSelectionModel().getSelectedItems());
+        saveContentInfo(contenetInfoFile);
+    }
+
+    private void addPath(String pathIn, List<String> tagNamesIn) {
+        for(String tagName: tagNamesIn){
+            JSONArray tagJSON = tags.getJSONArray(tagName);
+            boolean add = true;
+
+            for (int i = 0; i < tagJSON.length(); i++) {
+                if (tagJSON.getString(i).equals(pathIn)) {
+                    add = false;
+                }
+            }
+
+            if(add){
+                tags.getJSONArray(tagName).put(pathIn);
+            }
+        }
+
+        saveContentInfo(contenetInfoFile);
+        filterPathsBySelectedTags();
+    }
+
+    private void removeSelectedPathsFromSelectedTags() {
+        for(String selectedTag: tagsListView.getSelectionModel().getSelectedItems()){
+            for(String selectedPath: searchedPaths.getSelectionModel().getSelectedItems()){
+                JSONArray tagJSON = tags.getJSONArray(selectedTag);
+                for (int i = 0; i < tagJSON.length(); i++) {
+                    if (tagJSON.getString(i).equals(selectedPath)) {
+                        tagJSON.remove(i);
+                    }
+                }
+            }
+        }
+        saveContentInfo(contenetInfoFile);
+
+        searchedPaths.getItems().removeAll(searchedPaths.getSelectionModel().getSelectedItems());
+    }
+    //</editing>==============================
 
     private void addRecent(File fileIn, boolean saveIn) {
         for (MenuItem recentItem: openRecentMenu.getItems()) {
@@ -175,99 +276,6 @@ public class MainWIndow extends Application {
             saveGuiSettings();
         }
     }
-
-
-    //<Content info i/o>======================
-    private void validateContentInfo(JSONObject jsonIn) {
-        if (!jsonIn.has("tags")) {
-            jsonIn.put("tags", new JSONObject());
-        }
-    }
-
-    private void loadContentInfo(File fileIn) {
-        JSONObject json = JSONLoader.loadJSON(fileIn);
-        validateContentInfo(json);
-
-        tags = json.getJSONObject("tags");
-
-        tagsList.removeAll(tagsList);
-        tagsList.addAll(tags.keySet());
-        searchedPaths.getItems().removeAll(searchedPaths.getItems());
-
-
-        menuEdit.setDisable(false);
-
-        contenetInfoFile = fileIn;
-        primaryStage.setTitle(appName + " [" + fileIn.getName() + "]");
-    }
-
-    private void saveContentInfo(File fileIn) {
-        JSONObject json = new JSONObject();
-        json.put("tags", tags);
-        JSONLoader.saveJSON(fileIn, json);
-    }
-
-    private void newContentInfo(File fileIn) {
-        tags = new JSONObject();
-        menuEdit.setDisable(false);
-        searchedPaths.getItems().removeAll(searchedPaths.getItems());
-        tagsListView.getItems().removeAll(tagsListView.getItems());
-
-        contenetInfoFile = fileIn;
-        primaryStage.setTitle(appName + " [" + fileIn.getName() + "]");
-    }
-    //</Content info i/o>=====================
-
-
-    //<editing>===============================
-    private void addTag(String tagNameIn) {
-        tags.put(tagNameIn, new JSONArray());
-        tagsList.add(tagNameIn);
-        saveContentInfo(contenetInfoFile);
-    }
-
-    private void renameTag(String oldTagNameIn, String newTagNameIn) {
-        tags.put(newTagNameIn, tags.get(oldTagNameIn));
-        tags.remove(oldTagNameIn);
-
-        for (int i = 0; i < tagsList.size(); i++) {
-            if (tagsList.get(i).equals(oldTagNameIn)) {
-                tagsList.set(i, oldTagNameIn);
-                saveContentInfo(contenetInfoFile);
-                return;
-            }
-        }
-    }
-
-    private void removeSelectedTags() {
-        ObservableList<String> selectedTags = tagsListView.getSelectionModel().getSelectedItems();
-        for(String selTag: selectedTags){
-            tags.remove(selTag);
-        }
-        tagsList.removeAll(tagsListView.getSelectionModel().getSelectedItems());
-        saveContentInfo(contenetInfoFile);
-    }
-
-    private void addPath(String pathIn, List<String> tagNamesIn) {
-        for(String tag: tagNamesIn){
-            tags.getJSONArray(tag).put(pathIn);
-        }
-
-        saveContentInfo(contenetInfoFile);
-    }
-
-    private void removePathFromTag(String tagNameIn, String pathIn) {
-        JSONArray objects = tags.getJSONArray(tagNameIn);
-
-        for (int i = 0; i < objects.length(); i++) {
-            if (objects.getString(i).equals(pathIn)) {
-                objects.remove(i);
-                saveContentInfo(contenetInfoFile);
-                return;
-            }
-        }
-    }
-    //</editing>==============================
 
     private List<String> getTagsByPath(String pathIn){
         List<String> tagsByPath = new ArrayList<>();
@@ -345,6 +353,7 @@ public class MainWIndow extends Application {
 
         primaryStage.setOnCloseRequest(event -> saveGuiSettings());
         primaryStage.setScene(scene);
+        primaryStage.getIcons().add(new Image("file:icon.png"));
         primaryStage.show();
 
         searchedPaths = (ListView) scene.lookup("#searchedPaths");
@@ -367,7 +376,7 @@ public class MainWIndow extends Application {
 
         byTagsSearch = (TextField)scene.lookup("#byTagsSearch");
 
-        addRenameTagDialog = new AddRenameTagDialog(new AddChangeInterface() {
+        addRenameTagDialog = new AddRenameTagDialog(new AddRenameInterface() {
             @Override
             public void add(String newValueIn) {
                 addTag(newValueIn);
@@ -378,7 +387,7 @@ public class MainWIndow extends Application {
                 renameTag(oldValueIn, newValueIn);
             }
         });
-        addPathDialog = new AddEditPathDialog(tagsListView, new AddEditPathInterface() {
+        addEditPathDialog = new AddEditPathDialog(tagsListView, new AddEditPathInterface() {
             @Override
             public void add(String path, List<String> tagNamesIn) {
                 addPath(path, tagNamesIn);
@@ -441,12 +450,13 @@ public class MainWIndow extends Application {
         menuFile.getItems().add(exitItem);
         //</menu file>===================
 
-        //<tags listView ContextMenu>====================
+        //<serached paths listView ContextMenu>==========
         ContextMenu serchedPathsListViewContextMenu = new ContextMenu();
         MenuItem openPathItemContext = new MenuItem("Open");
         MenuItem openInFolderPathItemContext = new MenuItem("Open in folder");
         MenuItem editPathItemContext = new MenuItem("Edit Path");
         MenuItem addPathItemContext = new MenuItem("Add Path");
+        MenuItem removePathsFromSelectedTagsItemContext = new MenuItem("Remove Paths from selected tags");
 
         serchedPathsListViewContextMenu.getItems().add(openPathItemContext);
         serchedPathsListViewContextMenu.getItems().add(openInFolderPathItemContext);
@@ -454,6 +464,8 @@ public class MainWIndow extends Application {
         serchedPathsListViewContextMenu.getItems().add(editPathItemContext);
         serchedPathsListViewContextMenu.getItems().add(new SeparatorMenuItem());
         serchedPathsListViewContextMenu.getItems().add(addPathItemContext);
+        serchedPathsListViewContextMenu.getItems().add(new SeparatorMenuItem());
+        serchedPathsListViewContextMenu.getItems().add(removePathsFromSelectedTagsItemContext);
         searchedPaths.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (event.getButton() == MouseButton.SECONDARY){
                 serchedPathsListViewContextMenu.show(tagsListView, event.getScreenX(), event.getScreenY());
@@ -461,18 +473,21 @@ public class MainWIndow extends Application {
                 serchedPathsListViewContextMenu.hide();
             }
         });
-        //</tags listView ContextMenu>===================
+        //</serached paths listView ContextMenu>=========
 
-        //<serached paths listView ContextMenu>==========
+        //<tags listView ContextMenu>====================
         ContextMenu tagsListViewContextMenu = new ContextMenu();
         MenuItem renameTagItemContext = new MenuItem("Rename Tag");
         MenuItem removeTagItemContext = new MenuItem("Remove Tags");
         MenuItem addTagItemContext = new MenuItem("Add Tag");
+        MenuItem addPathSelectedWithTagsItemContext = new MenuItem("Add Path with selected tags");
 
         tagsListViewContextMenu.getItems().add(renameTagItemContext);
         tagsListViewContextMenu.getItems().add(new SeparatorMenuItem());
         tagsListViewContextMenu.getItems().add(removeTagItemContext);
         tagsListViewContextMenu.getItems().add(addTagItemContext);
+        tagsListViewContextMenu.getItems().add(new SeparatorMenuItem());
+        tagsListViewContextMenu.getItems().add(addPathSelectedWithTagsItemContext);
         tagsListView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (event.getButton() == MouseButton.SECONDARY){
                 tagsListViewContextMenu.show(tagsListView, event.getScreenX(), event.getScreenY());
@@ -480,7 +495,7 @@ public class MainWIndow extends Application {
                 tagsListViewContextMenu.hide();
             }
         });
-        //</serached paths listView ContextMenu>=========
+        //</tags listView ContextMenu>===================
 
         //<menu edit>====================================
         MenuItem addTagItem = new MenuItem("Add Tag");
@@ -513,8 +528,8 @@ public class MainWIndow extends Application {
         };
 
         EventHandler<ActionEvent> addPath = (event) -> {
-            addPathDialog.setAddPath();
-            addPathDialog.show();
+            addEditPathDialog.setAddPath();
+            addEditPathDialog.show();
         };
 
         EventHandler<ActionEvent> renameTag = (event) -> {
@@ -527,8 +542,8 @@ public class MainWIndow extends Application {
         EventHandler<ActionEvent> editPath = (event) -> {
             if(searchedPaths.getSelectionModel().getSelectedItems().size() == 1){
                 editPathItemContext.setDisable(false);
-                addPathDialog.setEditPath(searchedPaths.getSelectionModel().getSelectedItem(), getTagsByPath(searchedPaths.getSelectionModel().getSelectedItem()));
-                addPathDialog.show();
+                addEditPathDialog.setEditPath(searchedPaths.getSelectionModel().getSelectedItem(), getTagsByPath(searchedPaths.getSelectionModel().getSelectedItem()));
+                addEditPathDialog.show();
             }else{
                 editPathItemContext.setDisable(true);
             }
@@ -539,7 +554,6 @@ public class MainWIndow extends Application {
         renameTagItem.setOnAction(renameTag);
         editPathItem.setOnAction(editPath);
         removeTagItem.setOnAction(event -> removeSelectedTags());
-
 
         openPathItemContext.setOnAction(event -> {
             if( Desktop.isDesktopSupported()){
@@ -553,7 +567,6 @@ public class MainWIndow extends Application {
                 }).start();
             }
         });
-
         openInFolderPathItemContext.setOnAction(event -> {
             if( Desktop.isDesktopSupported()){
                 new Thread(() -> {
@@ -570,13 +583,17 @@ public class MainWIndow extends Application {
                 }).start();
             }
         });
-
         addPathItemContext.setOnAction(addPath);
         editPathItemContext.setOnAction(editPath);
+        removePathsFromSelectedTagsItemContext.setOnAction(event -> removeSelectedPathsFromSelectedTags());
 
         addTagItemContext.setOnAction(addTag);
         renameTagItemContext.setOnAction(renameTag);
         removeTagItemContext.setOnAction(event -> removeSelectedTags());
+        addPathSelectedWithTagsItemContext.setOnAction(event -> {
+            addEditPathDialog.setAddPath(tagsListView.getSelectionModel().getSelectedItems());
+            addEditPathDialog.show();
+        });
         tagsListView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (event.getButton() == MouseButton.SECONDARY){
                 tagsListViewContextMenu.show(tagsListView, event.getScreenX(), event.getScreenY());
