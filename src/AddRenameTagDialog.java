@@ -10,6 +10,7 @@ public class AddRenameTagDialog extends Stage {
 
     private boolean renaming;
     private String oldTagName;
+    private Tag renamingTag;
 
     private AddRenameInterface addRenameInterface;
 
@@ -42,17 +43,17 @@ public class AddRenameTagDialog extends Stage {
         tagName.setText("");
     }
 
-    public void setRenameTag(String tagNameIn){
+    public void setRenameTag(Tag tagIn){
         this.setTitle("Rename Tag");
         renaming = true;
-        oldTagName = tagNameIn;
-        tagName.setText(tagNameIn);
+        renamingTag = tagIn;
+        tagName.setText(renamingTag.getName());
         tagName.selectAll();
     }
 
     private void onOK() {
         if(renaming){
-            addRenameInterface.change(oldTagName, tagName.getText());
+            renamingTag.setName(tagName.getText());
         }else{
             addRenameInterface.add(tagName.getText());
         }

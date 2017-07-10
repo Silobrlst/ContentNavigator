@@ -17,17 +17,18 @@ public class AddEditPathDialog extends Stage {
     private TextField path;
     private Label pathValidation;
     private Button apply;
-    private ListView<String> addedTags;
-    private ListView<String> availableTags;
+    private ListView<Tag> addedTags;
+    private ListView<Tag> availableTags;
 
     private boolean editing;
 
     private String oldPath;
+    private Path editingPath;
 
-    private ListView<String> mainWindowTagslist;
+    private ListView<Tag> mainWindowTagslist;
     private AddEditPathInterface addEditPathInterface;
 
-    private List<String> tagNamesTemp;
+    private List<Tag> tagsTemp;
     private FileChooser fileChooser;
     private DirectoryChooser directoryChooser;
     private File initialDirectory;
@@ -42,7 +43,7 @@ public class AddEditPathDialog extends Stage {
     private static final File guiSettings = new File("guiSettings.json");
     //</string names>=====================
 
-    AddEditPathDialog(ListView<String> mainWindowTagslistIn, AddEditPathInterface addEditPathInterfaceIn)throws Exception{
+    AddEditPathDialog(ListView<Tag> mainWindowTagslistIn, AddEditPathInterface addEditPathInterfaceIn)throws Exception{
         mainWindowTagslist = mainWindowTagslistIn;
         addEditPathInterface = addEditPathInterfaceIn;
 
@@ -108,14 +109,14 @@ public class AddEditPathDialog extends Stage {
 
             if(editing){
                 addedTags.getItems().removeAll(addedTags.getItems());
-                addedTags.getItems().addAll(tagNamesTemp);
+                addedTags.getItems().addAll(tagsTemp);
                 availableTags.getItems().removeAll(addedTags.getItems());
             }else{
                 path.setText("");
                 addedTags.getItems().removeAll(addedTags.getItems());
 
-                if(tagNamesTemp != null){
-                    addedTags.getItems().addAll(tagNamesTemp);
+                if(tagsTemp != null){
+                    addedTags.getItems().addAll(tagsTemp);
                     availableTags.getItems().removeAll(addedTags.getItems());
                 }
             }
@@ -187,31 +188,31 @@ public class AddEditPathDialog extends Stage {
     }
     //</GUI settings i/o>=====================
 
-    public void setAddPath(List<String> tagNamesIn){
+    public void setAddPath(List<Tag> tagsIn){
         this.setTitle("Add Path");
         apply.setDisable(true);
         editing = false;
 
-        tagNamesTemp = tagNamesIn;
+        tagsTemp = tagsIn;
     }
 
     public void setAddPath(){
         setAddPath(null);
     }
 
-    public void setEditPath(String pathIn, List<String> tagNamesIn){
+    public void setEditPath(Path pathIn, List<Tag> tagsIn){
         this.setTitle("Edit Path");
         apply.setDisable(false);
         editing = true;
-        oldPath = path.getText();
-        path.setText(pathIn);
-        tagNamesTemp = tagNamesIn;
+        editingPath = pathIn;
+        path.setText(editingPath.getPath());
+        tagsTemp = tagsIn;
     }
 
     private void onOK() {
         if(new File(path.getText()).exists()){
             if(editing){
-                addEditPathInterface.change(oldPath, addedTags.getItems());
+                editingPath.setPath(path.getText());
             }else{
                 addEditPathInterface.add(path.getText(), addedTags.getItems());
             }

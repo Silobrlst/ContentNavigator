@@ -1,7 +1,6 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,6 +19,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.Duration;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,18 +27,15 @@ import org.json.JSONObject;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 public class MainWIndow extends Application {
     private Stage primaryStage;
 
     private SplitPane splitPane;
-    private ListView<String> tagsListView;
-    private ListView<String> searchedPaths;
-    private static final ObservableList<String> tagsList = FXCollections.observableArrayList();
+    private ListView<Tag> tagsListView;
+    private ListView<Path> searchedPaths;
 
     private Menu openRecentMenu;
     private Menu menuEdit;
@@ -48,8 +45,10 @@ public class MainWIndow extends Application {
 
     private final String appName = "Content navigator";
 
+    private Map<String, Tag> tagsMap;
+
     private File contenetInfoFile;
-    private JSONObject tags;
+    private JSONObject tagsJSON;
     private JSONObject paths;
 
     private AddRenameTagDialog addRenameTagDialog;
@@ -93,7 +92,7 @@ public class MainWIndow extends Application {
 
         JSONArray recentJSON = guiJSON.getJSONArray("recent");
 
-        for (int i = recentJSON.length()-1; i >= 0; i--) {
+        for (int i = recentJSON.length() - 1; i >= 0; i--) {
             addRecent(new File(recentJSON.getString(i)), false);
         }
 
@@ -109,8 +108,8 @@ public class MainWIndow extends Application {
             splitPane.setDividerPositions(mainWindowJSON.getDouble("tagsPathsSplitPosition"));
 
             JSONArray selectedTagsJSON = mainWindowJSON.getJSONArray("selectedTags");
-            for(int i=0; i<selectedTagsJSON.length(); i++){
-                tagsListView.getSelectionModel().select(selectedTagsJSON.getString(i));
+            for (int i = 0; i < selectedTagsJSON.length(); i++) {
+                tagsListView.getSelectionModel().select(new Tag(selectedTagsJSON.getString(i)));
             }
             filterPathsBySelectedTags();
         })).play();
@@ -134,8 +133,8 @@ public class MainWIndow extends Application {
         mainWindowJSON.put("tagsPathsSplitPosition", splitPane.getDividerPositions()[0]);
 
         JSONArray selectedTags = new JSONArray();
-        for(String selectedTag: tagsListView.getSelectionModel().getSelectedItems()){
-            selectedTags.put(selectedTag);
+        for (Tag selectedTag : tagsListView.getSelectionModel().getSelectedItems()) {
+            selectedTags.put(selectedTag.getName());
         }
         mainWindowJSON.put("selectedTags", selectedTags);
 
@@ -145,8 +144,8 @@ public class MainWIndow extends Application {
 
     //<Content info i/o>======================
     private void validateContentInfo(JSONObject jsonIn) {
-        if (!jsonIn.has("tags")) {
-            jsonIn.put("tags", new JSONObject());
+        if (!jsonIn.has("tagsJSON")) {
+            jsonIn.put("tagsJSON", new JSONObject());
         }
     }
 
@@ -154,11 +153,22 @@ public class MainWIndow extends Application {
         JSONObject json = JSONLoader.loadJSON(fileIn);
         validateContentInfo(json);
 
-        tags = json.getJSONObject("tags");
+        tagsJSON = json.getJSONObject("tags");
 
-        tagsList.removeAll(tagsList);
-        tagsList.addAll(tags.keySet());
-        tagsList.sort(Comparator.naturalOrder());
+        tagsListView.getItems().removeAll(tagsListView.getItems());
+
+        for (String tagName : tagsJSON.keySet()) {
+            Tag tag = new Tag(tagName);
+            tagsMap.put(tagName, tag);
+            tagsListView.getItems().add(tag);
+
+            JSONArray paths = tagsJSON.getJSONArray(tagName);
+            for(int i=0; i<paths.length(); i++){
+                tag.setPath(new Path(paths.getString(i)));
+            }
+        }
+
+        tagsListView.getItems().sort(Comparator.naturalOrder());
         searchedPaths.getItems().removeAll(searchedPaths.getItems());
 
         menuEdit.setDisable(false);
@@ -169,12 +179,12 @@ public class MainWIndow extends Application {
 
     private void saveContentInfo(File fileIn) {
         JSONObject json = new JSONObject();
-        json.put("tags", tags);
+        json.put("tagsJSON", tagsJSON);
         JSONLoader.saveJSON(fileIn, json);
     }
 
     private void newContentInfo(File fileIn) {
-        tags = new JSONObject();
+        tagsJSON = new JSONObject();
         menuEdit.setDisable(false);
         searchedPaths.getItems().removeAll(searchedPaths.getItems());
         tagsListView.getItems().removeAll(tagsListView.getItems());
@@ -186,24 +196,23 @@ public class MainWIndow extends Application {
 
     //<editing>===============================
     private void addTag(String tagNameIn) {
-        tags.put(tagNameIn, new JSONArray());
-        tagsList.add(tagNameIn);
-        tagsList.sort(Comparator.naturalOrder());
+        tagsJSON.put(tagNameIn, new JSONArray());
+        tagsListView.getItems().add(new Tag(tagNameIn));
+        tagsListView.getItems().sort(Comparator.naturalOrder());
         saveContentInfo(contenetInfoFile);
 
         tagsListView.getSelectionModel().clearSelection();
-        tagsListView.getSelectionModel().select(tagNameIn);
+        tagsListView.getSelectionModel().select(new Tag(tagNameIn));
         tagsListView.requestFocus();
     }
 
     private void renameTag(String oldTagNameIn, String newTagNameIn) {
-        tags.put(newTagNameIn, tags.get(oldTagNameIn));
-        tags.remove(oldTagNameIn);
+        tagsJSON.put(newTagNameIn, tagsJSON.get(oldTagNameIn));
+        tagsJSON.remove(oldTagNameIn);
 
-        for (int i = 0; i < tagsListView.getItems().size(); i++) {
-            if (tagsList.get(i).equals(oldTagNameIn)) {
-                tagsList.set(i, newTagNameIn);
-                tagsList.sort(Comparator.naturalOrder());
+        for (Tag tag : tagsListView.getItems()) {
+            if (tag.equals(oldTagNameIn)) {
+                tag.setName(newTagNameIn);
                 saveContentInfo(contenetInfoFile);
                 return;
             }
@@ -211,25 +220,29 @@ public class MainWIndow extends Application {
     }
 
     private void removeSelectedTags() {
+        ObservableList<Tag> selectedTags = tagsListView.getSelectionModel().getSelectedItems();
+        for (Tag selTag : selectedTags) {
+            tagsJSON.remove(selTag.getName());
+        }
+        tagsListView.getItems().removeAll(tagsListView.getSelectionModel().getSelectedItems());
+        byTagsSearch.setText("");
+        saveContentInfo(contenetInfoFile);
+    }
+
+    private void removeSelectedTagsConfirm() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Remove Tags");
-        alert.setHeaderText("Remove selected tags?");
+        alert.setHeaderText("Remove selected tagsJSON?");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){
-            ObservableList<String> selectedTags = tagsListView.getSelectionModel().getSelectedItems();
-            for(String selTag: selectedTags){
-                tags.remove(selTag);
-            }
-            tagsList.removeAll(tagsListView.getSelectionModel().getSelectedItems());
-            byTagsSearch.setText("");
-            saveContentInfo(contenetInfoFile);
+        if (result.get() == ButtonType.OK) {
+            removeSelectedTags();
         }
     }
 
-    private void addPath(String pathIn, List<String> tagNamesIn) {
-        for(String tagName: tagNamesIn){
-            JSONArray tagJSON = tags.getJSONArray(tagName);
+    private void addPath(String pathIn, List<Tag> tagsIn) {
+        for (Tag tag : tagsIn) {
+            JSONArray tagJSON = tagsJSON.getJSONArray(tag.getName());
             boolean add = true;
 
             for (int i = 0; i < tagJSON.length(); i++) {
@@ -238,8 +251,8 @@ public class MainWIndow extends Application {
                 }
             }
 
-            if(add){
-                tags.getJSONArray(tagName).put(pathIn);
+            if (add) {
+                tagsJSON.getJSONArray(tag.getName()).put(pathIn);
             }
         }
 
@@ -248,31 +261,35 @@ public class MainWIndow extends Application {
     }
 
     private void removeSelectedPathsFromSelectedTags() {
+        for (Tag selectedTag : tagsListView.getSelectionModel().getSelectedItems()) {
+            for (Path selectedPath : searchedPaths.getSelectionModel().getSelectedItems()) {
+                JSONArray tagJSON = tagsJSON.getJSONArray(selectedTag.getName());
+                for (int i = 0; i < tagJSON.length(); i++) {
+                    if (selectedPath.equals(tagJSON.getString(i))) {
+                        tagJSON.remove(i);
+                    }
+                }
+            }
+        }
+        saveContentInfo(contenetInfoFile);
+
+        searchedPaths.getItems().removeAll(searchedPaths.getSelectionModel().getSelectedItems());
+    }
+
+    private void removeSelectedPathsFromSelectedTagsConfirm() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Remove Paths");
         alert.setHeaderText("Remove selected paths from selected tags?");
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){
-            for(String selectedTag: tagsListView.getSelectionModel().getSelectedItems()){
-                for(String selectedPath: searchedPaths.getSelectionModel().getSelectedItems()){
-                    JSONArray tagJSON = tags.getJSONArray(selectedTag);
-                    for (int i = 0; i < tagJSON.length(); i++) {
-                        if (tagJSON.getString(i).equals(selectedPath)) {
-                            tagJSON.remove(i);
-                        }
-                    }
-                }
-            }
-            saveContentInfo(contenetInfoFile);
-
-            searchedPaths.getItems().removeAll(searchedPaths.getSelectionModel().getSelectedItems());
+        if (result.get() == ButtonType.OK) {
+            removeSelectedPathsFromSelectedTags();
         }
     }
     //</editing>==============================
 
     private void addRecent(File fileIn, boolean saveIn) {
-        for (MenuItem recentItem: openRecentMenu.getItems()) {
+        for (MenuItem recentItem : openRecentMenu.getItems()) {
             if (recentItem.getText().equals(fileIn.getAbsolutePath())) {
                 openRecentMenu.getItems().remove(recentItem);
                 openRecentMenu.getItems().add(0, recentItem);
@@ -290,7 +307,7 @@ public class MainWIndow extends Application {
 
         openRecentMenu.getItems().add(0, menuItem);
 
-        if(openRecentMenu.getItems().size() > 15){
+        if (openRecentMenu.getItems().size() > 15) {
             openRecentMenu.getItems().remove(15);
         }
 
@@ -299,39 +316,37 @@ public class MainWIndow extends Application {
         }
     }
 
-    private List<String> getTagsByPath(String pathIn){
-        List<String> tagsByPath = new ArrayList<>();
+    private List<Tag> getTagsByPath(Path pathIn) {
+        List<Tag> tagsByPath = new ArrayList<>();
 
-        for(String tagName: tags.keySet()){
-            if(tags.getJSONArray(tagName).toList().contains(pathIn)){
-                tagsByPath.add(tagName);
+        for (Tag tag : tagsMap.values()) {
+            if (tagsJSON.getJSONArray(tag.getName()).toList().contains(pathIn)) {
+                tagsByPath.add(tag);
             }
         }
 
         return tagsByPath;
     }
 
-    private List<String> getPathsByTags(List<String> tagNamesIn){
-        if(tagNamesIn.size() == 0){
+    private List<Path> getPathsByTags(List<Tag> tagsIn) {
+        if (tagsIn.size() == 0) {
             return null;
         }
 
-        ArrayList<String> filteredPaths = new ArrayList<>();
-        ArrayList<String> filteredPathsTemp = new ArrayList<>();
+        ArrayList<Path> filteredPaths = new ArrayList<>();
+        ArrayList<Path> filteredPathsTemp = new ArrayList<>();
 
-        JSONArray paths = tags.getJSONArray(tagNamesIn.get(0));
-        for(int i=0; i<paths.length(); i++){
-            filteredPaths.add(paths.getString(i));
-        }
+        filteredPaths.addAll(tagsIn.get(0).getPaths());
 
-        for(String tagName: tagNamesIn){
+        for (Tag tag : tagsIn) {
             filteredPathsTemp.clear();
-            paths = tags.getJSONArray(tagName);
-            for(int i=0; i<paths.length(); i++){
-                if(filteredPaths.contains(paths.getString(i))){
-                    filteredPathsTemp.add(paths.getString(i));
+
+            for (Path path : tag.getPaths()) {
+                if (filteredPaths.contains(path)) {
+                    filteredPathsTemp.add(path);
                 }
             }
+
             filteredPaths.clear();
             filteredPaths.addAll(filteredPathsTemp);
         }
@@ -339,28 +354,29 @@ public class MainWIndow extends Application {
         return filteredPaths;
     }
 
-    private void filterPathsBySelectedTags(){
-        List<String> filteredPaths = getPathsByTags(tagsListView.getSelectionModel().getSelectedItems());
-        if(filteredPaths != null){
+    private void filterPathsBySelectedTags() {
+        List<Path> filteredPaths = getPathsByTags(tagsListView.getSelectionModel().getSelectedItems());
+
+        if (filteredPaths != null) {
             searchedPaths.getItems().removeAll(searchedPaths.getItems());
             searchedPaths.getItems().addAll(filteredPaths);
             searchedPaths.getItems().sort(Comparator.naturalOrder());
 
             String tagsStr = "";
-            for(String tagName: tagsListView.getSelectionModel().getSelectedItems()){
-                if(tagName.contains(" ")){
-                    tagsStr += "\"" + tagName + "\" ";
-                }else{
-                    tagsStr += tagName + " ";
+            for (Tag tag : tagsListView.getSelectionModel().getSelectedItems()) {
+                if (tag.getName().contains(" ")) {
+                    tagsStr += "\"" + tag.getName() + "\" ";
+                } else {
+                    tagsStr += tag.getName() + " ";
                 }
             }
 
             byTagsSearch.setText(tagsStr);
         }
 
-        if(tagsListView.getSelectionModel().getSelectedItems().size() == 1){
+        if (tagsListView.getSelectionModel().getSelectedItems().size() == 1) {
             renameTagItem.setDisable(false);
-        }else{
+        } else {
             renameTagItem.setDisable(true);
         }
     }
@@ -369,6 +385,8 @@ public class MainWIndow extends Application {
     public void start(Stage primaryStageIn) throws Exception {
         primaryStage = primaryStageIn;
         contenetInfoFile = null;
+
+        tagsMap = new HashMap<>();
 
         Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"));
         Scene scene = new Scene(root);
@@ -381,23 +399,44 @@ public class MainWIndow extends Application {
 
         searchedPaths = (ListView) scene.lookup("#searchedPaths");
         searchedPaths.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(searchedPaths.getSelectionModel().getSelectedItems().size() == 1){
+            if (searchedPaths.getSelectionModel().getSelectedItems().size() == 1) {
                 editPathItem.setDisable(false);
-            }else{
+            } else {
                 editPathItem.setDisable(true);
+            }
+        });
+        searchedPaths.setCellFactory(param -> new ListCell<Path>() {
+            @Override
+            protected void updateItem(Path pathIn, boolean empty) {
+                super.updateItem(pathIn, empty);
+                if (pathIn != null) {
+                    setText(pathIn.getPath());
+                } else {
+                    setText("");   // <== clear the now empty cell.
+                }
             }
         });
 
         tagsListView = (ListView) scene.lookup("#tagsList");
         tagsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        tagsListView.setItems(tagsList);
         tagsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> filterPathsBySelectedTags());
+        tagsListView.setCellFactory(param -> new ListCell<Tag>() {
+            @Override
+            protected void updateItem(Tag tagIn, boolean empty) {
+                super.updateItem(tagIn, empty);
+                if (tagIn != null) {
+                    setText(tagIn.getName());
+                } else {
+                    setText("");   // <== clear the now empty cell.
+                }
+            }
+        });
 
         MenuBar menuBar = (MenuBar) scene.lookup("#menuBar");
 
         splitPane = (SplitPane) scene.lookup("#tagsPathsSpliter");
 
-        byTagsSearch = (TextField)scene.lookup("#byTagsSearch");
+        byTagsSearch = (TextField) scene.lookup("#byTagsSearch");
 
         addRenameTagDialog = new AddRenameTagDialog(new AddRenameInterface() {
             @Override
@@ -412,17 +451,15 @@ public class MainWIndow extends Application {
         });
         addEditPathDialog = new AddEditPathDialog(tagsListView, new AddEditPathInterface() {
             @Override
-            public void add(String path, List<String> tagNamesIn) {
-                addPath(path, tagNamesIn);
+            public void add(String path, List<Tag> tagsIn) {
+                addPath(path, tagsIn);
             }
 
             @Override
-            public void change(String path, List<String> tagNamesIn) {
+            public void change(String path, List<Tag> tagsIn) {
                 removeSelectedPathsFromSelectedTags();
-                System.out.println(tagNamesIn);
-                for(String tagName: tagNamesIn){
-                    tags.getJSONArray(tagName).put(path);
-                    System.out.println(tagName + ": " + path);
+                for (Tag tag : tagsIn) {
+                    tagsJSON.getJSONArray(tag.getName()).put(path);
                 }
                 saveContentInfo(contenetInfoFile);
             }
@@ -442,8 +479,8 @@ public class MainWIndow extends Application {
             fileChooser.setTitle("New content info file");
             File file = fileChooser.showSaveDialog(primaryStage);
             if (file != null) {
-                if(!file.getName().endsWith(".json")){
-                    file = new File(file.getAbsoluteFile()+".json");
+                if (!file.getName().endsWith(".json")) {
+                    file = new File(file.getAbsoluteFile() + ".json");
                 }
 
                 newContentInfo(file);
@@ -485,7 +522,7 @@ public class MainWIndow extends Application {
         MenuItem openInFolderPathItemContext = new MenuItem("Open in folder");
         MenuItem editPathItemContext = new MenuItem("Edit Path");
         MenuItem addPathItemContext = new MenuItem("Add Path");
-        MenuItem removePathsFromSelectedTagsItemContext = new MenuItem("Remove Paths from selected tags");
+        MenuItem removePathsFromSelectedTagsItemContext = new MenuItem("Remove Paths from selected tagsJSON");
 
         serchedPathsListViewContextMenu.getItems().add(openPathItemContext);
         serchedPathsListViewContextMenu.getItems().add(openInFolderPathItemContext);
@@ -496,20 +533,20 @@ public class MainWIndow extends Application {
         serchedPathsListViewContextMenu.getItems().add(new SeparatorMenuItem());
         serchedPathsListViewContextMenu.getItems().add(removePathsFromSelectedTagsItemContext);
         searchedPaths.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            if (event.getButton() == MouseButton.SECONDARY){
+            if (event.getButton() == MouseButton.SECONDARY) {
                 serchedPathsListViewContextMenu.show(tagsListView, event.getScreenX(), event.getScreenY());
-            }else if(event.getButton() == MouseButton.PRIMARY){
+            } else if (event.getButton() == MouseButton.PRIMARY) {
                 serchedPathsListViewContextMenu.hide();
             }
         });
         //</serached paths listView ContextMenu>=========
 
-        //<tags listView ContextMenu>====================
+        //<tagsJSON listView ContextMenu>====================
         ContextMenu tagsListViewContextMenu = new ContextMenu();
         MenuItem renameTagItemContext = new MenuItem("Rename Tag");
         MenuItem removeTagItemContext = new MenuItem("Remove Tags");
         MenuItem addTagItemContext = new MenuItem("Add Tag");
-        MenuItem addPathSelectedWithTagsItemContext = new MenuItem("Add Path with selected tags");
+        MenuItem addPathSelectedWithTagsItemContext = new MenuItem("Add Path with selected tagsJSON");
 
         tagsListViewContextMenu.getItems().add(renameTagItemContext);
         tagsListViewContextMenu.getItems().add(new SeparatorMenuItem());
@@ -518,13 +555,13 @@ public class MainWIndow extends Application {
         tagsListViewContextMenu.getItems().add(new SeparatorMenuItem());
         tagsListViewContextMenu.getItems().add(addPathSelectedWithTagsItemContext);
         tagsListView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            if (event.getButton() == MouseButton.SECONDARY){
+            if (event.getButton() == MouseButton.SECONDARY) {
                 tagsListViewContextMenu.show(tagsListView, event.getScreenX(), event.getScreenY());
-            }else if(event.getButton() == MouseButton.PRIMARY){
+            } else if (event.getButton() == MouseButton.PRIMARY) {
                 tagsListViewContextMenu.hide();
             }
         });
-        //</tags listView ContextMenu>===================
+        //</tagsJSON listView ContextMenu>===================
 
         //<menu edit>====================================
         MenuItem addTagItem = new MenuItem("Add Tag");
@@ -569,11 +606,11 @@ public class MainWIndow extends Application {
         };
 
         EventHandler<ActionEvent> editPath = (event) -> {
-            if(searchedPaths.getSelectionModel().getSelectedItems().size() == 1){
+            if (searchedPaths.getSelectionModel().getSelectedItems().size() == 1) {
                 editPathItemContext.setDisable(false);
                 addEditPathDialog.setEditPath(searchedPaths.getSelectionModel().getSelectedItem(), getTagsByPath(searchedPaths.getSelectionModel().getSelectedItem()));
                 addEditPathDialog.show();
-            }else{
+            } else {
                 editPathItemContext.setDisable(true);
             }
         };
@@ -582,13 +619,13 @@ public class MainWIndow extends Application {
         addPathItem.setOnAction(addPath);
         renameTagItem.setOnAction(renameTag);
         editPathItem.setOnAction(editPath);
-        removeTagItem.setOnAction(event -> removeSelectedTags());
+        removeTagItem.setOnAction(event -> removeSelectedTagsConfirm());
 
         openPathItemContext.setOnAction(event -> {
-            if( Desktop.isDesktopSupported()){
+            if (Desktop.isDesktopSupported()) {
                 new Thread(() -> {
                     try {
-                        File file = new File(searchedPaths.getSelectionModel().getSelectedItem());
+                        File file = new File(searchedPaths.getSelectionModel().getSelectedItem().getPath());
                         Desktop.getDesktop().open(file);
                     } catch (IOException ex) {
                         ex.printStackTrace();
@@ -597,10 +634,10 @@ public class MainWIndow extends Application {
             }
         });
         openInFolderPathItemContext.setOnAction(event -> {
-            if( Desktop.isDesktopSupported()){
+            if (Desktop.isDesktopSupported()) {
                 new Thread(() -> {
                     try {
-                        File file = new File(searchedPaths.getSelectionModel().getSelectedItem());
+                        File file = new File(searchedPaths.getSelectionModel().getSelectedItem().getPath());
 //                        if(file.isDirectory()){
 //                            file = new File(searchedPaths.getSelectionModel().getSelectedItem().split("(\\\\|\\/)[^\\\\|\\/]*$")[0]);
 //                        }
@@ -614,49 +651,49 @@ public class MainWIndow extends Application {
         });
         addPathItemContext.setOnAction(addPath);
         editPathItemContext.setOnAction(editPath);
-        removePathsFromSelectedTagsItemContext.setOnAction(event -> removeSelectedPathsFromSelectedTags());
+        removePathsFromSelectedTagsItemContext.setOnAction(event -> removeSelectedPathsFromSelectedTagsConfirm());
 
         addTagItemContext.setOnAction(addTag);
         renameTagItemContext.setOnAction(renameTag);
-        removeTagItemContext.setOnAction(event -> removeSelectedTags());
+        removeTagItemContext.setOnAction(event -> removeSelectedTagsConfirm());
         addPathSelectedWithTagsItemContext.setOnAction(event -> {
             addEditPathDialog.setAddPath(tagsListView.getSelectionModel().getSelectedItems());
             addEditPathDialog.show();
         });
         tagsListView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            if (event.getButton() == MouseButton.SECONDARY){
+            if (event.getButton() == MouseButton.SECONDARY) {
                 tagsListViewContextMenu.show(tagsListView, event.getScreenX(), event.getScreenY());
 
                 int selectedCount = tagsListView.getSelectionModel().getSelectedItems().size();
-                if(selectedCount == 1){
+                if (selectedCount == 1) {
                     renameTagItem.setDisable(false);
                     renameTagItemContext.setDisable(false);
-                }else{
+                } else {
                     renameTagItem.setDisable(true);
                     renameTagItemContext.setDisable(true);
                 }
-                if(selectedCount != 0){
+                if (selectedCount != 0) {
                     removeTagItem.setDisable(false);
                     removeTagItemContext.setDisable(false);
-                }else{
+                } else {
                     removeTagItem.setDisable(true);
                     removeTagItemContext.setDisable(true);
                 }
-            }else if(event.getButton() == MouseButton.PRIMARY){
+            } else if (event.getButton() == MouseButton.PRIMARY) {
                 tagsListViewContextMenu.hide();
             }
         });
         //</menu events>====================================
 
         tagsListView.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if (event.getCode() == KeyCode.DELETE){
-                removeSelectedTags();
+            if (event.getCode() == KeyCode.DELETE) {
+                removeSelectedTagsConfirm();
             }
         });
 
         searchedPaths.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if (event.getCode() == KeyCode.DELETE){
-                removeSelectedPathsFromSelectedTags();
+            if (event.getCode() == KeyCode.DELETE) {
+                removeSelectedPathsFromSelectedTagsConfirm();
             }
         });
 
