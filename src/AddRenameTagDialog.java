@@ -3,19 +3,22 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class AddRenameTagDialog extends Stage {
     private TextField tagName;
 
     private boolean renaming;
-    private String oldTagName;
     private Tag renamingTag;
 
-    private AddRenameInterface addRenameInterface;
+    private Tags tags;
 
-    AddRenameTagDialog(AddRenameInterface addRenameInterfaceIn)throws Exception{
-        addRenameInterface = addRenameInterfaceIn;
+    AddRenameTagDialog(Stage parentStageIn, Tags tagsIn)throws Exception{
+        this.initOwner(parentStageIn);
+        this.initModality(Modality.APPLICATION_MODAL);
+
+        tags = tagsIn;
 
         Parent root = FXMLLoader.load(getClass().getResource("AddRenameTagDialog.fxml"));
         Scene scene = new Scene(root);
@@ -53,9 +56,9 @@ public class AddRenameTagDialog extends Stage {
 
     private void onOK() {
         if(renaming){
-            renamingTag.setName(tagName.getText());
+            tags.renameTag(renamingTag, tagName.getText());
         }else{
-            addRenameInterface.add(tagName.getText());
+            tags.newTag(tagName.getText());
         }
 
         this.hide();

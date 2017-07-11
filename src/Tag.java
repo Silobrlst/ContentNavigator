@@ -1,29 +1,30 @@
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 public class Tag implements Comparable<Tag> {
-    private Map<String, Path> paths;
+    private ArrayList<Path> paths;
     private String name;
 
     public Tag(String nameIn){
-        paths = new HashMap<>();
+        paths = new ArrayList<>();
         name = nameIn;
     }
 
-    public void setPath(Path pathIn){
-        paths.put(pathIn.getPath(), pathIn);
+    public void addPath(Path pathIn){
+        paths.add(pathIn);
     }
+
+    public void removePath(Path pathIn){
+        paths.remove(pathIn);
+    }
+
     public void setName(String nameIn){
         name = nameIn;
     }
 
-    public Path getPath(String pathIn){
-        return paths.get(pathIn);
+    public ArrayList<Path> getPaths(){
+        return paths;
     }
-    public Collection<Path> getPaths(){
-        return paths.values();
-    }
+
     public String getName(){
         return name;
     }
