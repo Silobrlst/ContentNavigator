@@ -54,11 +54,11 @@ public class MainWIndow extends Application {
     private AddRenameTagDialog addRenameTagDialog;
     private AddEditPathDialog addEditPathDialog;
 
-    //<string names>======================
+    //<string names>==========================
     private static final String tagsJSONName = "tags";
     private static final String pathsJSONName = "paths";
     private static final String nameJSONName = "name";
-    //</string names>=====================
+    //</string names>=========================
 
     //<GUI settings i/o>======================
     private void validateGuiSettings(JSONObject jsonIn) {
@@ -115,7 +115,8 @@ public class MainWIndow extends Application {
 
             JSONArray selectedTagsJSON = mainWindowJSON.getJSONArray("selectedTags");
             for (int i = 0; i < selectedTagsJSON.length(); i++) {
-                tagsListView.getSelectionModel().select(new Tag(selectedTagsJSON.getString(i)));
+                //tags.newTagWithoutNotifing();
+                //tagsListView.getSelectionModel().select(new Tag(selectedTagsJSON.getString(i)));
             }
             filterPathsBySelectedTags();
         })).play();
@@ -179,24 +180,28 @@ public class MainWIndow extends Application {
         tagsJSON = json.getJSONObject(tagsJSONName);
         JSONObject pathsJSON = json.getJSONObject(pathsJSONName);
 
-        tagsListView.getItems().removeAll(tagsListView.getItems());
+        tagsListView.getItems().clear();
 
         for (String tagName : tagsJSON.keySet()) {
-            Tag tag = new Tag(tagName);
-            tags.add(tag);
+            Tag tag = tags.newTagWithoutNotifing(tagName);
             tagsListView.getItems().add(tag);
         }
 
-        for(String pathJSON: pathsJSON.keySet()){
-            Path path = new Path(pathJSON);
-            paths.add(path);
+        for(String pathJSONKey: pathsJSON.keySet()){
+            Path path;
+            JSONObject pathJSON = pathsJSON.getJSONObject(pathJSONKey);
 
-            for(String tagJSON: pathsJSON.keySet()){
+            if(pathJSON.getString(nameJSONName).length() > 0){
+                path = paths.newPathWithoutNotifing(pathJSONKey, pathJSON.getString(nameJSONName));
+            }else{
+                path = paths.newPathWithoutNotifing(pathJSONKey);
+            }
+
+            for(String tagJSON: pathJSON.getJSONObject(tagsJSONName).keySet()){
                 Tag tag = tags.getTag(tagJSON);
 
                 if(tag != null){
-                    tag.addPath(path);
-                    path.addTag(tag);
+                    path.addTagWithoutNotifing(tag);
                 }
             }
         }
@@ -220,7 +225,12 @@ public class MainWIndow extends Application {
         json.put(pathsJSONName, pathsJSON);
 
         for(Tag tag: tags){
-            tagsJSON.put(tag.getName(), "");
+            JSONObject tagJSON = new JSONObject();
+            tagsJSON.put(tag.getName(), tagJSON);
+
+            for(Path path: tag.getPaths()){
+                tagJSON.put(path.getPath(), "");
+            }
         }
 
         for(Path path: paths){
@@ -229,8 +239,7 @@ public class MainWIndow extends Application {
 
             JSONObject pathTagsJSON = new JSONObject();
             pathJSON.put(tagsJSONName, pathTagsJSON);
-
-            System.out.println(path.getTags());
+            pathJSON.put(nameJSONName, path.getName());
 
             for(Tag tag: path.getTags()){
                 pathTagsJSON.put(tag.getName(), "");
@@ -252,34 +261,13 @@ public class MainWIndow extends Application {
     //</Content info i/o>=====================
 
     //<editing>===============================
-    private void addTag(Tag tagIn) {
-        tagsListView.getItems().add(tagIn);
-        tagsListView.getItems().sort(Comparator.naturalOrder());
-        saveContentInfo(contenetInfoFile);
-
-        tagsListView.getSelectionModel().clearSelection();
-        tagsListView.getSelectionModel().select(tagIn);
-        tagsListView.requestFocus();
-    }
-
-    private void renameTag(String oldTagNameIn, String newTagNameIn) {
-        tagsJSON.put(newTagNameIn, tagsJSON.get(oldTagNameIn));
-        tagsJSON.remove(oldTagNameIn);
-
-        for (Tag tag : tagsListView.getItems()) {
-            if (tag.equals(oldTagNameIn)) {
-                tag.setName(newTagNameIn);
-                saveContentInfo(contenetInfoFile);
-                return;
-            }
-        }
-    }
-
     private void removeSelectedTags() {
         ObservableList<Tag> selectedTags = tagsListView.getSelectionModel().getSelectedItems();
         for (Tag selTag: selectedTags) {
             tags.removeTag(selTag);
         }
+
+        System.out.println(tagsListView.getSelectionModel().getSelectedItems());
 
         tagsListView.getItems().removeAll(tagsListView.getSelectionModel().getSelectedItems());
         byTagsSearch.setText("");
@@ -297,25 +285,12 @@ public class MainWIndow extends Application {
         }
     }
 
-    private void addPath() {
-        saveContentInfo(contenetInfoFile);
-        filterPathsBySelectedTags();
-    }
-
     private void removeSelectedPathsFromSelectedTags() {
-        for (Tag selectedTag : tagsListView.getSelectionModel().getSelectedItems()) {
-            for (Path selectedPath : searchedPaths.getSelectionModel().getSelectedItems()) {
-                JSONArray tagJSON = tagsJSON.getJSONArray(selectedTag.getName());
-                for (int i = 0; i < tagJSON.length(); i++) {
-                    if (selectedPath.equals(tagJSON.getString(i))) {
-                        tagJSON.remove(i);
-                    }
-                }
-            }
+        for (Path selectedPath: searchedPaths.getSelectionModel().getSelectedItems()) {
+            selectedPath.removeTags(tagsListView.getSelectionModel().getSelectedItems());
         }
-        saveContentInfo(contenetInfoFile);
-
         searchedPaths.getItems().removeAll(searchedPaths.getSelectionModel().getSelectedItems());
+        saveContentInfo(contenetInfoFile);
     }
 
     private void removeSelectedPathsFromSelectedTagsConfirm() {
@@ -358,20 +333,12 @@ public class MainWIndow extends Application {
         }
     }
 
-    private List<Tag> getTagsByPath(Path pathIn) {
-        List<Tag> tagsByPath = new ArrayList<>();
-
-        for (Tag tag : tags) {
-            if (tagsJSON.getJSONArray(tag.getName()).toList().contains(pathIn)) {
-                tagsByPath.add(tag);
-            }
-        }
-
-        return tagsByPath;
-    }
-
     private List<Path> getPathsByTags(List<Tag> tagsIn) {
         if (tagsIn.size() == 0) {
+            return null;
+        }
+
+        if(tagsIn.get(0) == null){
             return null;
         }
 
@@ -464,32 +431,37 @@ public class MainWIndow extends Application {
         paths.addListener(new EmptyPathListener(){
             @Override
             public void created(Path pathIn) {
-                addPath();
+                saveContentInfo(contenetInfoFile);
                 filterPathsBySelectedTags();
             }
 
             @Override
             public void renamed(Path pathIn) {
+                saveContentInfo(contenetInfoFile);
                 filterPathsBySelectedTags();
             }
 
             @Override
             public void removedTag(Path pathIn, Tag tagIn) {
+                saveContentInfo(contenetInfoFile);
                 filterPathsBySelectedTags();
             }
 
             @Override
             public void removedTags(Path pathIn, Collection<Tag> tagsIn) {
+                saveContentInfo(contenetInfoFile);
                 filterPathsBySelectedTags();
             }
 
             @Override
             public void addedTags(Path pathIn, Collection<Tag> tagsIn) {
+                saveContentInfo(contenetInfoFile);
                 filterPathsBySelectedTags();
             }
 
             @Override
             public void addedTag(Path pathIn, Tag tagIn) {
+                saveContentInfo(contenetInfoFile);
                 filterPathsBySelectedTags();
             }
         });
@@ -514,7 +486,21 @@ public class MainWIndow extends Application {
         tags.addTagObserver(new EmptyTagListener(){
             @Override
             public void created(Tag tagIn) {
-                addTag(tagIn);
+                tagsListView.getItems().add(tagIn);
+                tagsListView.getItems().sort(Comparator.naturalOrder());
+
+                tagsListView.getSelectionModel().clearSelection();
+                tagsListView.getSelectionModel().select(tagIn);
+                tagsListView.requestFocus();
+
+                saveContentInfo(contenetInfoFile);
+            }
+
+            @Override
+            public void renamed(Tag tagIn) {
+                tagsListView.getItems().sort(Comparator.naturalOrder());
+                tagsListView.refresh();
+                saveContentInfo(contenetInfoFile);
             }
         });
         //</tags list>===========================
@@ -527,7 +513,7 @@ public class MainWIndow extends Application {
 
         addRenameTagDialog = new AddRenameTagDialog(primaryStage, tags);
         addEditPathDialog = new AddEditPathDialog(primaryStage, paths, tags);
-        SettingsWindow settingsWindow = new SettingsWindow();
+        SettingsWindow settingsWindow = new SettingsWindow(primaryStage);
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All (*.*)", "*.*"));
@@ -564,7 +550,7 @@ public class MainWIndow extends Application {
         openRecentMenu = new Menu("Open Recent");
 
         MenuItem settingsItem = new MenuItem("Settings");
-        settingsItem.setOnAction(event -> settingsWindow.show());
+        settingsItem.setOnAction(event -> settingsWindow.showAndWait());
 
         MenuItem exitItem = new MenuItem("Exit");
 

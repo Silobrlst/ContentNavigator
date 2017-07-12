@@ -6,24 +6,33 @@ public class Path implements Comparable<Path> {
     private String name;
 
     private ArrayList<Tag> tags;
+    private ArrayList<PathListener> pathListeners;
 
-    public Path(String pathIn, String nameIn){
+    public Path(ArrayList<PathListener> pathListenersIn, String pathIn, String nameIn){
         path = pathIn;
         name = nameIn;
         tags = new ArrayList<>();
+        pathListeners = pathListenersIn;
     }
-    public Path(String pathIn){
+    public Path(ArrayList<PathListener> pathListenersIn, String pathIn){
         path = pathIn;
-        name = pathIn.split("[\\/][^\\/]*$")[0];
+
+        String regex = "/";
+        String[] splited = path.split(regex);
+        name = splited[splited.length-1];
+
         tags = new ArrayList<>();
+        pathListeners = pathListenersIn;
     }
 
     public void setPath(String pathIn){
         path = pathIn;
+        pathListeners.forEach(pathListener -> pathListener.changedPath(this));
     }
 
-    public void setName(String nameIn){
-        name = nameIn;
+    public void rename(String newNameIn){
+        name = newNameIn;
+        pathListeners.forEach(pathListener -> pathListener.renamed(this));
     }
 
     public String getPath(){
@@ -35,19 +44,46 @@ public class Path implements Comparable<Path> {
     }
 
     public void addTag(Tag tagIn){
-        tags.add(tagIn);
+        if(!tags.contains(tagIn)){
+            addTagWithoutNotifing(tagIn);
+            pathListeners.forEach(pathListener -> pathListener.addedTag(this, tagIn));
+        }
+    }
+    public void addTagWithoutNotifing(Tag tagIn){
+        if(!tags.contains(tagIn)){
+            tags.add(tagIn);
+            tagIn.addPathWithoutNotifing(this);
+        }
     }
 
+
     public void addTags(Collection<Tag> tagsIn){
-        tags.addAll(tagsIn);
+        for(Tag tag: tagsIn){
+            if(!tags.contains(tag)){
+                tags.add(tag);
+                tag.addPath(this);
+            }
+        }
+
+        pathListeners.forEach(pathListener -> pathListener.addedTags(this, tagsIn));
     }
 
     public void removeTags(Collection<Tag> tagsIn){
         tags.removeAll(tagsIn);
+
+        for(Tag tag: tagsIn){
+            tag.removePath(this);
+        }
+
+        pathListeners.forEach(pathListener -> pathListener.removedTags(this, tagsIn));
     }
 
     public void removeTag(Tag tagIn){
-        tags.remove(tagIn);
+        if(tags.contains(tagIn)){
+            tags.remove(tagIn);
+            tagIn.removePath(this);
+            pathListeners.forEach(pathListener -> pathListener.removedTag(this, tagIn));
+        }
     }
 
     public ArrayList<Tag> getTags(){

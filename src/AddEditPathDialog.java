@@ -213,11 +213,11 @@ public class AddEditPathDialog extends Stage {
     private void onOK() {
         if(new File(path.getText()).exists()){
             if(editing){
-                paths.changePath(editingPath, path.getText());
-                paths.removeTagsFromPath(editingPath.getTags(), editingPath);
-                paths.addTagsToPath(addedTags.getItems(), editingPath);
+                editingPath.setPath(path.getText());
+                editingPath.addTags(addedTags.getItems());
             }else{
-                paths.addTagsToPath(addedTags.getItems(), paths.newPath(path.getText()));
+                Path newPath = paths.newPath(path.getText());
+                newPath.addTags(addedTags.getItems());
             }
 
             this.close();

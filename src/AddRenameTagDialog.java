@@ -56,7 +56,7 @@ public class AddRenameTagDialog extends Stage {
 
     private void onOK() {
         if(renaming){
-            tags.renameTag(renamingTag, tagName.getText());
+            renamingTag.rename(tagName.getText());
         }else{
             tags.newTag(tagName.getText());
         }

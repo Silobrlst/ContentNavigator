@@ -1,13 +1,29 @@
 {
      "paths": {
-          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/FileEditor.rc": {"tags": {}},
-          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/Main.h": {"tags": {}},
-          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/FileEditor.ico": {"tags": {}},
-          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/Menu.rc": {"tags": {}},
-          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/Main.c": {"tags": {}}
+          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/FileEditor.rc": {
+               "name": "FileEditor.rc",
+               "tags": {}
+          },
+          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/Main.h": {
+               "name": "Main.h",
+               "tags": {}
+          },
+          "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Simple.ico": {
+               "name": "Simple.ico",
+               "tags": {}
+          },
+          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/FileEditor.ico": {
+               "name": "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor",
+               "tags": {}
+          },
+          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/Menu.rc": {
+               "name": "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor",
+               "tags": {}
+          },
+          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/Main.c": {
+               "name": "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor",
+               "tags": {}
+          }
      },
-     "tags": {
-          "asd": "",
-          "sdf": ""
-     }
+     "tags": {"vbsrtgr": {}}
 }

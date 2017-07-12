@@ -1,18 +1,18 @@
 {
      "settingsWindow": {
-          "exploreCurrentDirectory": "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor",
-          "x": 219,
+          "exploreCurrentDirectory": "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin",
+          "x": 592,
           "width": 736,
-          "y": 44,
+          "y": 165,
           "height": 559
      },
      "mainWindow": {
           "x": 658,
-          "width": 926,
-          "selectedTags": ["sdf"],
+          "width": 909,
+          "selectedTags": ["vbsrtgr"],
           "y": 208,
-          "tagsPathsSplitPosition": 0.30543478260869567,
-          "height": 582
+          "tagsPathsSplitPosition": 0.301218161683278,
+          "height": 578
      },
      "recent": ["/home/q/Загрузки/ContentNavigator/sdf.json"]
 }
