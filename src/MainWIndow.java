@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -36,7 +35,6 @@ public class MainWIndow extends Application {
 
     private SplitPane splitPane;
     private ListView<Tag> tagsListView;
-    private ListView<Path> searchedPaths;
 
     private Menu openRecentMenu;
     private Menu menuEdit;
@@ -60,7 +58,11 @@ public class MainWIndow extends Application {
     private static final String tagsJSONName = "tags";
     private static final String pathsJSONName = "paths";
     private static final String nameJSONName = "name";
+    private static final String searchedPathsNameWidth = "searchedPathsNameWidth";
+    private static final String searchedPathsPathWidth = "searchedPathsPathWidth";
     //</string names>=========================
+
+    private PathsTableController pathsTableController;
 
     //<GUI settings i/o>======================
     private void validateGuiSettings(JSONObject jsonIn) {
@@ -92,6 +94,13 @@ public class MainWIndow extends Application {
         if (!mainWindowJSON.has("selectedTags")) {
             mainWindowJSON.put("selectedTags", new JSONArray());
         }
+
+        if (!jsonIn.has(searchedPathsNameWidth)) {
+            jsonIn.put(searchedPathsNameWidth, 0.d);
+        }
+        if (!jsonIn.has(searchedPathsPathWidth)) {
+            jsonIn.put(searchedPathsPathWidth, 0.d);
+        }
     }
 
     private void preLoadGuiSettings() {
@@ -112,7 +121,15 @@ public class MainWIndow extends Application {
             primaryStage.setHeight(mainWindowJSON.getDouble("height"));
         }
 
-        new Timeline(new KeyFrame(Duration.millis(1000), e -> splitPane.setDividerPositions(mainWindowJSON.getDouble("tagsPathsSplitPosition")))).play();
+        new Timeline(new KeyFrame(Duration.millis(1000), e -> {
+            splitPane.setDividerPositions(mainWindowJSON.getDouble("tagsPathsSplitPosition"));
+            if(guiJSON.getDouble(searchedPathsNameWidth) != 0.d){
+                pathsTableController.setSearchedPathsNameWidth(guiJSON.getDouble(searchedPathsNameWidth));
+            }
+            if(guiJSON.getDouble(searchedPathsPathWidth) != 0.d){
+                pathsTableController.setSearchedPathsPathWidth(guiJSON.getDouble(searchedPathsPathWidth));
+            }
+        })).play();
     }
 
     private void postLoadGuiSettings() {
@@ -150,6 +167,12 @@ public class MainWIndow extends Application {
             selectedTags.put(selectedTag.getName());
         }
         mainWindowJSON.put("selectedTags", selectedTags);
+
+        guiJSON.put(searchedPathsNameWidth, pathsTableController.getSearchedPathsNameWidth());
+        guiJSON.put(searchedPathsPathWidth, pathsTableController.getSearchedPathsPathWidth());
+
+        System.out.println("name: " + pathsTableController.getSearchedPathsNameWidth());
+        System.out.println("path: " + pathsTableController.getSearchedPathsPathWidth());
 
         JSONLoader.saveJSON(new File("guiSettings.json"), guiJSON);
     }
@@ -221,7 +244,7 @@ public class MainWIndow extends Application {
         }
 
         tagsListView.getItems().sort(Comparator.naturalOrder());
-        searchedPaths.getItems().clear();
+        pathsTableController.clear();
 
         menuEdit.setDisable(false);
 
@@ -268,7 +291,7 @@ public class MainWIndow extends Application {
     private void newContentInfo(File fileIn) {
         tagsJSON = new JSONObject();
         menuEdit.setDisable(false);
-        searchedPaths.getItems().removeAll(searchedPaths.getItems());
+        pathsTableController.clear();
         tagsListView.getItems().removeAll(tagsListView.getItems());
 
         contenetInfoFile = fileIn;
@@ -302,10 +325,7 @@ public class MainWIndow extends Application {
     }
 
     private void removeSelectedPathsFromSelectedTags() {
-        for (Path selectedPath: searchedPaths.getSelectionModel().getSelectedItems()) {
-            selectedPath.removeTags(tagsListView.getSelectionModel().getSelectedItems());
-        }
-        searchedPaths.getItems().removeAll(searchedPaths.getSelectionModel().getSelectedItems());
+        pathsTableController.removeSelectedPathsFromSelectedTags(tagsListView.getSelectionModel().getSelectedItems());
         saveContentInfo(contenetInfoFile);
     }
 
@@ -383,9 +403,7 @@ public class MainWIndow extends Application {
         List<Path> filteredPaths = getPathsByTags(tagsListView.getSelectionModel().getSelectedItems());
 
         if (filteredPaths != null) {
-            searchedPaths.getItems().removeAll(searchedPaths.getItems());
-            searchedPaths.getItems().addAll(filteredPaths);
-            searchedPaths.getItems().sort(Comparator.naturalOrder());
+            pathsTableController.setPaths(filteredPaths);
 
             String tagsStr = "";
             for (Tag tag : tagsListView.getSelectionModel().getSelectedItems()) {
@@ -411,9 +429,14 @@ public class MainWIndow extends Application {
         primaryStage = primaryStageIn;
         contenetInfoFile = null;
 
-        Parent root = FXMLLoader.load(getClass().getResource("MainWindow.fxml"));
-        Scene scene = new Scene(root);
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("MainWindow.fxml"));
+        loader.load();
+
+        Scene scene = new Scene(loader.getRoot());
         scene.getStylesheets().add("modena_dark.css");
+
+        pathsTableController = loader.getController();
 
         primaryStage.setOnCloseRequest(event -> saveGuiSettings());
         primaryStage.setScene(scene);
@@ -424,26 +447,6 @@ public class MainWIndow extends Application {
         paths = new Paths();
 
         //<paths table>==========================
-        searchedPaths = (ListView) scene.lookup("#searchedPaths");
-        searchedPaths.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (searchedPaths.getSelectionModel().getSelectedItems().size() == 1) {
-                editPathItem.setDisable(false);
-            } else {
-                editPathItem.setDisable(true);
-            }
-        });
-        searchedPaths.setCellFactory(param -> new ListCell<Path>() {
-            @Override
-            protected void updateItem(Path pathIn, boolean empty) {
-                super.updateItem(pathIn, empty);
-                if (pathIn != null) {
-                    setText(pathIn.getPath());
-                } else {
-                    setText("");   // <== clear the now empty cell.
-                }
-            }
-        });
-
         paths.addListener(new EmptyPathListener(){
             @Override
             public void created(Path pathIn) {
@@ -615,21 +618,21 @@ public class MainWIndow extends Application {
         serchedPathsListViewContextMenu.getItems().add(editPathItemContext);
         serchedPathsListViewContextMenu.getItems().add(new SeparatorMenuItem());
         serchedPathsListViewContextMenu.getItems().add(removePathsFromSelectedTagsItemContext);
-        searchedPaths.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+        pathsTableController.getTable().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
-                if(searchedPaths.getSelectionModel().getSelectedItems().size() == 1){
+                if(pathsTableController.getTable().getSelectionModel().getSelectedItems().size() == 1){
                     removePathsFromSelectedTagsItemContext.setDisable(false);
                     openPathItemContext.setDisable(false);
                     openInFolderPathItemContext.setDisable(false);
                     editPathItemContext.setDisable(false);
                 }
-                if(searchedPaths.getSelectionModel().getSelectedItems().size() > 1){
+                if(pathsTableController.getTable().getSelectionModel().getSelectedItems().size() > 1){
                     removePathsFromSelectedTagsItemContext.setDisable(false);
                     openPathItemContext.setDisable(true);
                     openInFolderPathItemContext.setDisable(true);
                     editPathItemContext.setDisable(true);
                 }
-                if(searchedPaths.getSelectionModel().getSelectedItems().size() == 0){
+                if(pathsTableController.getTable().getSelectionModel().getSelectedItems().size() == 0){
                     removePathsFromSelectedTagsItemContext.setDisable(true);
                     openPathItemContext.setDisable(true);
                     openInFolderPathItemContext.setDisable(true);
@@ -717,9 +720,9 @@ public class MainWIndow extends Application {
         };
 
         EventHandler<ActionEvent> editPath = (event) -> {
-            if (searchedPaths.getSelectionModel().getSelectedItems().size() == 1) {
+            if (pathsTableController.getTable().getSelectionModel().getSelectedItems().size() == 1) {
                 editPathItemContext.setDisable(false);
-                addEditPathDialog.setEditPath(searchedPaths.getSelectionModel().getSelectedItem());
+                addEditPathDialog.setEditPath(pathsTableController.getTable().getSelectionModel().getSelectedItem());
                 addEditPathDialog.showAndWait();
             } else {
                 editPathItemContext.setDisable(true);
@@ -736,7 +739,7 @@ public class MainWIndow extends Application {
             if (Desktop.isDesktopSupported()) {
                 new Thread(() -> {
                     try {
-                        File file = new File(searchedPaths.getSelectionModel().getSelectedItem().getPath());
+                        File file = new File(pathsTableController.getTable().getSelectionModel().getSelectedItem().getPath());
                         Desktop.getDesktop().open(file);
                     } catch (IOException ex) {
                         ex.printStackTrace();
@@ -748,7 +751,7 @@ public class MainWIndow extends Application {
             if (Desktop.isDesktopSupported()) {
                 new Thread(() -> {
                     try {
-                        File file = new File(searchedPaths.getSelectionModel().getSelectedItem().getPath());
+                        File file = new File(pathsTableController.getTable().getSelectionModel().getSelectedItem().getPath());
 //                        if(file.isDirectory()){
 //                            file = new File(searchedPaths.getSelectionModel().getSelectedItem().split("(\\\\|\\/)[^\\\\|\\/]*$")[0]);
 //                        }
@@ -802,7 +805,7 @@ public class MainWIndow extends Application {
             }
         });
 
-        searchedPaths.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+        pathsTableController.getTable().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (event.getCode() == KeyCode.DELETE) {
                 removeSelectedPathsFromSelectedTagsConfirm();
             }

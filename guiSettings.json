@@ -9,11 +9,13 @@
      "mainWindow": {
           "x": 658,
           "width": 996,
-          "selectedTags": ["sdfg"],
+          "selectedTags": ["edrtger"],
           "y": 208,
           "tagsPathsSplitPosition": 0.2080808080808081,
           "height": 670
      },
+     "searchedPathsNameWidth": 678.0000060796738,
+     "searchedPathsPathWidth": 68,
      "recent": [
           "/home/q/Загрузки/ContentNavigator/sdf.json",
           "/home/q/music.json"

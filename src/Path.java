@@ -1,46 +1,57 @@
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class Path implements Comparable<Path> {
-    private String path;
-    private String name;
+    private StringProperty path;
+    private StringProperty name;
 
     private ArrayList<Tag> tags;
     private ArrayList<PathListener> pathListeners;
 
     public Path(ArrayList<PathListener> pathListenersIn, String pathIn, String nameIn){
-        path = pathIn;
-        name = nameIn;
+        path = new SimpleStringProperty(pathIn);
+        name = new SimpleStringProperty(nameIn);
         tags = new ArrayList<>();
         pathListeners = pathListenersIn;
     }
     public Path(ArrayList<PathListener> pathListenersIn, String pathIn){
-        path = pathIn;
+        path = new SimpleStringProperty(pathIn);
 
         String regex = "/";
-        String[] splited = path.split(regex);
-        name = splited[splited.length-1];
+        String[] splited = getPath().split(regex);
+        name = new SimpleStringProperty(splited[splited.length-1]);
 
         tags = new ArrayList<>();
         pathListeners = pathListenersIn;
     }
 
     public void setPath(String pathIn){
-        path = pathIn;
+        path.set(pathIn);
         pathListeners.forEach(pathListener -> pathListener.changedPath(this));
     }
 
     public void rename(String newNameIn){
-        name = newNameIn;
+        name.set(newNameIn);
         pathListeners.forEach(pathListener -> pathListener.renamed(this));
     }
 
     public String getPath(){
-        return path;
+        return path.get();
     }
 
     public String getName(){
+        return name.get();
+    }
+
+    public StringProperty getNameProperty(){
         return name;
+    }
+
+    public StringProperty getPathProperty(){
+        return path;
     }
 
     public void addTag(Tag tagIn){
@@ -92,12 +103,12 @@ public class Path implements Comparable<Path> {
 
     @Override
     public String toString(){
-        return name;
+        return name.getName();
     }
 
     @Override
     public int compareTo(Path pathIn) {
-        return name.compareTo(pathIn.getPath());
+        return getName().compareTo(pathIn.getPath());
     }
 
 
