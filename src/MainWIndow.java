@@ -8,11 +8,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -92,7 +94,7 @@ public class MainWIndow extends Application {
         }
     }
 
-    private void loadGuiSettings() {
+    private void preLoadGuiSettings() {
         JSONObject guiJSON = JSONLoader.loadJSON(new File("guiSettings.json"));
         validateGuiSettings(guiJSON);
 
@@ -110,16 +112,20 @@ public class MainWIndow extends Application {
             primaryStage.setHeight(mainWindowJSON.getDouble("height"));
         }
 
-        new Timeline(new KeyFrame(Duration.millis(1000), e -> {
-            splitPane.setDividerPositions(mainWindowJSON.getDouble("tagsPathsSplitPosition"));
+        new Timeline(new KeyFrame(Duration.millis(1000), e -> splitPane.setDividerPositions(mainWindowJSON.getDouble("tagsPathsSplitPosition")))).play();
+    }
 
-            JSONArray selectedTagsJSON = mainWindowJSON.getJSONArray("selectedTags");
-            for (int i = 0; i < selectedTagsJSON.length(); i++) {
-                //tags.newTagWithoutNotifing();
-                //tagsListView.getSelectionModel().select(new Tag(selectedTagsJSON.getString(i)));
-            }
-            filterPathsBySelectedTags();
-        })).play();
+    private void postLoadGuiSettings() {
+        JSONObject guiJSON = JSONLoader.loadJSON(new File("guiSettings.json"));
+        validateGuiSettings(guiJSON);
+        JSONObject mainWindowJSON = guiJSON.getJSONObject("mainWindow");
+
+        JSONArray selectedTagsJSON = mainWindowJSON.getJSONArray("selectedTags");
+        for (int i = 0; i < selectedTagsJSON.length(); i++) {
+            tagsListView.getSelectionModel().select(tags.getTag(selectedTagsJSON.getString(i)));
+        }
+        filterPathsBySelectedTags();
+        tagsListView.requestFocus();
     }
 
     private void saveGuiSettings() {
@@ -174,6 +180,10 @@ public class MainWIndow extends Application {
     }
 
     private void loadContentInfo(File fileIn) {
+        if(!fileIn.exists()){
+            return;
+        }
+
         JSONObject json = JSONLoader.loadJSON(fileIn);
         validateContentInfo(json);
 
@@ -206,6 +216,10 @@ public class MainWIndow extends Application {
             }
         }
 
+        for (Tag tag: tags){
+            System.out.println(tag.getName() + ": " + tag.getPaths());
+        }
+
         tagsListView.getItems().sort(Comparator.naturalOrder());
         searchedPaths.getItems().clear();
 
@@ -234,15 +248,17 @@ public class MainWIndow extends Application {
         }
 
         for(Path path: paths){
-            JSONObject pathJSON = new JSONObject();
-            pathsJSON.put(path.getPath(), pathJSON);
+            if(path.getTags().size() > 0){
+                JSONObject pathJSON = new JSONObject();
+                pathsJSON.put(path.getPath(), pathJSON);
 
-            JSONObject pathTagsJSON = new JSONObject();
-            pathJSON.put(tagsJSONName, pathTagsJSON);
-            pathJSON.put(nameJSONName, path.getName());
+                JSONObject pathTagsJSON = new JSONObject();
+                pathJSON.put(tagsJSONName, pathTagsJSON);
+                pathJSON.put(nameJSONName, path.getName());
 
-            for(Tag tag: path.getTags()){
-                pathTagsJSON.put(tag.getName(), "");
+                for(Tag tag: path.getTags()){
+                    pathTagsJSON.put(tag.getName(), "");
+                }
             }
         }
 
@@ -401,7 +417,7 @@ public class MainWIndow extends Application {
 
         primaryStage.setOnCloseRequest(event -> saveGuiSettings());
         primaryStage.setScene(scene);
-        primaryStage.getIcons().add(new Image("file:icon.png"));
+        primaryStage.getIcons().add(new Image("file:images/appIcon.png"));
         primaryStage.show();
 
         tags = new Tags();
@@ -432,7 +448,6 @@ public class MainWIndow extends Application {
             @Override
             public void created(Path pathIn) {
                 saveContentInfo(contenetInfoFile);
-                filterPathsBySelectedTags();
             }
 
             @Override
@@ -511,6 +526,8 @@ public class MainWIndow extends Application {
 
         byTagsSearch = (TextField) scene.lookup("#byTagsSearch");
 
+        Button searchButton = (Button) scene.lookup("#search");
+
         addRenameTagDialog = new AddRenameTagDialog(primaryStage, tags);
         addEditPathDialog = new AddEditPathDialog(primaryStage, paths, tags);
         SettingsWindow settingsWindow = new SettingsWindow(primaryStage);
@@ -521,6 +538,16 @@ public class MainWIndow extends Application {
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Content file info (*.json)", "*.json");
         fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.setSelectedExtensionFilter(extensionFilter);
+
+
+        Image openIcon = new Image("file:images/openIcon.png");
+        Image settingsIcon = new Image("file:images/settingsIcon.png");
+        Image addIcon = new Image("file:images/addIcon.png");
+        Image removeIcon = new Image("file:images/removeIcon.png");
+        Image searchIcon = new Image("file:images/searchIcon.png");
+        Image editIcon = new Image("file:images/editIcon.png");
+
+        searchButton.setGraphic(new ImageView(searchIcon));
 
         //<menu file>====================
         MenuItem newItem = new MenuItem("New");
@@ -538,6 +565,7 @@ public class MainWIndow extends Application {
         });
 
         MenuItem openItem = new MenuItem("Open");
+        openItem.setGraphic(new ImageView(openIcon));
         openItem.setOnAction(event -> {
             fileChooser.setTitle("Open content info file");
             File file = fileChooser.showOpenDialog(primaryStage);
@@ -550,6 +578,7 @@ public class MainWIndow extends Application {
         openRecentMenu = new Menu("Open Recent");
 
         MenuItem settingsItem = new MenuItem("Settings");
+        settingsItem.setGraphic(new ImageView(settingsIcon));
         settingsItem.setOnAction(event -> settingsWindow.showAndWait());
 
         MenuItem exitItem = new MenuItem("Exit");
@@ -568,21 +597,45 @@ public class MainWIndow extends Application {
         //<serached paths listView ContextMenu>==========
         ContextMenu serchedPathsListViewContextMenu = new ContextMenu();
         MenuItem openPathItemContext = new MenuItem("Open");
+        openPathItemContext.setGraphic(new ImageView(openIcon));
         MenuItem openInFolderPathItemContext = new MenuItem("Open in folder");
+        openInFolderPathItemContext.setGraphic(new ImageView(openIcon));
         MenuItem editPathItemContext = new MenuItem("Edit Path");
+        editPathItemContext.setGraphic(new ImageView(editIcon));
         MenuItem addPathItemContext = new MenuItem("Add Path");
+        addPathItemContext.setGraphic(new ImageView(addIcon));
         MenuItem removePathsFromSelectedTagsItemContext = new MenuItem("Remove Paths from selected tags");
+        removePathsFromSelectedTagsItemContext.setGraphic(new ImageView(removeIcon));
 
         serchedPathsListViewContextMenu.getItems().add(openPathItemContext);
         serchedPathsListViewContextMenu.getItems().add(openInFolderPathItemContext);
         serchedPathsListViewContextMenu.getItems().add(new SeparatorMenuItem());
-        serchedPathsListViewContextMenu.getItems().add(editPathItemContext);
-        serchedPathsListViewContextMenu.getItems().add(new SeparatorMenuItem());
         serchedPathsListViewContextMenu.getItems().add(addPathItemContext);
+        serchedPathsListViewContextMenu.getItems().add(new SeparatorMenuItem());
+        serchedPathsListViewContextMenu.getItems().add(editPathItemContext);
         serchedPathsListViewContextMenu.getItems().add(new SeparatorMenuItem());
         serchedPathsListViewContextMenu.getItems().add(removePathsFromSelectedTagsItemContext);
         searchedPaths.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
+                if(searchedPaths.getSelectionModel().getSelectedItems().size() == 1){
+                    removePathsFromSelectedTagsItemContext.setDisable(false);
+                    openPathItemContext.setDisable(false);
+                    openInFolderPathItemContext.setDisable(false);
+                    editPathItemContext.setDisable(false);
+                }
+                if(searchedPaths.getSelectionModel().getSelectedItems().size() > 1){
+                    removePathsFromSelectedTagsItemContext.setDisable(false);
+                    openPathItemContext.setDisable(true);
+                    openInFolderPathItemContext.setDisable(true);
+                    editPathItemContext.setDisable(true);
+                }
+                if(searchedPaths.getSelectionModel().getSelectedItems().size() == 0){
+                    removePathsFromSelectedTagsItemContext.setDisable(true);
+                    openPathItemContext.setDisable(true);
+                    openInFolderPathItemContext.setDisable(true);
+                    editPathItemContext.setDisable(true);
+                }
+
                 serchedPathsListViewContextMenu.show(tagsListView, event.getScreenX(), event.getScreenY());
             } else if (event.getButton() == MouseButton.PRIMARY) {
                 serchedPathsListViewContextMenu.hide();
@@ -593,16 +646,20 @@ public class MainWIndow extends Application {
         //<tagsJSON listView ContextMenu>====================
         ContextMenu tagsListViewContextMenu = new ContextMenu();
         MenuItem renameTagItemContext = new MenuItem("Rename Tag");
-        MenuItem removeTagItemContext = new MenuItem("Remove Tags");
+        renameTagItemContext.setGraphic(new ImageView(editIcon));
         MenuItem addTagItemContext = new MenuItem("Add Tag");
+        addTagItemContext.setGraphic(new ImageView(addIcon));
         MenuItem addPathSelectedWithTagsItemContext = new MenuItem("Add Path with selected tags");
+        addPathSelectedWithTagsItemContext.setGraphic(new ImageView(addIcon));
+        MenuItem removeTagItemContext = new MenuItem("Remove Tags");
+        removeTagItemContext.setGraphic(new ImageView(removeIcon));
 
+        tagsListViewContextMenu.getItems().add(addTagItemContext);
+        tagsListViewContextMenu.getItems().add(addPathSelectedWithTagsItemContext);
+        tagsListViewContextMenu.getItems().add(new SeparatorMenuItem());
         tagsListViewContextMenu.getItems().add(renameTagItemContext);
         tagsListViewContextMenu.getItems().add(new SeparatorMenuItem());
         tagsListViewContextMenu.getItems().add(removeTagItemContext);
-        tagsListViewContextMenu.getItems().add(addTagItemContext);
-        tagsListViewContextMenu.getItems().add(new SeparatorMenuItem());
-        tagsListViewContextMenu.getItems().add(addPathSelectedWithTagsItemContext);
         tagsListView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
                 tagsListViewContextMenu.show(tagsListView, event.getScreenX(), event.getScreenY());
@@ -614,10 +671,15 @@ public class MainWIndow extends Application {
 
         //<menu edit>====================================
         MenuItem addTagItem = new MenuItem("Add Tag");
+        addTagItem.setGraphic(new ImageView(addIcon));
         MenuItem addPathItem = new MenuItem("Add Path");
+        addPathItem.setGraphic(new ImageView(addIcon));
         renameTagItem = new MenuItem("Rename Tag");
+        renameTagItem.setGraphic(new ImageView(editIcon));
         editPathItem = new MenuItem("Edit Path");
+        editPathItem.setGraphic(new ImageView(editIcon));
         MenuItem removeTagItem = new MenuItem("Remove Tags");
+        removeTagItem.setGraphic(new ImageView(removeIcon));
 
         menuEdit = new Menu("Edit");
         ObservableList<MenuItem> menuEditItems = menuEdit.getItems();
@@ -749,11 +811,13 @@ public class MainWIndow extends Application {
         menuBar.getMenus().add(menuFile);
         menuBar.getMenus().add(menuEdit);
 
-        loadGuiSettings();
+        preLoadGuiSettings();
 
         if (openRecentMenu.getItems().size() > 0) {
             loadContentInfo(new File(openRecentMenu.getItems().get(0).getText()));
         }
+
+        postLoadGuiSettings();
     }
 
     public static void main(String[] args) {

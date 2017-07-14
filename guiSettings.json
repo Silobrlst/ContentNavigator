@@ -1,6 +1,6 @@
 {
      "settingsWindow": {
-          "exploreCurrentDirectory": "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin",
+          "exploreCurrentDirectory": "/media/q/3Q HDD External/Dev-Cpp/examples",
           "x": 592,
           "width": 736,
           "y": 165,
@@ -8,11 +8,14 @@
      },
      "mainWindow": {
           "x": 658,
-          "width": 909,
-          "selectedTags": ["vbsrtgr"],
+          "width": 996,
+          "selectedTags": ["sdfg"],
           "y": 208,
-          "tagsPathsSplitPosition": 0.301218161683278,
-          "height": 578
+          "tagsPathsSplitPosition": 0.2080808080808081,
+          "height": 670
      },
-     "recent": ["/home/q/Загрузки/ContentNavigator/sdf.json"]
+     "recent": [
+          "/home/q/Загрузки/ContentNavigator/sdf.json",
+          "/home/q/music.json"
+     ]
 }

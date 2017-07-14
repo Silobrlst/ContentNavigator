@@ -1,29 +1,55 @@
 {
      "paths": {
-          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/FileEditor.rc": {
-               "name": "FileEditor.rc",
-               "tags": {}
+          "/media/q/3Q HDD External/Dev-Cpp/examples/WinTest": {
+               "name": "WinTest",
+               "tags": {
+                    "edrtger": "",
+                    "sdfg": ""
+               }
           },
-          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/Main.h": {
-               "name": "Main.h",
-               "tags": {}
+          "/media/q/3Q HDD External/Dev-Cpp/examples/OpenGL": {
+               "name": "OpenGL",
+               "tags": {
+                    "edrtger": "",
+                    "sdfg": ""
+               }
+          },
+          "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Main.cpp": {
+               "name": "Main.cpp",
+               "tags": {"edrtger": ""}
+          },
+          "/media/q/3Q HDD External/Dev-Cpp/examples/OpenGL/OpenGL.dev": {
+               "name": "OpenGL.dev",
+               "tags": {"vbrty": ""}
           },
           "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Simple.ico": {
                "name": "Simple.ico",
-               "tags": {}
-          },
-          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/FileEditor.ico": {
-               "name": "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor",
-               "tags": {}
-          },
-          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/Menu.rc": {
-               "name": "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor",
-               "tags": {}
-          },
-          "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor/Main.c": {
-               "name": "/media/q/3Q HDD External/Dev-Cpp/examples/FileEditor",
-               "tags": {}
+               "tags": {
+                    "vbsrtgr": "",
+                    "edrtger": "",
+                    "vbrty": "",
+                    "dfgrwet": "",
+                    "sdfg": ""
+               }
           }
      },
-     "tags": {"vbsrtgr": {}}
+     "tags": {
+          "vbsrtgr": {"/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Simple.ico": ""},
+          "edrtger": {
+               "/media/q/3Q HDD External/Dev-Cpp/examples/WinTest": "",
+               "/media/q/3Q HDD External/Dev-Cpp/examples/OpenGL": "",
+               "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Main.cpp": "",
+               "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Simple.ico": ""
+          },
+          "vbrty": {
+               "/media/q/3Q HDD External/Dev-Cpp/examples/OpenGL/OpenGL.dev": "",
+               "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Simple.ico": ""
+          },
+          "sdfg": {
+               "/media/q/3Q HDD External/Dev-Cpp/examples/WinTest": "",
+               "/media/q/3Q HDD External/Dev-Cpp/examples/OpenGL": "",
+               "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Simple.ico": ""
+          },
+          "dfgrwet": {"/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Simple.ico": ""}
+     }
 }
