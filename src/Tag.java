@@ -75,7 +75,7 @@ public class Tag {
         children.add(tagIn);
     }
 
-    public void removeChildTag(Tag tagIn){
+    public void removeChild(Tag tagIn){
         children.remove(tagIn);
     }
 }

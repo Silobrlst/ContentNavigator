@@ -33,7 +33,7 @@ public class Tags extends Tag {
     }
 
     public void removeTag(Tag tagIn){
-        tagIn.getParent().removeChildTag(tagIn);
+        tagIn.getParent().removeChild(tagIn);
     }
 
     public Tag getTagById(String idIn){

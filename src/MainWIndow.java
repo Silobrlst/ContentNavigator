@@ -727,7 +727,12 @@ public class MainWIndow extends Application {
 
         //<menu events>===================================
         EventHandler<ActionEvent> addTag = (event) -> {
-            addEditTagDialog.setAddTag(mainController.getTagsTree().getSelectionModel().getSelectedItem().getValue());
+            if(mainController.getTagsTree().getSelectionModel().getSelectedItems().size() == 1){
+                addEditTagDialog.setAddTag(mainController.getTagsTree().getSelectionModel().getSelectedItem().getValue());
+            }else{
+                addEditTagDialog.setAddTag();
+            }
+
             addEditTagDialog.open();
         };
 
@@ -752,6 +757,14 @@ public class MainWIndow extends Application {
                 editPathItemContext.setDisable(true);
             }
         };
+
+        primaryStage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if (event.getCode() == KeyCode.T && event.isControlDown()) {
+                addTag.handle(new ActionEvent());
+            }else if (event.getCode() == KeyCode.P && event.isControlDown()) {
+                addPath.handle(new ActionEvent());
+            }
+        });
 
         addTagItem.setOnAction(addTag);
         addPathItem.setOnAction(addPath);

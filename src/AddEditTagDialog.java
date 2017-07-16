@@ -1,9 +1,12 @@
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -29,6 +32,8 @@ public class AddEditTagDialog {
     public void initialize() {
         ok.setOnAction(event -> onOK());
         cancel.setOnAction(event -> onCancel());
+
+        tagName.setOnAction(event -> onOK());
     }
 
     public AddEditTagDialog(){
@@ -56,6 +61,11 @@ public class AddEditTagDialog {
                 if(parentTag != null && parentTag != tags){
                     parent.setText(tags.getTagId(parentTag));
                 }
+            }
+        });
+        stage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                onCancel();
             }
         });
     }

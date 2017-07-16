@@ -47,9 +47,12 @@ public class MainController {
 
     public void removeSelectedTags() {
         Collection<TreeItem<Tag>> selectedTags = tagsTree.getSelectionModel().getSelectedItems();
+
         for (TreeItem<Tag> selectedTag: selectedTags) {
-            selectedTag.getParent().getChildren().remove(selectedTag);
-            selectedTag.getValue().getParent().getChildren().remove(selectedTag.getValue());
+            if(selectedTag != tagsTree.getRoot()){
+                selectedTag.getParent().getChildren().remove(selectedTag);
+                selectedTag.getValue().getParent().removeChild(selectedTag.getValue());
+            }
         }
     }
 

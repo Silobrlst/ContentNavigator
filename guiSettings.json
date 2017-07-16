@@ -7,10 +7,10 @@
           "height": 643
      },
      "mainWindow": {
-          "x": 463,
+          "x": 658,
           "width": 964,
-          "selectedTags": [],
-          "y": 138,
+          "selectedTags": ["sdfgsdf"],
+          "y": 208,
           "tagsPathsSplitPosition": 0.31315240083507306,
           "height": 677
      },

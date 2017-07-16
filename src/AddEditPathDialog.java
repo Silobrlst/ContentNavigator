@@ -2,6 +2,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -110,6 +112,11 @@ public class AddEditPathDialog {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setOnHidden(event -> saveGuiSettings());
         stage.setOnCloseRequest(event -> saveGuiSettings());
+        stage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                onCancel();
+            }
+        });
 
         stage.setOnShown(event -> {
             getTags(tagsIn);
