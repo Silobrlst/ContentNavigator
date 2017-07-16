@@ -1,14 +1,27 @@
 import java.util.ArrayList;
+import java.util.List;
 
-public class Tag implements Comparable<Tag> {
-    private ArrayList<Path> paths;
+public class Tag {
     private String name;
+    private ArrayList<Path> paths;
     private ArrayList<TagListener> tagListeners;
+    private Tag parent;
+    private ArrayList<Tag> children;
+
+    public Tag(ArrayList<TagListener> tagListenersIn, String nameIn, Tag parentIn){
+        name = nameIn;
+        paths = new ArrayList<>();
+        tagListeners = tagListenersIn;
+        parent = parentIn;
+        children = new ArrayList<>();
+    }
 
     public Tag(ArrayList<TagListener> tagListenersIn, String nameIn){
-        paths = new ArrayList<>();
         name = nameIn;
+        paths = new ArrayList<>();
         tagListeners = tagListenersIn;
+        parent = null;
+        children = new ArrayList<>();
     }
 
     public void addPath(Path pathIn){
@@ -46,17 +59,23 @@ public class Tag implements Comparable<Tag> {
         return name;
     }
 
-    @Override
-    public String toString(){
-        return name;
+    public void setParentTag(Tag tagIn){
+        parent = tagIn;
     }
 
-    @Override
-    public int compareTo(Tag tagIn) {
-        return name.compareTo(tagIn.getName());
+    public Tag getParent(){
+        return parent;
     }
 
-    public boolean equals(String tagNameIn){
-        return name.equals(tagNameIn);
+    public List<Tag> getChildren(){
+        return children;
+    }
+
+    public void addChildWithoutNotify(Tag tagIn){
+        children.add(tagIn);
+    }
+
+    public void removeChildTag(Tag tagIn){
+        children.remove(tagIn);
     }
 }

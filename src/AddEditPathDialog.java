@@ -1,8 +1,6 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -12,15 +10,10 @@ import javafx.util.Duration;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
-public class AddEditPathDialog extends Stage {
-    private TextField path;
-    private Label pathValidation;
-    private Button apply;
-    private ListView<Tag> addedTags;
-    private ListView<Tag> availableTags;
-
+public class AddEditPathDialog {
     private boolean editing;
 
     private Path editingPath;
@@ -29,6 +22,29 @@ public class AddEditPathDialog extends Stage {
     private FileChooser fileChooser;
     private DirectoryChooser directoryChooser;
     private File initialDirectory;
+
+    @FXML
+    private ListView<String> availableTags;
+    @FXML
+    private ListView<String> addedTags;
+    @FXML
+    private Button ok;
+    @FXML
+    private Button cancel;
+    @FXML
+    private Button exploreFile;
+    @FXML
+    private Button exploreDirectory;
+    @FXML
+    private Button addTags;
+    @FXML
+    private Button removeTags;
+    @FXML
+    private Button apply;
+    @FXML
+    private Label pathValidation;
+    @FXML
+    private TextField path;
 
     //<string names>======================
     private static final String settingsWindow = "settingsWindow";
@@ -42,32 +58,18 @@ public class AddEditPathDialog extends Stage {
 
     private Paths paths;
 
-    AddEditPathDialog(Stage parentStageIn, Paths pathsIn, Tags tagsIn)throws Exception{
-        this.initOwner(parentStageIn);
-        this.initModality(Modality.APPLICATION_MODAL);
+    private Tags tags;
 
-        paths = pathsIn;
+    private Stage stage;
 
-        Parent root = FXMLLoader.load(getClass().getResource("AddEditPathDialog.fxml"));
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add("modena_dark.css");
+    @FXML
+    public void initialize() {
+        ok.setOnAction(event -> onOK());
 
-        this.setScene(scene);
+        cancel.setOnAction(event -> onCancel());
 
-        path = (TextField)scene.lookup("#path");
-        pathValidation = (Label)scene.lookup("#pathValidation");
-        apply = (Button)scene.lookup("#apply");
-
-        fileChooser = new FileChooser();
-        directoryChooser = new DirectoryChooser();
-        initialDirectory = new File(System.getProperty("user.dir"));
-
-        ((Button)scene.lookup("#ok")).setOnAction(event -> onOK());
-
-        ((Button)scene.lookup("#cancel")).setOnAction(event -> onCancel());
-
-        ((Button)scene.lookup("#exploreFile")).setOnAction(event -> {
-            File file = fileChooser.showOpenDialog(this);
+        exploreFile.setOnAction(event -> {
+            File file = fileChooser.showOpenDialog(stage);
             if(file != null){
                 path.setText(file.getAbsolutePath());
                 pathValidation.setText("");
@@ -75,8 +77,8 @@ public class AddEditPathDialog extends Stage {
             }
         });
 
-        ((Button)scene.lookup("#exploreDirectory")).setOnAction(event -> {
-            File file = directoryChooser.showDialog(this);
+        exploreDirectory.setOnAction(event -> {
+            File file = directoryChooser.showDialog(stage);
             if(file != null){
                 path.setText(file.getAbsolutePath());
                 pathValidation.setText("");
@@ -84,40 +86,46 @@ public class AddEditPathDialog extends Stage {
             }
         });
 
-        ((Button)scene.lookup("#addTags")).setOnAction(event -> {
+        addTags.setOnAction(event -> {
             addedTags.getItems().addAll(availableTags.getSelectionModel().getSelectedItems());
             availableTags.getItems().removeAll(availableTags.getSelectionModel().getSelectedItems());
         });
 
-        ((Button)scene.lookup("#removeTags")).setOnAction(event -> {
+        removeTags.setOnAction(event -> {
             availableTags.getItems().addAll(addedTags.getSelectionModel().getSelectedItems());
             addedTags.getItems().removeAll(addedTags.getSelectionModel().getSelectedItems());
         });
 
-        loadGuiSettings();
+        availableTags.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        addedTags.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    }
 
-        this.setOnHidden(event -> saveGuiSettings());
-        this.setOnCloseRequest(event -> saveGuiSettings());
+    public void setPathsTagsParent(Stage parentStageIn, Stage stageIn, Paths pathsIn, Tags tagsIn){
+        paths = pathsIn;
+        tags = tagsIn;
 
-        this.setOnShown(event -> {
-            availableTags = (ListView)scene.lookup("#availableTags");
-            availableTags.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            addedTags = (ListView)scene.lookup("#addedTags");
-            addedTags.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        stage = stageIn;
 
+        stage.initOwner(parentStageIn);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setOnHidden(event -> saveGuiSettings());
+        stage.setOnCloseRequest(event -> saveGuiSettings());
+
+        stage.setOnShown(event -> {
+            getTags(tagsIn);
             availableTags.getItems().clear();
-            availableTags.getItems().addAll(tagsIn);
+            availableTags.getItems().addAll(getTagIds(getTags(tagsIn)));
 
             if(editing){
                 addedTags.getItems().clear();
-                addedTags.getItems().addAll(tagsTemp);
+                addedTags.getItems().addAll(getTagIds(tagsTemp));
                 availableTags.getItems().removeAll(addedTags.getItems());
             }else{
                 path.setText("");
                 addedTags.getItems().clear();
 
                 if(tagsTemp != null){
-                    addedTags.getItems().addAll(tagsTemp);
+                    addedTags.getItems().addAll(getTagIds(tagsTemp));
                     availableTags.getItems().removeAll(addedTags.getItems());
                 }
             }
@@ -125,7 +133,50 @@ public class AddEditPathDialog extends Stage {
             path.requestFocus();
         });
 
+        loadGuiSettings();
+
         setAddPath();
+    }
+
+    public AddEditPathDialog()throws Exception{
+        fileChooser = new FileChooser();
+        directoryChooser = new DirectoryChooser();
+        initialDirectory = new File(System.getProperty("user.dir"));
+    }
+
+    private List<String> getTagIds(List<Tag> tagsIn){
+        ArrayList<String> ids = new ArrayList<>();
+        for(Tag tag: tagsIn){
+            if(tag != tags){
+                ids.add(tags.getTagId(tag));
+            }
+        }
+        return ids;
+    }
+
+    private List<Tag> getTagsByIds(List<String> idsIn){
+        ArrayList<Tag> tags_ = new ArrayList<>();
+
+        for(String id: idsIn){
+            tags_.add(tags.getTagById(id));
+        }
+
+        return tags_;
+    }
+
+    private void getTags(Tag parentIn, List<Tag> tagsOut){
+        if(parentIn != tags){
+            tagsOut.add(parentIn);
+        }
+        for(Tag tag: parentIn.getChildren()){
+            getTags(tag, tagsOut);
+        }
+    }
+
+    private List<Tag> getTags(Tag parentIn){
+        ArrayList<Tag> allTags = new ArrayList<>();
+        getTags(parentIn, allTags);
+        return allTags;
     }
 
     //<GUI settings i/o>======================
@@ -158,10 +209,10 @@ public class AddEditPathDialog extends Stage {
 
         JSONObject mainWindowJSON = guiJSON.getJSONObject(settingsWindow);
         if (mainWindowJSON.getDouble(width) > 0) {
-            this.setWidth(mainWindowJSON.getDouble(width));
+            stage.setWidth(mainWindowJSON.getDouble(width));
         }
         if (mainWindowJSON.getDouble(height) > 0) {
-            this.setHeight(mainWindowJSON.getDouble(height));
+            stage.setHeight(mainWindowJSON.getDouble(height));
         }
 
         new Timeline(new KeyFrame(Duration.millis(1000), e -> {
@@ -179,10 +230,10 @@ public class AddEditPathDialog extends Stage {
         validateGuiSettings(guiJSON);
 
         JSONObject settingsWindowJSON = guiJSON.getJSONObject(settingsWindow);
-        settingsWindowJSON.put(x, this.getX());
-        settingsWindowJSON.put(y, this.getY());
-        settingsWindowJSON.put(width, this.getWidth());
-        settingsWindowJSON.put(height, this.getHeight());
+        settingsWindowJSON.put(x, stage.getX());
+        settingsWindowJSON.put(y, stage.getY());
+        settingsWindowJSON.put(width, stage.getWidth());
+        settingsWindowJSON.put(height, stage.getHeight());
         settingsWindowJSON.put(exploreCurrentDirectory, initialDirectory.getAbsolutePath());
 
         JSONLoader.saveJSON(guiSettings, guiJSON);
@@ -190,7 +241,7 @@ public class AddEditPathDialog extends Stage {
     //</GUI settings i/o>=====================
 
     public void setAddPath(List<Tag> tagsIn){
-        this.setTitle("Add Path");
+        stage.setTitle("Add Path");
         apply.setDisable(true);
         editing = false;
 
@@ -202,7 +253,7 @@ public class AddEditPathDialog extends Stage {
     }
 
     public void setEditPath(Path pathIn){
-        this.setTitle("Edit Path");
+        stage.setTitle("Edit Path");
         apply.setDisable(false);
         editing = true;
         editingPath = pathIn;
@@ -214,13 +265,13 @@ public class AddEditPathDialog extends Stage {
         if(new File(path.getText()).exists()){
             if(editing){
                 editingPath.setPath(path.getText());
-                editingPath.addTags(addedTags.getItems());
+                editingPath.addTags(getTagsByIds(addedTags.getItems()));
             }else{
                 Path newPath = paths.newPath(path.getText());
-                newPath.addTags(addedTags.getItems());
+                newPath.addTags(getTagsByIds(addedTags.getItems()));
             }
 
-            this.close();
+            stage.hide();
         }else{
             pathValidation.setText("Path does not exists");
         }
@@ -228,6 +279,10 @@ public class AddEditPathDialog extends Stage {
 
     private void onCancel() {
         // add your code here if necessary
-        this.hide();
+        stage.hide();
+    }
+
+    public void open(){
+        stage.showAndWait();
     }
 }

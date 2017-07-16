@@ -1,55 +1,10 @@
 {
-     "paths": {
-          "/media/q/3Q HDD External/Dev-Cpp/examples/WinTest": {
-               "name": "WinTest",
-               "tags": {
-                    "edrtger": "",
-                    "sdfg": ""
-               }
-          },
-          "/media/q/3Q HDD External/Dev-Cpp/examples/OpenGL": {
-               "name": "OpenGL",
-               "tags": {
-                    "edrtger": "",
-                    "sdfg": ""
-               }
-          },
-          "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Main.cpp": {
-               "name": "Main.cpp",
-               "tags": {"edrtger": ""}
-          },
-          "/media/q/3Q HDD External/Dev-Cpp/examples/OpenGL/OpenGL.dev": {
-               "name": "OpenGL.dev",
-               "tags": {"vbrty": ""}
-          },
-          "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Simple.ico": {
-               "name": "Simple.ico",
-               "tags": {
-                    "vbsrtgr": "",
-                    "edrtger": "",
-                    "vbrty": "",
-                    "dfgrwet": "",
-                    "sdfg": ""
-               }
+     "paths": {"/media/q/3Q HDD External/Dev-Cpp/examples/WinAnim/ballmask.bmp": {
+          "name": "ballmask.bmp",
+          "tags": {
+               "hbedrt : vcbret : fgdsfgre : rtyrty : dfgrtew": "",
+               "hbedrt : vcbret : fgdsfgre": ""
           }
-     },
-     "tags": {
-          "vbsrtgr": {"/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Simple.ico": ""},
-          "edrtger": {
-               "/media/q/3Q HDD External/Dev-Cpp/examples/WinTest": "",
-               "/media/q/3Q HDD External/Dev-Cpp/examples/OpenGL": "",
-               "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Main.cpp": "",
-               "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Simple.ico": ""
-          },
-          "vbrty": {
-               "/media/q/3Q HDD External/Dev-Cpp/examples/OpenGL/OpenGL.dev": "",
-               "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Simple.ico": ""
-          },
-          "sdfg": {
-               "/media/q/3Q HDD External/Dev-Cpp/examples/WinTest": "",
-               "/media/q/3Q HDD External/Dev-Cpp/examples/OpenGL": "",
-               "/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Simple.ico": ""
-          },
-          "dfgrwet": {"/media/q/3Q HDD External/Dev-Cpp/examples/Simpwin/Simple.ico": ""}
-     }
+     }},
+     "tags": {"hbedrt": {"tags": {"vcbret": {"tags": {"fgdsfgre": {"tags": {"rtyrty": {"tags": {"dfgrtew": {"tags": {"j6yueyr": {"tags": {}}}}}}}}}}}}}
 }

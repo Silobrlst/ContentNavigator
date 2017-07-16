@@ -1,23 +1,20 @@
 {
      "settingsWindow": {
-          "exploreCurrentDirectory": "/media/q/3Q HDD External/Dev-Cpp/examples",
-          "x": 592,
-          "width": 736,
-          "y": 165,
-          "height": 559
+          "exploreCurrentDirectory": "/media/q/3Q HDD External/Dev-Cpp/examples/WinAnim",
+          "x": 482,
+          "width": 957,
+          "y": 137,
+          "height": 643
      },
      "mainWindow": {
-          "x": 658,
-          "width": 996,
-          "selectedTags": ["edrtger"],
-          "y": 208,
-          "tagsPathsSplitPosition": 0.2080808080808081,
-          "height": 670
+          "x": 463,
+          "width": 964,
+          "selectedTags": [],
+          "y": 138,
+          "tagsPathsSplitPosition": 0.31315240083507306,
+          "height": 677
      },
-     "searchedPathsNameWidth": 678.0000060796738,
-     "searchedPathsPathWidth": 68,
-     "recent": [
-          "/home/q/Загрузки/ContentNavigator/sdf.json",
-          "/home/q/music.json"
-     ]
+     "searchedPathsNameWidth": 128.00000607967377,
+     "searchedPathsPathWidth": 407,
+     "recent": ["/home/q/Загрузки/ContentNavigator/sdf.json"]
 }
