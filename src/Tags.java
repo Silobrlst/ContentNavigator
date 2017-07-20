@@ -14,12 +14,12 @@ public class Tags extends Tag {
 
     public Tag newTag(String tagNameIn, Tag parentIn){
         Tag tag = newTagWithoutNotifing(tagNameIn, parentIn);
-        listeners.forEach(tagListener -> tagListener.created(tag, parentIn));
+        listeners.forEach(tagListener -> tagListener.createdTag(tag, parentIn));
         return tag;
     }
     public Tag newTag(String tagNameIn){
         Tag tag = newTagWithoutNotifing(tagNameIn);
-        listeners.forEach(tagListener -> tagListener.created(tag, this));
+        listeners.forEach(tagListener -> tagListener.createdTag(tag, this));
         return tag;
     }
 

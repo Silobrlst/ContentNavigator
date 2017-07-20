@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainWindowController">
    <center>
       <VBox prefHeight="400.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
@@ -15,19 +15,16 @@
                <content>
                   <AnchorPane>
                      <children>
-                        <GridPane layoutX="168.0" layoutY="38.0" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <GridPane hgap="5.0" layoutX="99.0" layoutY="-35.0" vgap="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" />
+                            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
                            <children>
-                              <Label text="By name:" GridPane.halignment="RIGHT">
-                                 <GridPane.margin>
-                                    <Insets right="5.0" />
-                                 </GridPane.margin></Label>
-                              <Label text="By tags:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                                 <GridPane.margin>
-                                    <Insets right="5.0" />
-                                 </GridPane.margin></Label>
-                              <TextField fx:id="byNameSearch" GridPane.columnIndex="1" />
-                              <TextField fx:id="byTagsSearch" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+                              <GridPane hgap="5.0" vgap="5.0" GridPane.rowIndex="1">
                                 <columnConstraints>
                                   <ColumnConstraints hgrow="SOMETIMES" />
                                   <ColumnConstraints hgrow="NEVER" />
@@ -40,16 +37,31 @@
                                     <Label fx:id="searchValidation" textFill="RED" />
                                  </children>
                               </GridPane>
+                              <GridPane minHeight="-Infinity" minWidth="-Infinity">
+                                 <children>
+                                    <Label text="By name:" GridPane.halignment="RIGHT">
+                                       <GridPane.margin>
+                                          <Insets right="5.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label text="By tags:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                       <GridPane.margin>
+                                          <Insets right="5.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <TextField fx:id="byNameSearch" GridPane.columnIndex="1" />
+                                    <TextField fx:id="byTagsSearch" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                 </children>
+                                 <columnConstraints>
+                                    <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
+                                    <ColumnConstraints hgrow="SOMETIMES" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                                 </rowConstraints>
+                              </GridPane>
                            </children>
-                           <columnConstraints>
-                              <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
-                              <ColumnConstraints hgrow="SOMETIMES" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-                           </rowConstraints>
                         </GridPane>
                      </children>
                   </AnchorPane>

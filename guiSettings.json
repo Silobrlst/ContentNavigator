@@ -1,6 +1,6 @@
 {
      "settingsWindow": {
-          "exploreCurrentDirectory": "/media/q/3Q HDD External/Dev-Cpp/examples/WinAnim",
+          "exploreCurrentDirectory": "/media/q/3Q HDD External/Dev-Cpp/examples",
           "x": 482,
           "width": 957,
           "y": 137,
@@ -9,12 +9,12 @@
      "mainWindow": {
           "x": 658,
           "width": 964,
-          "selectedTags": ["sdfgsdf"],
+          "selectedTags": ["dkljf"],
           "y": 208,
           "tagsPathsSplitPosition": 0.31315240083507306,
           "height": 677
      },
-     "searchedPathsNameWidth": 128.00000607967377,
+     "searchedPathsNameWidth": 200.00000607967377,
      "searchedPathsPathWidth": 407,
      "recent": ["/home/q/Загрузки/ContentNavigator/sdf.json"]
 }

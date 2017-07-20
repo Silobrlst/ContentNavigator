@@ -1,6 +1,8 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -15,7 +17,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddEditPathDialog {
+public class AddEditPathDialogController {
     private boolean editing;
 
     private Path editingPath;
@@ -47,6 +49,8 @@ public class AddEditPathDialog {
     private Label pathValidation;
     @FXML
     private TextField path;
+    @FXML
+    private TextField name;
 
     //<string names>======================
     private static final String settingsWindow = "settingsWindow";
@@ -64,6 +68,8 @@ public class AddEditPathDialog {
 
     private Stage stage;
 
+    private String styleFileName;
+
     @FXML
     public void initialize() {
         ok.setOnAction(event -> onOK());
@@ -74,6 +80,7 @@ public class AddEditPathDialog {
             File file = fileChooser.showOpenDialog(stage);
             if(file != null){
                 path.setText(file.getAbsolutePath());
+                name.setText(file.getName());
                 pathValidation.setText("");
                 initialDirectory = new File(file.getAbsolutePath().split("[/\\\\][^\\\\/]*$")[0]);
             }
@@ -83,6 +90,7 @@ public class AddEditPathDialog {
             File file = directoryChooser.showDialog(stage);
             if(file != null){
                 path.setText(file.getAbsolutePath());
+                name.setText(file.getName());
                 pathValidation.setText("");
                 initialDirectory = new File(file.getAbsolutePath().split("[/\\\\][^\\\\/]*$")[0]);
             }
@@ -102,12 +110,13 @@ public class AddEditPathDialog {
         addedTags.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
-    public void setPathsTagsParent(Stage parentStageIn, Stage stageIn, Paths pathsIn, Tags tagsIn){
+    public void setPathsTagsParent(Stage parentStageIn, FXMLLoader loaderIn, Paths pathsIn, Tags tagsIn)throws Exception{
         paths = pathsIn;
         tags = tagsIn;
 
-        stage = stageIn;
-
+        Scene addEditPathDialogscene = new Scene(loaderIn.getRoot());
+        stage = new Stage();
+        stage.setScene(addEditPathDialogscene);
         stage.initOwner(parentStageIn);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setOnHidden(event -> saveGuiSettings());
@@ -145,10 +154,11 @@ public class AddEditPathDialog {
         setAddPath();
     }
 
-    public AddEditPathDialog()throws Exception{
+    public AddEditPathDialogController()throws Exception{
         fileChooser = new FileChooser();
         directoryChooser = new DirectoryChooser();
         initialDirectory = new File(System.getProperty("user.dir"));
+        styleFileName = "";
     }
 
     private List<String> getTagIds(List<Tag> tagsIn){
@@ -270,12 +280,19 @@ public class AddEditPathDialog {
 
     private void onOK() {
         if(new File(path.getText()).exists()){
+            List<Tag> addedTagsTemp = getTagsByIds(addedTags.getItems());
+
             if(editing){
+                ArrayList<Tag> tagsToRemove = new ArrayList<>();
+                tagsToRemove.addAll(editingPath.getTags());
+                tagsToRemove.removeAll(addedTagsTemp);
+
                 editingPath.setPath(path.getText());
-                editingPath.addTags(getTagsByIds(addedTags.getItems()));
+                editingPath.removeTags(tagsToRemove);
+                editingPath.addTags(addedTagsTemp);
             }else{
                 Path newPath = paths.newPath(path.getText());
-                newPath.addTags(getTagsByIds(addedTags.getItems()));
+                newPath.addTags(addedTagsTemp);
             }
 
             stage.hide();
@@ -291,5 +308,13 @@ public class AddEditPathDialog {
 
     public void open(){
         stage.showAndWait();
+    }
+
+    public void setStyle(String styleFileNameIn){
+        if(styleFileName.length() > 0){
+            stage.getScene().getStylesheets().remove(styleFileName);
+        }
+        styleFileName = styleFileNameIn;
+        stage.getScene().getStylesheets().add(styleFileName);
     }
 }

@@ -1,5 +1,23 @@
 {
-     "paths": {},
+     "paths": {
+          "/media/q/3Q HDD External/Dev-Cpp/examples/WinAnim/Images.rc": {
+               "name": "Images.rc",
+               "tags": {
+                    "df;gkljfg": "",
+                    "dkljf": "",
+                    "xcvbfdg": "",
+                    "sdfgsdf": ""
+               }
+          },
+          "/media/q/3Q HDD External/Dev-Cpp/examples/WinAnim/Anim.rc": {
+               "name": "Anim.rc",
+               "tags": {"dkljf": ""}
+          },
+          "/media/q/3Q HDD External/Dev-Cpp/examples/WinAnim/ballmask.bmp": {
+               "name": "ballmask.bmp",
+               "tags": {"dkljf": ""}
+          }
+     },
      "tags": {
           "df;gkljfg": {"tags": {}},
           "dkljf": {"tags": {}},

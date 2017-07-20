@@ -27,7 +27,7 @@ public class Tag {
     public void addPath(Path pathIn){
         if(!paths.contains(pathIn)) {
             addPathWithoutNotifing(pathIn);
-            tagListeners.forEach(tagListener -> tagListener.addedPath(this, pathIn));
+            tagListeners.forEach(tagListener -> tagListener.addedPathToTag(this, pathIn));
         }
     }
     public void addPathWithoutNotifing(Path pathIn){
@@ -42,13 +42,13 @@ public class Tag {
             paths.remove(pathIn);
             this.removePath(pathIn);
             pathIn.removeTag(this);
-            tagListeners.forEach(tagListener -> tagListener.removedPath(this, pathIn));
+            tagListeners.forEach(tagListener -> tagListener.removedPathFromTag(this, pathIn));
         }
     }
 
     public void rename(String nameIn){
         name = nameIn;
-        tagListeners.forEach(tagListener -> tagListener.renamed(this));
+        tagListeners.forEach(tagListener -> tagListener.renamedTag(this));
     }
 
     public ArrayList<Path> getPaths(){

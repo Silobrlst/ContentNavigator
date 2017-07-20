@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddEditPathDialog">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddEditPathDialogController">
    <children>
       <HBox spacing="5.0" VBox.vgrow="NEVER">
          <VBox.margin>
@@ -22,10 +22,13 @@
         </columnConstraints>
         <rowConstraints>
           <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
         </rowConstraints>
          <children>
-            <Label alignment="CENTER_RIGHT" text="Path:" />
+            <Label alignment="CENTER_RIGHT" text="Path:" GridPane.halignment="RIGHT" />
             <TextField fx:id="path" GridPane.columnIndex="1" />
+            <Label text="Name:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+            <TextField fx:id="name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

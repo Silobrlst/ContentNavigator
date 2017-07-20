@@ -1,7 +1,5 @@
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -10,7 +8,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class AddEditTagDialog {
+public class AddEditTagDialogController {
     @FXML
     private TextField tagName;
     @FXML
@@ -28,6 +26,8 @@ public class AddEditTagDialog {
 
     private Stage stage;
 
+    private String styleFileName;
+
     @FXML
     public void initialize() {
         ok.setOnAction(event -> onOK());
@@ -36,13 +36,16 @@ public class AddEditTagDialog {
         tagName.setOnAction(event -> onOK());
     }
 
-    public AddEditTagDialog(){
+    public AddEditTagDialogController(){
+        styleFileName = "";
     }
 
-    public void setTagsParent(Stage parentStageIn, Stage stageIn, Tags tagsIn){
+    public void setTagsParent(Stage parentStageIn, FXMLLoader loaderIn, Tags tagsIn){
         tags = tagsIn;
 
-        stage = stageIn;
+        Scene scene = new Scene(loaderIn.getRoot());
+        stage = new Stage();
+        stage.setScene(scene);
         stage.initOwner(parentStageIn);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setOnShown(event -> {
@@ -110,5 +113,13 @@ public class AddEditTagDialog {
 
     public void open() {
         stage.showAndWait();
+    }
+
+    public void setStyle(String styleFileNameIn){
+        if(styleFileName.length() > 0){
+            stage.getScene().getStylesheets().remove(styleFileName);
+        }
+        styleFileName = styleFileNameIn;
+        stage.getScene().getStylesheets().add(styleFileName);
     }
 }
