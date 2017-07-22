@@ -114,9 +114,10 @@ public class AddEditPathDialogController {
         paths = pathsIn;
         tags = tagsIn;
 
-        Scene addEditPathDialogscene = new Scene(loaderIn.getRoot());
+        Scene scene = new Scene(loaderIn.getRoot());
+        scene.getRoot().setId("addEditPathDialogRoot");
         stage = new Stage();
-        stage.setScene(addEditPathDialogscene);
+        stage.setScene(scene);
         stage.initOwner(parentStageIn);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setOnHidden(event -> saveGuiSettings());
@@ -128,6 +129,9 @@ public class AddEditPathDialogController {
         });
 
         stage.setOnShown(event -> {
+            pathValidation.setText("");
+            name.setText("");
+
             getTags(tagsIn);
             availableTags.getItems().clear();
             availableTags.getItems().addAll(getTagIds(getTags(tagsIn)));
@@ -290,12 +294,18 @@ public class AddEditPathDialogController {
                 editingPath.setPath(path.getText());
                 editingPath.removeTags(tagsToRemove);
                 editingPath.addTags(addedTagsTemp);
-            }else{
-                Path newPath = paths.newPath(path.getText());
-                newPath.addTags(addedTagsTemp);
-            }
 
-            stage.hide();
+                stage.hide();
+            }else{
+                if(!paths.checkPathExist(path.getText())){
+                    Path newPath = paths.newPath(path.getText());
+                    newPath.addTags(addedTagsTemp);
+
+                    stage.hide();
+                }else{
+                    pathValidation.setText("This path is already added");
+                }
+            }
         }else{
             pathValidation.setText("Path does not exists");
         }

@@ -48,7 +48,7 @@ public class Tag {
 
     public void rename(String nameIn){
         name = nameIn;
-        tagListeners.forEach(tagListener -> tagListener.renamedTag(this));
+        tagListeners.forEach(tagListener -> tagListener.editedTag(this));
     }
 
     public ArrayList<Path> getPaths(){

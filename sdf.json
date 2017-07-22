@@ -1,5 +1,16 @@
 {
      "paths": {
+          "/media/q/547425A174258738/360Rec": {
+               "name": "360Rec",
+               "tags": {
+                    "dkljf": "",
+                    "xcvbfdg": ""
+               }
+          },
+          "/media/q/547425A174258738/CMakeFiles/cmake.check_cache": {
+               "name": "cmake.check_cache",
+               "tags": {"xcvbfdg": ""}
+          },
           "/media/q/3Q HDD External/Dev-Cpp/examples/WinAnim/Images.rc": {
                "name": "Images.rc",
                "tags": {
@@ -16,12 +27,20 @@
           "/media/q/3Q HDD External/Dev-Cpp/examples/WinAnim/ballmask.bmp": {
                "name": "ballmask.bmp",
                "tags": {"dkljf": ""}
+          },
+          "/home/q/Документы/CodeBLocks": {
+               "name": "CodeBLocks",
+               "tags": {"xcvbfdg": ""}
+          },
+          "/media/q/547425A174258738/bison-3.0": {
+               "name": "bison-3.0",
+               "tags": {"xcvbfdg": ""}
           }
      },
      "tags": {
-          "df;gkljfg": {"tags": {}},
+          "df;gkljfg": {"tags": {"fsdgsr": {"tags": {}}}},
           "dkljf": {"tags": {}},
-          "ewryrey": {"tags": {}},
+          "ewryrey": {"tags": {"vbdfg": {"tags": {"fgwertwe": {"tags": {}}}}}},
           "xcvbfdg": {"tags": {}},
           "sdfgsdf": {"tags": {}}
      }

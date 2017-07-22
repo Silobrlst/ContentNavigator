@@ -1,6 +1,6 @@
 {
      "settingsWindow": {
-          "exploreCurrentDirectory": "/media/q/3Q HDD External/Dev-Cpp/examples",
+          "exploreCurrentDirectory": "/media/q/547425A174258738/CMakeFiles",
           "x": 482,
           "width": 957,
           "y": 137,
@@ -8,13 +8,23 @@
      },
      "mainWindow": {
           "x": 658,
-          "width": 964,
-          "selectedTags": ["dkljf"],
+          "width": 1098,
+          "selectedTags": ["xcvbfdg"],
           "y": 208,
-          "tagsPathsSplitPosition": 0.31315240083507306,
-          "height": 677
+          "tagsExpand": {
+               "df;gkljfg": true,
+               "dkljf": true,
+               "ewryrey : vbdfg : fgwertwe": false,
+               "ewryrey": true,
+               "df;gkljfg : fsdgsr": false,
+               "ewryrey : vbdfg": true,
+               "xcvbfdg": true,
+               "sdfgsdf": true
+          },
+          "tagsPathsSplitPosition": 0.2042124542124542,
+          "height": 759
      },
-     "searchedPathsNameWidth": 200.00000607967377,
+     "searchedPathsNameWidth": 394.00000607967377,
      "searchedPathsPathWidth": 407,
      "recent": ["/home/q/Загрузки/ContentNavigator/sdf.json"]
 }

@@ -44,6 +44,7 @@ public class AddEditTagDialogController {
         tags = tagsIn;
 
         Scene scene = new Scene(loaderIn.getRoot());
+        scene.getRoot().setId("addEditTagDialogRoot");
         stage = new Stage();
         stage.setScene(scene);
         stage.initOwner(parentStageIn);

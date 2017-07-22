@@ -32,4 +32,14 @@ public class Paths extends ArrayList<Path> {
         this.add(path);
         return path;
     }
+
+    boolean checkPathExist(String pathIn){
+        for(Path path: this){
+            if(pathIn.equals(path.getPath())){
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

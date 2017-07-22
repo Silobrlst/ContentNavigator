@@ -12,7 +12,7 @@ public interface TagListener {
      *
      * @param tagIn переименнованный тег
      */
-    void renamedTag(Tag tagIn);
+    void editedTag(Tag tagIn);
 
     /**
      * сообщает о добавлении пути в тег

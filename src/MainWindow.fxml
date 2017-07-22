@@ -11,7 +11,7 @@
    <center>
       <VBox prefHeight="400.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <TitledPane animated="false" collapsible="false" text="Search Paths">
+            <TitledPane fx:id="searchPathsTitledPane" animated="false" collapsible="false" text="Search Paths">
                <content>
                   <AnchorPane>
                      <children>
@@ -24,42 +24,41 @@
                             <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
+                              <GridPane hgap="5.0" minHeight="-Infinity" minWidth="-Infinity" vgap="5.0">
+                                 <children>
+                                    <TextField fx:id="byNameSearch" GridPane.columnIndex="1" />
+                                    <Button fx:id="searchByName" mnemonicParsing="false" text="Search by name" GridPane.columnIndex="2" GridPane.halignment="LEFT" />
+                                    <TextField fx:id="byPathSearch" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Button fx:id="searchByPath" mnemonicParsing="false" text="Search by path" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <TextField fx:id="byTagsSearch" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Button fx:id="searchByTags" mnemonicParsing="false" text="Search by tags" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                    <Label text="By name:" GridPane.halignment="RIGHT" />
+                                    <Label text="By tags:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                                    <Label text="By path:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                 </children>
+                                 <columnConstraints>
+                                    <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
+                                    <ColumnConstraints hgrow="SOMETIMES" />
+                                    <ColumnConstraints hgrow="NEVER" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                                 </rowConstraints>
+                              </GridPane>
                               <GridPane hgap="5.0" vgap="5.0" GridPane.rowIndex="1">
                                 <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" />
                                   <ColumnConstraints hgrow="NEVER" />
+                                  <ColumnConstraints hgrow="ALWAYS" />
                                 </columnConstraints>
                                 <rowConstraints>
                                   <RowConstraints vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Button fx:id="search" mnemonicParsing="false" text="Search" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
-                                    <Label fx:id="searchValidation" textFill="RED" />
+                                    <Label fx:id="searchValidation" textFill="RED" GridPane.columnIndex="1" />
+                                    <Button fx:id="searchByAll" mnemonicParsing="false" text="Search by all" />
                                  </children>
-                              </GridPane>
-                              <GridPane minHeight="-Infinity" minWidth="-Infinity">
-                                 <children>
-                                    <Label text="By name:" GridPane.halignment="RIGHT">
-                                       <GridPane.margin>
-                                          <Insets right="5.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label text="By tags:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                                       <GridPane.margin>
-                                          <Insets right="5.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <TextField fx:id="byNameSearch" GridPane.columnIndex="1" />
-                                    <TextField fx:id="byTagsSearch" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                 </children>
-                                 <columnConstraints>
-                                    <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
-                                    <ColumnConstraints hgrow="SOMETIMES" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-                                 </rowConstraints>
                               </GridPane>
                            </children>
                         </GridPane>
@@ -71,7 +70,7 @@
                <items>
                   <AnchorPane minHeight="0.0" minWidth="0.0">
                      <children>
-                        <TitledPane animated="false" collapsible="false" layoutX="-23.0" text="Tags" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TitledPane fx:id="tagsTitledPane" animated="false" collapsible="false" layoutX="-23.0" text="Tags" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0">
                                  <children>
@@ -83,11 +82,11 @@
                      </children></AnchorPane>
                   <AnchorPane>
                      <children>
-                        <TitledPane animated="false" collapsible="false" layoutX="14.0" text="Searched Paths" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TitledPane fx:id="searchedPathsTitledPane" animated="false" collapsible="false" layoutX="14.0" text="Searched Paths" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0">
                                  <children>
-                                    <TableView fx:id="searchedPaths" editable="true" layoutX="125.0" layoutY="29.0" prefHeight="235.0" prefWidth="472.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TableView fx:id="pathsTable" editable="true" layoutX="125.0" layoutY="29.0" prefHeight="235.0" prefWidth="472.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <columns>
                                         <TableColumn fx:id="searchedPathsName" prefWidth="128.00000607967377" text="Name" />
                                         <TableColumn fx:id="searchedPathsPath" prefWidth="330.0" text="Path" />

@@ -2,6 +2,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
@@ -18,10 +19,16 @@ public class SettingsDialogController {
     private Button ok;
     @FXML
     private Button openAppFolder;
+    @FXML
+    private TextField openInFolderCommand;
 
     private Stage stage;
 
     private String styleFileName;
+
+    private MainWindowController mainWindowController;
+
+    private SettingsDialogInterface settingsDialogInterface;
 
     public SettingsDialogController(){
         styleFileName = "";
@@ -31,7 +38,12 @@ public class SettingsDialogController {
     public void initialize() {
     }
 
-    public void setParentStage(Stage parentStageIn, FXMLLoader loaderIn){
+    public void setParentStage(Stage parentStageIn, FXMLLoader loaderIn, MainWindowController mainWindowControllerIn, SettingsDialogInterface settingsDialogInterfaceIn){
+        mainWindowController = mainWindowControllerIn;
+        settingsDialogInterface = settingsDialogInterfaceIn;
+
+        openInFolderCommand.setText(mainWindowController.getOpenInFolderCommand());
+
         Scene scene = new Scene(loaderIn.getRoot());
         stage = new Stage();
         stage.setScene(scene);
@@ -44,6 +56,7 @@ public class SettingsDialogController {
         });
 
         cancel.setOnAction(event -> onCancel());
+        ok.setOnAction(event -> onOk());
 
         openAppFolder.setOnAction(event -> {
             if( Desktop.isDesktopSupported()){
@@ -62,6 +75,11 @@ public class SettingsDialogController {
         stage.hide();
     }
 
+    private void onOk(){
+        settingsDialogInterface.applied();
+        stage.hide();
+    }
+
     public void open() {
         stage.showAndWait();
     }
@@ -72,5 +90,9 @@ public class SettingsDialogController {
         }
         styleFileName = styleFileNameIn;
         stage.getScene().getStylesheets().add(styleFileName);
+    }
+
+    public String getOpenInFolderCommand(){
+        return openInFolderCommand.getText();
     }
 }
