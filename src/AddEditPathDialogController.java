@@ -130,7 +130,6 @@ public class AddEditPathDialogController {
 
         stage.setOnShown(event -> {
             pathValidation.setText("");
-            name.setText("");
 
             getTags(tagsIn);
             availableTags.getItems().clear();
@@ -247,7 +246,7 @@ public class AddEditPathDialogController {
     }
 
     private void saveGuiSettings() {
-        JSONObject guiJSON = new JSONObject();
+        JSONObject guiJSON = JSONLoader.loadJSON(guiSettings);
         validateGuiSettings(guiJSON);
 
         JSONObject settingsWindowJSON = guiJSON.getJSONObject(settingsWindow);
@@ -265,6 +264,7 @@ public class AddEditPathDialogController {
         stage.setTitle("Add Path");
         apply.setDisable(true);
         editing = false;
+        name.setText("");
 
         tagsTemp = tagsIn;
     }
@@ -279,6 +279,8 @@ public class AddEditPathDialogController {
         editing = true;
         editingPath = pathIn;
         path.setText(editingPath.getPath());
+        name.setText(editingPath.getName());
+        System.out.println(editingPath.getName());
         tagsTemp = pathIn.getTags();
     }
 
@@ -292,6 +294,7 @@ public class AddEditPathDialogController {
                 tagsToRemove.removeAll(addedTagsTemp);
 
                 editingPath.setPath(path.getText());
+                editingPath.setName(name.getText());
                 editingPath.removeTags(tagsToRemove);
                 editingPath.addTags(addedTagsTemp);
 

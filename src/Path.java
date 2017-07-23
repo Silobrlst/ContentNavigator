@@ -33,8 +33,8 @@ public class Path implements Comparable<Path> {
         pathListeners.forEach(pathListener -> pathListener.changedPath(this));
     }
 
-    public void rename(String newNameIn){
-        name.set(newNameIn);
+    public void setName(String nameIn){
+        name.set(nameIn);
         pathListeners.forEach(pathListener -> pathListener.renamed(this));
     }
 

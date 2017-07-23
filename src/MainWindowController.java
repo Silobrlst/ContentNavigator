@@ -3,7 +3,6 @@ import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
@@ -79,6 +78,7 @@ public class MainWindowController {
     private static final String nameJSONName = "name";
     private static final String searchedPathsNameWidth = "searchedPathsNameWidth";
     private static final String searchedPathsPathWidth = "searchedPathsPathWidth";
+    private static final File guiSettings = new File("guiSettings.json");
     //</JSON names>===========================
 
     private Menu openRecentMenu;
@@ -95,7 +95,7 @@ public class MainWindowController {
     private AddEditPathDialogController addEditPathDialogController;
     private AddEditTagDialogController addEditTagDialogController;
 
-    private File contenetInfoFile;
+    private File tagsFile;
 
     //проверяем что Enter был нажат пока фокус был на таблице
     private boolean enterPressed = false;
@@ -106,9 +106,10 @@ public class MainWindowController {
 
     public void setTagsStage(Stage stageIn, FXMLLoader loaderIn)throws Exception{
         loadSettings();
+        tagsFile = null;
 
         stage = stageIn;
-        stage.setOnCloseRequest(event -> saveGuiSettings());
+        stage.setOnCloseRequest(event -> saveAppGuiSettings());
         stage.setScene(new Scene(loaderIn.getRoot()));
         stage.getIcons().add(new Image("file:images/appIcon.png"));
         stage.show();
@@ -118,30 +119,30 @@ public class MainWindowController {
         paths.addListener(new EmptyPathListener(){
             @Override
             public void created(Path pathIn) {
-                saveContentInfo(contenetInfoFile);
+                saveTagsFile(tagsFile);
             }
 
             @Override
             public void renamed(Path pathIn) {
-                saveContentInfo(contenetInfoFile);
+                saveTagsFile(tagsFile);
                 filterPathsBySelectedTags();
             }
 
             @Override
             public void removedTag(Path pathIn, Tag tagIn) {
-                saveContentInfo(contenetInfoFile);
+                saveTagsFile(tagsFile);
                 filterPathsBySelectedTags();
             }
 
             @Override
             public void removedTags(Path pathIn, Collection<Tag> tagsIn) {
-                saveContentInfo(contenetInfoFile);
+                saveTagsFile(tagsFile);
                 filterPathsBySelectedTags();
             }
 
             @Override
             public void addedTags(Path pathIn, Collection<Tag> tagsIn) {
-                saveContentInfo(contenetInfoFile);
+                saveTagsFile(tagsFile);
                 filterPathsBySelectedTags();
                 pathsTable.getSelectionModel().select(pathIn);
                 pathsTable.refresh();
@@ -150,7 +151,7 @@ public class MainWindowController {
 
             @Override
             public void addedTag(Path pathIn, Tag tagIn) {
-                saveContentInfo(contenetInfoFile);
+                saveTagsFile(tagsFile);
                 filterPathsBySelectedTags();
                 pathsTable.getSelectionModel().select(pathIn);
                 pathsTable.refresh();
@@ -173,7 +174,7 @@ public class MainWindowController {
                 });
                 tagsTree.refresh();
 
-                saveContentInfo(contenetInfoFile);
+                saveTagsFile(tagsFile);
             }
 
             @Override
@@ -187,7 +188,7 @@ public class MainWindowController {
                     return o1.getValue().getName().compareTo(o2.getValue().getName());
                 });
                 tagsTree.refresh();
-                saveContentInfo(contenetInfoFile);
+                saveTagsFile(tagsFile);
             }
         });
 
@@ -275,13 +276,11 @@ public class MainWindowController {
 
         initMenu();
 
-        preLoadGuiSettings();
+        loadAppGuiSettings();
 
         if (openRecentMenu.getItems().size() > 0) {
-            loadContentInfo(new File(openRecentMenu.getItems().get(0).getText()));
+            loadTagsFile(new File(openRecentMenu.getItems().get(0).getText()));
         }
-
-        postLoadGuiSettings();
     }
 
     @FXML
@@ -366,16 +365,16 @@ public class MainWindowController {
     }
 
     //<GUI settings i/o>======================
-    private void validateGuiSettings(JSONObject jsonIn) {
-        if (!jsonIn.has("recent")) {
-            jsonIn.put("recent", new JSONArray());
+    private void validateGuiSettings(JSONObject appGuiSettingsJsonIn) {
+        if (!appGuiSettingsJsonIn.has("recent")) {
+            appGuiSettingsJsonIn.put("recent", new JSONArray());
         }
 
-        if (!jsonIn.has("mainWindow")) {
-            jsonIn.put("mainWindow", new JSONObject());
+        if (!appGuiSettingsJsonIn.has("mainWindow")) {
+            appGuiSettingsJsonIn.put("mainWindow", new JSONObject());
         }
 
-        JSONObject mainWindowJSON = jsonIn.getJSONObject("mainWindow");
+        JSONObject mainWindowJSON = appGuiSettingsJsonIn.getJSONObject("mainWindow");
         if (!mainWindowJSON.has("x")) {
             mainWindowJSON.put("x", 0.d);
         }
@@ -391,32 +390,35 @@ public class MainWindowController {
         if (!mainWindowJSON.has("tagsPathsSplitPosition")) {
             mainWindowJSON.put("tagsPathsSplitPosition", 0.2d);
         }
-        if (!mainWindowJSON.has("selectedTags")) {
-            mainWindowJSON.put("selectedTags", new JSONArray());
-        }
-        if (!mainWindowJSON.has("tagsExpand")) {
-            mainWindowJSON.put("tagsExpand", new JSONObject());
-        }
 
-        if (!jsonIn.has(searchedPathsNameWidth)) {
-            jsonIn.put(searchedPathsNameWidth, 0.d);
+        if (!appGuiSettingsJsonIn.has(searchedPathsNameWidth)) {
+            appGuiSettingsJsonIn.put(searchedPathsNameWidth, 0.d);
         }
-        if (!jsonIn.has(searchedPathsPathWidth)) {
-            jsonIn.put(searchedPathsPathWidth, 0.d);
+        if (!appGuiSettingsJsonIn.has(searchedPathsPathWidth)) {
+            appGuiSettingsJsonIn.put(searchedPathsPathWidth, 0.d);
         }
     }
 
-    private void preLoadGuiSettings() {
-        JSONObject guiJSON = JSONLoader.loadJSON(new File("guiSettings.json"));
-        validateGuiSettings(guiJSON);
+    private void validateTagsFileGuiSettings(JSONObject tagsFileGuiSettingsJsonIn) {
+        if (!tagsFileGuiSettingsJsonIn.has("selectedTags")) {
+            tagsFileGuiSettingsJsonIn.put("selectedTags", new JSONArray());
+        }
+        if (!tagsFileGuiSettingsJsonIn.has("tagsExpand")) {
+            tagsFileGuiSettingsJsonIn.put("tagsExpand", new JSONObject());
+        }
+    }
 
-        JSONArray recentJSON = guiJSON.getJSONArray("recent");
+    private void loadAppGuiSettings() {
+        JSONObject appGuiJson = JSONLoader.loadJSON(new File("guiSettings.json"));
+        validateGuiSettings(appGuiJson);
+
+        JSONArray recentJSON = appGuiJson.getJSONArray("recent");
 
         for (int i = recentJSON.length() - 1; i >= 0; i--) {
             addRecent(new File(recentJSON.getString(i)), false);
         }
 
-        JSONObject mainWindowJSON = guiJSON.getJSONObject("mainWindow");
+        JSONObject mainWindowJSON = appGuiJson.getJSONObject("mainWindow");
         if (mainWindowJSON.getDouble("width") > 0) {
             stage.setWidth(mainWindowJSON.getDouble("width"));
         }
@@ -424,38 +426,38 @@ public class MainWindowController {
             stage.setHeight(mainWindowJSON.getDouble("height"));
         }
 
+        new Timeline(new KeyFrame(Duration.millis(1000), e -> {
+            tagsPathsSpliter.setDividerPositions(mainWindowJSON.getDouble("tagsPathsSplitPosition"));
+            if(appGuiJson.getDouble(searchedPathsNameWidth) != 0.d){
+                searchedPathsName.setPrefWidth(appGuiJson.getDouble(searchedPathsNameWidth));
+            }
+            if(appGuiJson.getDouble(searchedPathsPathWidth) != 0.d){
+                searchedPathsPath.setPrefWidth(appGuiJson.getDouble(searchedPathsPathWidth));
+            }
+        })).play();
+
         pathsTable.getSortOrder().add(searchedPathsName);
         searchedPathsName.setSortType(TableColumn.SortType.ASCENDING);
         searchedPathsName.setSortable(true);
     }
 
-    //вызывается после загрузки файла contentFile
-    private void postLoadGuiSettings() {
-        JSONObject guiJSON = JSONLoader.loadJSON(new File("guiSettings.json"));
-        validateGuiSettings(guiJSON);
-        JSONObject mainWindowJSON = guiJSON.getJSONObject("mainWindow");
+    private void loadTagsFileGuiSettings(){
+        JSONObject tagsFileGuiSettingsJson = JSONLoader.loadJSON(new File(tagsFile.getName() + ".guiSettings.json"));
+        validateTagsFileGuiSettings(tagsFileGuiSettingsJson);
 
-        filterPathsBySelectedTags();
-        tagsTree.requestFocus();
-
-        JSONObject tagsExpandJSON = mainWindowJSON.getJSONObject("tagsExpand");
+        JSONObject tagsExpandJSON = tagsFileGuiSettingsJson.getJSONObject("tagsExpand");
         for(String tagId: tagsExpandJSON.keySet()){
             getTreeItemByTag(tags.getTagById(tagId)).setExpanded(tagsExpandJSON.getBoolean(tagId));
         }
 
         new Timeline(new KeyFrame(Duration.millis(1000), e -> {
-            tagsPathsSpliter.setDividerPositions(mainWindowJSON.getDouble("tagsPathsSplitPosition"));
-            if(guiJSON.getDouble(searchedPathsNameWidth) != 0.d){
-                searchedPathsName.setPrefWidth(guiJSON.getDouble(searchedPathsNameWidth));
-            }
-            if(guiJSON.getDouble(searchedPathsPathWidth) != 0.d){
-                searchedPathsPath.setPrefWidth(guiJSON.getDouble(searchedPathsPathWidth));
-            }
-
-            JSONArray selectedTagsJSON = mainWindowJSON.getJSONArray("selectedTags");
+            JSONArray selectedTagsJSON = tagsFileGuiSettingsJson.getJSONArray("selectedTags");
             for (int i = 0; i < selectedTagsJSON.length(); i++) {
                 tagsTree.getSelectionModel().select(getTreeItemByTag(tags.getTagById(selectedTagsJSON.getString(i))));
             }
+
+            filterPathsBySelectedTags();
+            tagsTree.requestFocus();
         })).play();
     }
 
@@ -474,22 +476,35 @@ public class MainWindowController {
         return tagItems;
     }
 
-    private void saveGuiSettings() {
-        JSONObject guiJSON = JSONLoader.loadJSON(new File("guiSettings.json"));
-        validateGuiSettings(guiJSON);
+    private void saveAppGuiSettings() {
+        saveTagsFileGuiSettings();
+
+        //загружаем из файла данные, т.к. другие окна тоже сохраняют свои данные в этот файл
+        JSONObject appGuiJson = JSONLoader.loadJSON(guiSettings);
+        validateGuiSettings(appGuiJson);
 
         JSONArray recentJSON = new JSONArray();
         for (int i = 0; i < openRecentMenu.getItems().size(); i++) {
             recentJSON.put(openRecentMenu.getItems().get(i).getText());
         }
 
-        guiJSON.put("recent", recentJSON);
-        JSONObject mainWindowJSON = guiJSON.getJSONObject("mainWindow");
+        appGuiJson.put("recent", recentJSON);
+        JSONObject mainWindowJSON = appGuiJson.getJSONObject("mainWindow");
         mainWindowJSON.put("x", stage.getX());
         mainWindowJSON.put("y", stage.getY());
         mainWindowJSON.put("width", stage.getWidth());
         mainWindowJSON.put("height", stage.getHeight());
         mainWindowJSON.put("tagsPathsSplitPosition", tagsPathsSpliter.getDividerPositions()[0]);
+
+        appGuiJson.put(searchedPathsNameWidth, searchedPathsName.getWidth());
+        appGuiJson.put(searchedPathsPathWidth, searchedPathsPath.getWidth());
+
+        JSONLoader.saveJSON(guiSettings, appGuiJson);
+    }
+
+    private void saveTagsFileGuiSettings() {
+        JSONObject tagsFileGuiSettingsJson = new JSONObject();
+        validateTagsFileGuiSettings(tagsFileGuiSettingsJson);
 
         JSONArray selectedTagsJSON = new JSONArray();
         for (TreeItem<Tag> selectedTagItem : tagsTree.getSelectionModel().getSelectedItems()) {
@@ -497,18 +512,15 @@ public class MainWindowController {
                 selectedTagsJSON.put(tags.getTagId(selectedTagItem.getValue()));
             }
         }
-        mainWindowJSON.put("selectedTags", selectedTagsJSON);
+        tagsFileGuiSettingsJson.put("selectedTags", selectedTagsJSON);
 
         JSONObject tagsExpandJSON = new JSONObject();
         for(TreeItem<Tag> tagTreeItem: getAllTagItems()){
             tagsExpandJSON.put(tags.getTagId(tagTreeItem.getValue()), tagTreeItem.isExpanded());
         }
-        mainWindowJSON.put("tagsExpand", tagsExpandJSON);
+        tagsFileGuiSettingsJson.put("tagsExpand", tagsExpandJSON);
 
-        guiJSON.put(searchedPathsNameWidth, searchedPathsName.getWidth());
-        guiJSON.put(searchedPathsPathWidth, searchedPathsPath.getWidth());
-
-        JSONLoader.saveJSON(new File("guiSettings.json"), guiJSON);
+        JSONLoader.saveJSON(new File(tagsFile.getName() + ".guiSettings.json"), tagsFileGuiSettingsJson);
     }
     //</GUI settings i/o>=====================
 
@@ -525,7 +537,7 @@ public class MainWindowController {
         MenuItem menuItem = new MenuItem(fileIn.getAbsolutePath());
         menuItem.setOnAction(e -> {
             File file = new File(menuItem.getText());
-            loadContentInfo(file);
+            loadTagsFile(file);
             addRecent(file, true);
         });
 
@@ -536,7 +548,7 @@ public class MainWindowController {
         }
 
         if (saveIn) {
-            saveGuiSettings();
+            saveAppGuiSettings();
         }
     }
 
@@ -648,8 +660,8 @@ public class MainWindowController {
         }
     }
 
-    //<Content info i/o>======================
-    private void validateContentInfo(JSONObject jsonIn) {
+    //<Tag file i/o>==========================
+    private void validateTagsFile(JSONObject jsonIn) {
         if (!jsonIn.has(tagsJSONName)) {
             jsonIn.put(tagsJSONName, new JSONObject());
         }
@@ -698,13 +710,22 @@ public class MainWindowController {
         });
     }
 
-    private void loadContentInfo(File fileIn) {
+    private void loadTagsFile(File fileIn) {
         if(!fileIn.exists()){
             return;
         }
 
+        if(tagsFile != null){
+            saveTagsFileGuiSettings();
+        }
+
         JSONObject json = JSONLoader.loadJSON(fileIn);
-        validateContentInfo(json);
+        validateTagsFile(json);
+
+        tagsTree.getRoot().getChildren().clear();
+        pathsTable.getItems().clear();
+        tags.getChildren().clear();
+        paths.clear();
 
         //<load tags>================================
         JSONObject tagsJSON = json.getJSONObject(tagsJSONName);
@@ -747,8 +768,10 @@ public class MainWindowController {
 
         menuEdit.setDisable(false);
 
-        contenetInfoFile = fileIn;
-        stage.setTitle(appName + " [" + fileIn.getName() + "]");
+        tagsFile = fileIn;
+        stage.setTitle("[" + fileIn.getName() + "] " + appName);
+
+        loadTagsFileGuiSettings();
     }
 
     private void tagsToJSONRecursive(Tag tagIn, JSONObject tagJSONIn){
@@ -762,7 +785,7 @@ public class MainWindowController {
         }
     }
 
-    private void saveContentInfo(File fileIn) {
+    private void saveTagsFile(File fileIn) {
         JSONObject json = new JSONObject();
 
         JSONObject tagsJSON = new JSONObject();
@@ -795,15 +818,15 @@ public class MainWindowController {
         JSONLoader.saveJSON(fileIn, json);
     }
 
-    private void newContentInfo(File fileIn) {
+    private void newTagsFile(File fileIn) {
         menuEdit.setDisable(false);
         pathsTable.getItems().clear();
         tagsTree.getRoot().getChildren().clear();
 
-        contenetInfoFile = fileIn;
+        tagsFile = fileIn;
         stage.setTitle(appName + " [" + fileIn.getName() + "]");
     }
-    //</Content info i/o>=====================
+    //</Tag file i/o>=========================
 
     private void removeSelectedTagsConfirm() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -814,7 +837,7 @@ public class MainWindowController {
         if (result.get() == ButtonType.OK) {
             removeSelectedTags();
             byTagsSearch.setText("");
-            saveContentInfo(contenetInfoFile);
+            saveTagsFile(tagsFile);
         }
     }
 
@@ -834,7 +857,7 @@ public class MainWindowController {
             }
             pathsTable.getItems().removeAll(pathsTable.getSelectionModel().getSelectedItems());
 
-            saveContentInfo(contenetInfoFile);
+            saveTagsFile(tagsFile);
         }
     }
 
@@ -868,7 +891,7 @@ public class MainWindowController {
                     file = new File(file.getAbsoluteFile() + ".json");
                 }
 
-                newContentInfo(file);
+                newTagsFile(file);
                 addRecent(file, true);
             }
         });
@@ -879,7 +902,7 @@ public class MainWindowController {
             fileChooser.setTitle("Open content info file");
             File file = fileChooser.showOpenDialog(stage);
             if (file != null) {
-                loadContentInfo(file);
+                loadTagsFile(file);
                 addRecent(file, true);
             }
         });

@@ -1,30 +1,22 @@
 {
      "settingsWindow": {
-          "exploreCurrentDirectory": "/media/q/547425A174258738/CMakeFiles",
-          "x": 482,
-          "width": 957,
-          "y": 137,
-          "height": 643
+          "exploreCurrentDirectory": "/home/q/Загрузки/ContentNavigator",
+          "x": 524,
+          "width": 872,
+          "y": 118,
+          "height": 700
      },
      "mainWindow": {
           "x": 658,
           "width": 1098,
-          "selectedTags": ["xcvbfdg"],
           "y": 208,
-          "tagsExpand": {
-               "df;gkljfg": true,
-               "dkljf": true,
-               "ewryrey : vbdfg : fgwertwe": false,
-               "ewryrey": true,
-               "df;gkljfg : fsdgsr": false,
-               "ewryrey : vbdfg": true,
-               "xcvbfdg": true,
-               "sdfgsdf": true
-          },
           "tagsPathsSplitPosition": 0.2042124542124542,
           "height": 759
      },
      "searchedPathsNameWidth": 394.00000607967377,
      "searchedPathsPathWidth": 407,
-     "recent": ["/home/q/Загрузки/ContentNavigator/sdf.json"]
+     "recent": [
+          "/home/q/Загрузки/ContentNavigator/sdf.json",
+          "/home/q/Рабочий стол/qwerty.json"
+     ]
 }
