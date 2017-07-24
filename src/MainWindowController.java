@@ -60,6 +60,7 @@ public class MainWindowController {
     private Label searchValidation;
 
     private String openInFolderCommand;
+    private String openInFolderArgument;
 
     private final String appName = "Tag file navigator";
 
@@ -105,7 +106,6 @@ public class MainWindowController {
     }
 
     public void setTagsStage(Stage stageIn, FXMLLoader loaderIn)throws Exception{
-        loadSettings();
         tagsFile = null;
 
         stage = stageIn;
@@ -251,12 +251,15 @@ public class MainWindowController {
         addEditPathDialogController.setPathsTagsParent(stage, loader, paths, tags);
         //</addEditPathDialogController>========================
 
+        MainWindowController mainWindowControllerContext = this;
         //<SettingsDialogController>============================
         loader = new FXMLLoader(getClass().getResource("SettingsDialog.fxml"));
         loader.load();
         settingsDialogController = loader.getController();
         settingsDialogController.setParentStage(stage, loader, this, () -> {
             openInFolderCommand = settingsDialogController.getOpenInFolderCommand();
+            openInFolderArgument = settingsDialogController.getOpenInFolderArgument();
+            mainWindowControllerContext.setStyle(settingsDialogController.getSelectedStyle());
             saveSettings();
         });
         //</SettingsDialogController>===========================
@@ -276,6 +279,7 @@ public class MainWindowController {
 
         initMenu();
 
+        loadSettings();
         loadAppGuiSettings();
 
         if (openRecentMenu.getItems().size() > 0) {
@@ -335,16 +339,29 @@ public class MainWindowController {
 
 
     private void validateSettings(JSONObject settingsJSONIn){
-        if(!settingsJSONIn.has("openInFolderCommand")){
+        String os = System.getProperty("os.name").toLowerCase();
 
-            String os = System.getProperty("os.name").toLowerCase();
+        if(!settingsJSONIn.has("openInFolderCommand")){
             if(os.contains("win")){
-                settingsJSONIn.put("openInFolderCommand", "explorer /select");
+                settingsJSONIn.put("openInFolderCommand", "explorer");
             }else if(os.contains("nix") || os.contains("nux") || os.contains("aix")){
                 settingsJSONIn.put("openInFolderCommand", "nautilus");
             }else{
                 settingsJSONIn.put("openInFolderCommand", "nautilus");
             }
+        }
+        if(!settingsJSONIn.has("openInFolderArgument")){
+            if(os.contains("win")){
+                settingsJSONIn.put("openInFolderArgument", "/select");
+            }else if(os.contains("nix") || os.contains("nux") || os.contains("aix")){
+                settingsJSONIn.put("openInFolderArgument", "");
+            }else{
+                settingsJSONIn.put("openInFolderArgument", "");
+            }
+        }
+
+        if(!settingsJSONIn.has("style")){
+            settingsJSONIn.put("style", "default");
         }
     }
 
@@ -353,6 +370,14 @@ public class MainWindowController {
         validateSettings(settingsJSON);
 
         openInFolderCommand = settingsJSON.getString("openInFolderCommand");
+        openInFolderArgument = settingsJSON.getString("openInFolderArgument");
+
+        String style = settingsJSON.getString("style");
+        if(new File("styles/" + style).exists() && style.length() > 0){
+            setStyle("file:styles/" + style);
+        }else{
+            setStyle("default");
+        }
     }
 
     private void saveSettings(){
@@ -360,6 +385,11 @@ public class MainWindowController {
         validateSettings(settingsJSON);
 
         settingsJSON.put("openInFolderCommand", openInFolderCommand);
+        settingsJSON.put("openInFolderArgument", openInFolderArgument);
+
+        if(!styleFileName.equals("default")){
+            settingsJSON.put("style", styleFileName.replace("file:styles/", ""));
+        }
 
         JSONLoader.saveJSON(new File("settings.json"), settingsJSON);
     }
@@ -1083,23 +1113,50 @@ public class MainWindowController {
         editPathItem.setOnAction(editPath);
         removeTagItem.setOnAction(event -> removeSelectedTagsConfirm());
 
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Path does not exist");
+        alert.setHeaderText("Path does not exist, Remove this path?");
+
         openPathItemContext.setOnAction(event -> {
             desktopOpenFile(new File(pathsTable.getSelectionModel().getSelectedItem().getPath()));
         });
         openInFolderPathItemContext.setOnAction(event -> {
-            if (Desktop.isDesktopSupported()) {
-                new Thread(() -> {
-                    try {
-                        File file = new File(pathsTable.getSelectionModel().getSelectedItem().getPath());
-//                        if(file.isDirectory()){
-//                            file = new File(pathsTable.getSelectionModel().getSelectedItem().split("(\\\\|\\/)[^\\\\|\\/]*$")[0]);
-//                        }
-                        String[] command = {openInFolderCommand, file.getAbsolutePath()};
-                        Runtime.getRuntime().exec(command);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }).start();
+            File file = new File(pathsTable.getSelectionModel().getSelectedItem().getPath());
+
+            if(!file.exists()){
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    Path path = pathsTable.getSelectionModel().getSelectedItem();
+                    path.removeTags(path.getTags());
+                    paths.remove(path);
+
+                    saveTagsFile(tagsFile);
+                }
+            }else{
+                if (Desktop.isDesktopSupported()) {
+                    new Thread(() -> {
+                        try {
+                            if(!file.exists()){
+                            }else{
+                                String[] command;
+                                if(openInFolderArgument.length() > 0){
+                                    command = new String[3];
+                                    command[0] = openInFolderCommand;
+                                    command[1] = openInFolderArgument;
+                                    command[2] = file.getAbsolutePath();
+                                }else{
+                                    command = new String[2];
+                                    command[0] = openInFolderCommand;
+                                    command[1] = file.getAbsolutePath();
+                                }
+
+                                Runtime.getRuntime().exec(command);
+                            }
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }).start();
+                }
             }
         });
         addPathItemContext.setOnAction(addPath);
@@ -1151,15 +1208,26 @@ public class MainWindowController {
         if(styleFileName.length() > 0){
             stage.getScene().getStylesheets().remove(styleFileName);
         }
-        styleFileName = styleFileNameIn;
-        stage.getScene().getStylesheets().add(styleFileName);
+
+        styleFileName = "default";
+        if(!styleFileNameIn.equals("default")){
+            styleFileName = styleFileNameIn;
+            stage.getScene().getStylesheets().add(styleFileName);
+        }
 
         addEditTagDialogController.setStyle(styleFileName);
         addEditPathDialogController.setStyle(styleFileName);
         settingsDialogController.setStyle(styleFileName);
     }
 
+    public String getStyle(){
+        return styleFileName;
+    }
+
     public String getOpenInFolderCommand(){
         return openInFolderCommand;
+    }
+    public String getOpenInFolderArgument(){
+        return openInFolderArgument;
     }
 }

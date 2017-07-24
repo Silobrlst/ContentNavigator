@@ -1,42 +1,8 @@
 {
-     "paths": {
-          "/media/q/547425A174258738/360Rec": {
-               "name": "360Rec",
-               "tags": {
-                    "dkljf": "",
-                    "xcvbfdg": ""
-               }
-          },
-          "/media/q/547425A174258738/CMakeFiles/cmake.check_cache": {
-               "name": "cmake.check_cache",
-               "tags": {"xcvbfdg": ""}
-          },
-          "/media/q/3Q HDD External/Dev-Cpp/examples/WinAnim/Images.rc": {
-               "name": "Images.rc",
-               "tags": {
-                    "df;gkljfg": "",
-                    "dkljf": "",
-                    "xcvbfdg": "",
-                    "sdfgsdf": ""
-               }
-          },
-          "/media/q/3Q HDD External/Dev-Cpp/examples/WinAnim/Anim.rc": {
-               "name": "Anim.rc",
-               "tags": {"dkljf": ""}
-          },
-          "/media/q/3Q HDD External/Dev-Cpp/examples/WinAnim/ballmask.bmp": {
-               "name": "ballmask.bmp",
-               "tags": {"dkljf": ""}
-          },
-          "/home/q/Документы/CodeBLocks": {
-               "name": "CodeBLocks",
-               "tags": {"xcvbfdg": ""}
-          },
-          "/media/q/547425A174258738/bison-3.0": {
-               "name": "bison-3.0",
-               "tags": {"xcvbfdg": ""}
-          }
-     },
+     "paths": {"/home/q/Загрузки/ContentNavigator/guiSettings.json": {
+          "name": "guiSettings.json",
+          "tags": {"dkljf": ""}
+     }},
      "tags": {
           "df;gkljfg": {"tags": {"fsdgsr": {"tags": {}}}},
           "dkljf": {"tags": {}},

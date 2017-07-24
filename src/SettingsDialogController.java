@@ -2,6 +2,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -18,12 +19,19 @@ public class SettingsDialogController {
     @FXML
     private Button ok;
     @FXML
+    private Button apply;
+    @FXML
     private Button openAppFolder;
     @FXML
     private TextField openInFolderCommand;
+    @FXML
+    private TextField openInFolderArgument;
+    @FXML
+    private ComboBox<String> style;
 
     private Stage stage;
 
+    //стиль этого окна
     private String styleFileName;
 
     private MainWindowController mainWindowController;
@@ -42,8 +50,6 @@ public class SettingsDialogController {
         mainWindowController = mainWindowControllerIn;
         settingsDialogInterface = settingsDialogInterfaceIn;
 
-        openInFolderCommand.setText(mainWindowController.getOpenInFolderCommand());
-
         Scene scene = new Scene(loaderIn.getRoot());
         stage = new Stage();
         stage.setScene(scene);
@@ -57,6 +63,7 @@ public class SettingsDialogController {
 
         cancel.setOnAction(event -> onCancel());
         ok.setOnAction(event -> onOk());
+        apply.setOnAction(event -> settingsDialogInterface.applied());
 
         openAppFolder.setOnAction(event -> {
             if( Desktop.isDesktopSupported()){
@@ -81,10 +88,32 @@ public class SettingsDialogController {
     }
 
     public void open() {
+        File folder = new File("styles");
+        File[] listOfFiles = folder.listFiles();
+
+        style.getItems().clear();
+        style.getItems().add("default");
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile() && listOfFiles[i].getName().endsWith(".css")) {
+                style.getItems().add(listOfFiles[i].getName());
+            }
+        }
+        style.getSelectionModel().select(mainWindowController.getStyle().replace("file:styles/", ""));
+
+        openInFolderCommand.setText(mainWindowController.getOpenInFolderCommand());
+        openInFolderArgument.setText(mainWindowController.getOpenInFolderArgument());
         stage.showAndWait();
     }
 
     public void setStyle(String styleFileNameIn){
+        if(styleFileNameIn.equals("default")){
+            if(styleFileName.length() > 0){
+                stage.getScene().getStylesheets().remove(styleFileName);
+            }
+            styleFileName = "";
+            return;
+        }
+
         if(styleFileName.length() > 0){
             stage.getScene().getStylesheets().remove(styleFileName);
         }
@@ -94,5 +123,17 @@ public class SettingsDialogController {
 
     public String getOpenInFolderCommand(){
         return openInFolderCommand.getText();
+    }
+    public String getOpenInFolderArgument(){
+        return openInFolderArgument.getText();
+    }
+    public String getSelectedStyle(){
+        String selectedStyle = style.getSelectionModel().getSelectedItem();
+
+        if(selectedStyle.equals("default")){
+            return "default";
+        }
+
+        return "file:styles/" + style.getSelectionModel().getSelectedItem();
     }
 }

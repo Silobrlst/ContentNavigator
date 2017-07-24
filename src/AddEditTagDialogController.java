@@ -117,6 +117,14 @@ public class AddEditTagDialogController {
     }
 
     public void setStyle(String styleFileNameIn){
+        if(styleFileNameIn.equals("default")){
+            if(styleFileName.length() > 0){
+                stage.getScene().getStylesheets().remove(styleFileName);
+            }
+            styleFileName = "";
+            return;
+        }
+
         if(styleFileName.length() > 0){
             stage.getScene().getStylesheets().remove(styleFileName);
         }

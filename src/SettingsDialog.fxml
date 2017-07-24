@@ -45,12 +45,15 @@
               <rowConstraints>
                 <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <ComboBox fx:id="style" GridPane.columnIndex="1" />
                   <Label text="Style:" GridPane.halignment="RIGHT" />
                   <Label text="&quot;Open in folder&quot; command:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                   <TextField fx:id="openInFolderCommand" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="&quot;Open in folder&quot; argument:" GridPane.rowIndex="2" />
+                  <TextField fx:id="openInFolderArgument" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </children>

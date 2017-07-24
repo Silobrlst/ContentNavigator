@@ -33,6 +33,7 @@ public class Tags extends Tag {
     }
 
     public void removeTag(Tag tagIn){
+        tagIn.removePaths(tagIn.getPaths());
         tagIn.getParent().removeChild(tagIn);
     }
 

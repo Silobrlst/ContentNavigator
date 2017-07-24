@@ -1,4 +1,7 @@
+import org.lwjgl.system.CallbackI;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Tag {
@@ -43,6 +46,13 @@ public class Tag {
             this.removePath(pathIn);
             pathIn.removeTag(this);
             tagListeners.forEach(tagListener -> tagListener.removedPathFromTag(this, pathIn));
+        }
+    }
+
+    public void removePaths(Collection<Path> pathsIn){
+        for(Path path: pathsIn){
+            path.removeTag(this);
+            removePath(path);
         }
     }
 

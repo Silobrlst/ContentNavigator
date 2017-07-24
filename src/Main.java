@@ -10,7 +10,6 @@ public class Main extends Application {
         loader.load();
         MainWindowController mainWindowController = loader.getController();
         mainWindowController.setTagsStage(primaryStageIn, loader);
-        mainWindowController.setStyle("file:styles/modena_dark.css");
     }
 
     public static void main(String[] args) {
