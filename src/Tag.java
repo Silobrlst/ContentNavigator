@@ -1,5 +1,3 @@
-import org.lwjgl.system.CallbackI;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
