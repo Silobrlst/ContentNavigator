@@ -352,7 +352,7 @@ public class MainWindowController {
         }
         if(!settingsJSONIn.has("openInFolderArgument")){
             if(os.contains("win")){
-                settingsJSONIn.put("openInFolderArgument", "/select");
+                settingsJSONIn.put("openInFolderArgument", "/select,");
             }else if(os.contains("nix") || os.contains("nux") || os.contains("aix")){
                 settingsJSONIn.put("openInFolderArgument", "");
             }else{
