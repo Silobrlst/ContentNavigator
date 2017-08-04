@@ -54,12 +54,6 @@ public class Path implements Comparable<Path> {
         return path;
     }
 
-    public void addTag(Tag tagIn){
-        if(!tags.contains(tagIn)){
-            addTagWithoutNotifing(tagIn);
-            pathListeners.forEach(pathListener -> pathListener.addedTag(this, tagIn));
-        }
-    }
     public void addTagWithoutNotifing(Tag tagIn){
         if(!tags.contains(tagIn)){
             tags.add(tagIn);
@@ -79,20 +73,38 @@ public class Path implements Comparable<Path> {
         pathListeners.forEach(pathListener -> pathListener.addedTags(this, tagsIn));
     }
 
-    public void removeTags(Collection<Tag> tagsIn){
-        tags.removeAll(tagsIn);
-
+    public void removeTagsWithoutNotifing(Collection<Tag> tagsIn){
         for(Tag tag: tagsIn){
-            tag.removePath(this);
+            tag.removePathWithoutNotifing(this);
         }
 
+        tags.removeAll(tagsIn);
+    }
+
+    //удаляет все теги
+    public void removeTagsWithoutNotifing(){
+        for(Tag tag: tags){
+            tag.removePathOnly(this);
+        }
+
+        tags.clear();
+    }
+
+    public void removeTags(Collection<Tag> tagsIn){
+        removeTagsWithoutNotifing(tagsIn);
         pathListeners.forEach(pathListener -> pathListener.removedTags(this, tagsIn));
+    }
+
+    public void removeTagWithoutNotifing(Tag tagIn){
+        if(tags.contains(tagIn)){
+            tags.remove(tagIn);
+            tagIn.removePathOnly(this);
+        }
     }
 
     public void removeTag(Tag tagIn){
         if(tags.contains(tagIn)){
-            tags.remove(tagIn);
-            tagIn.removePath(this);
+            removeTagWithoutNotifing(tagIn);
             pathListeners.forEach(pathListener -> pathListener.removedTag(this, tagIn));
         }
     }
@@ -109,10 +121,5 @@ public class Path implements Comparable<Path> {
     @Override
     public int compareTo(Path pathIn) {
         return getName().compareTo(pathIn.getPath());
-    }
-
-
-    public boolean equals(String tagNameIn){
-        return name.equals(tagNameIn);
     }
 }

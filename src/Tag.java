@@ -1,5 +1,3 @@
-import org.lwjgl.system.CallbackI;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -40,11 +38,20 @@ public class Tag {
         }
     }
 
+    public void removePathWithoutNotifing(Path pathIn){
+        if(paths.contains(pathIn)){
+            removePathOnly(pathIn);
+            pathIn.removeTagWithoutNotifing(this);
+        }
+    }
+
+    public void removePathOnly(Path pathIn){
+        paths.remove(pathIn);
+    }
+
     public void removePath(Path pathIn){
         if(paths.contains(pathIn)){
-            paths.remove(pathIn);
-            this.removePath(pathIn);
-            pathIn.removeTag(this);
+            removePathWithoutNotifing(pathIn);
             tagListeners.forEach(tagListener -> tagListener.removedPathFromTag(this, pathIn));
         }
     }

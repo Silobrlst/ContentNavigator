@@ -64,6 +64,8 @@ public class MainWindowController {
 
     private final String appName = "Tag file navigator";
 
+    private final Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
+
     //<icons>=================================
     private final Image openIcon = new Image("file:images/openIcon.png");
     private final Image settingsIcon = new Image("file:images/settingsIcon.png");
@@ -147,15 +149,7 @@ public class MainWindowController {
                 pathsTable.getSelectionModel().select(pathIn);
                 pathsTable.refresh();
                 pathsTable.requestFocus();
-            }
-
-            @Override
-            public void addedTag(Path pathIn, Tag tagIn) {
-                saveTagsFile(tagsFile);
-                filterPathsBySelectedTags();
-                pathsTable.getSelectionModel().select(pathIn);
-                pathsTable.refresh();
-                pathsTable.requestFocus();
+                pathsTable.scrollTo(pathIn);
             }
         });
 
@@ -168,6 +162,7 @@ public class MainWindowController {
                 tagsTree.getSelectionModel().clearSelection();
                 tagsTree.getSelectionModel().select(tagTreeItem);
                 tagsTree.requestFocus();
+                tagsTree.scrollTo(tagsTree.getRow(tagTreeItem));
 
                 getTreeItemByTag(parentIn).getChildren().sort((o1, o2) -> {
                     return o1.getValue().getName().compareTo(o2.getValue().getName());
@@ -298,8 +293,13 @@ public class MainWindowController {
 
         for (TreeItem<Tag> selectedTag: selectedTags) {
             if(selectedTag != tagsTree.getRoot()){
-                selectedTag.getParent().getChildren().remove(selectedTag);
-                selectedTag.getValue().getParent().removeChild(selectedTag.getValue());
+                tags.removeTag(selectedTag.getValue());
+            }
+        }
+
+        for (TreeItem<Tag> selectedTag: selectedTags) {
+            if(selectedTag != tagsTree.getRoot()){
+                selectedTag.getParent().getChildren().removeAll(selectedTags);
             }
         }
     }
@@ -477,7 +477,9 @@ public class MainWindowController {
 
         JSONObject tagsExpandJSON = tagsFileGuiSettingsJson.getJSONObject("tagsExpand");
         for(String tagId: tagsExpandJSON.keySet()){
-            getTreeItemByTag(tags.getTagById(tagId)).setExpanded(tagsExpandJSON.getBoolean(tagId));
+            if(tags.getTagById(tagId) != null){
+                getTreeItemByTag(tags.getTagById(tagId)).setExpanded(tagsExpandJSON.getBoolean(tagId));
+            }
         }
 
         new Timeline(new KeyFrame(Duration.millis(1000), e -> {
@@ -845,7 +847,7 @@ public class MainWindowController {
             }
         }
 
-        JSONLoader.saveJSON(fileIn, json);
+        //JSONLoader.saveJSON(fileIn, json);
     }
 
     private void newTagsFile(File fileIn) {
@@ -873,16 +875,18 @@ public class MainWindowController {
 
     private void removeSelectedPathsFromSelectedTagsConfirm() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Remove Paths");
+        alert.setTitle("Remove Paths from tags");
         alert.setHeaderText("Remove selected paths from selected tags?");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
+            //выделенные теги
+            ArrayList<Tag> tags = new ArrayList<>();
+            for(TreeItem<Tag> tagItem: tagsTree.getSelectionModel().getSelectedItems()){
+                tags.add(tagItem.getValue());
+            }
+
             for (Path selectedPath: pathsTable.getSelectionModel().getSelectedItems()) {
-                ArrayList<Tag> tags = new ArrayList<>();
-                for(TreeItem<Tag> tagItem: tagsTree.getSelectionModel().getSelectedItems()){
-                    tags.add(tagItem.getValue());
-                }
                 selectedPath.removeTags(tags);
             }
             pathsTable.getItems().removeAll(pathsTable.getSelectionModel().getSelectedItems());
@@ -891,15 +895,82 @@ public class MainWindowController {
         }
     }
 
+    private void removeSelectedPathsConfirm(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Remove Paths");
+        alert.setHeaderText("Remove selected paths?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            for (Path selectedPath: pathsTable.getSelectionModel().getSelectedItems()) {
+                paths.removePath(selectedPath);
+            }
+            pathsTable.getItems().removeAll(pathsTable.getSelectionModel().getSelectedItems());
+
+            saveTagsFile(tagsFile);
+        }
+    }
+
+    private void desktopOpenInFolder(File fileIn){
+        if(!fileIn.exists()){
+            Optional<ButtonType> result = alertConfirm.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                Path path = pathsTable.getSelectionModel().getSelectedItem();
+                path.removeTags(path.getTags());
+                paths.removePath(path);
+
+                saveTagsFile(tagsFile);
+            }
+        }else{
+            if (Desktop.isDesktopSupported()) {
+                new Thread(() -> {
+                    try {
+                        if(!fileIn.exists()){
+                        }else{
+                            String[] command;
+                            if(openInFolderArgument.length() > 0){
+                                command = new String[3];
+                                command[0] = openInFolderCommand;
+                                command[1] = openInFolderArgument;
+                                command[2] = fileIn.getAbsolutePath();
+                            }else{
+                                command = new String[2];
+                                command[0] = openInFolderCommand;
+                                command[1] = fileIn.getAbsolutePath();
+                            }
+
+                            Runtime.getRuntime().exec(command);
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }).start();
+            }
+        }
+    }
+
     private void desktopOpenFile(File fileIn){
-        if (Desktop.isDesktopSupported()) {
-            new Thread(() -> {
-                try {
-                    Desktop.getDesktop().open(fileIn);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }).start();
+        if(!fileIn.exists()){
+            alertConfirm.setTitle("Path does not exist");
+            alertConfirm.setHeaderText("Path does not exist, Remove this path?");
+            Optional<ButtonType> result = alertConfirm.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                Path path = pathsTable.getSelectionModel().getSelectedItem();
+                path.removeTags(path.getTags());
+                paths.removePath(path);
+
+                saveTagsFile(tagsFile);
+            }
+        }else{
+            if (Desktop.isDesktopSupported()) {
+                new Thread(() -> {
+                    try {
+                        Desktop.getDesktop().open(fileIn);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }).start();
+            }
         }
     }
 
@@ -956,7 +1027,7 @@ public class MainWindowController {
         menuFile.getItems().add(exitItem);
         //</menu file>===================================
 
-        //<serached paths listView ContextMenu>==========
+        //<paths ContextMenu>============================
         ContextMenu serchedPathsContextMenu = new ContextMenu();
         MenuItem openPathItemContext = new MenuItem("Open");
         openPathItemContext.setGraphic(new ImageView(openIcon));
@@ -966,6 +1037,10 @@ public class MainWindowController {
         editPathItemContext.setGraphic(new ImageView(editIcon));
         MenuItem addPathItemContext = new MenuItem("Add Path");
         addPathItemContext.setGraphic(new ImageView(addIcon));
+        MenuItem addPathSelectedWithTagsItemContextPaths = new MenuItem("Add Path with selected tags");
+        addPathSelectedWithTagsItemContextPaths.setGraphic(new ImageView(addIcon));
+        MenuItem removePathsItemContext = new MenuItem("Remove Paths");
+        removePathsItemContext.setGraphic(new ImageView(removeIcon));
         MenuItem removePathsFromSelectedTagsItemContext = new MenuItem("Remove Paths from selected tags");
         removePathsFromSelectedTagsItemContext.setGraphic(new ImageView(removeIcon));
 
@@ -973,9 +1048,11 @@ public class MainWindowController {
         serchedPathsContextMenu.getItems().add(openInFolderPathItemContext);
         serchedPathsContextMenu.getItems().add(new SeparatorMenuItem());
         serchedPathsContextMenu.getItems().add(addPathItemContext);
+        serchedPathsContextMenu.getItems().add(addPathSelectedWithTagsItemContextPaths);
         serchedPathsContextMenu.getItems().add(new SeparatorMenuItem());
         serchedPathsContextMenu.getItems().add(editPathItemContext);
         serchedPathsContextMenu.getItems().add(new SeparatorMenuItem());
+        serchedPathsContextMenu.getItems().add(removePathsItemContext);
         serchedPathsContextMenu.getItems().add(removePathsFromSelectedTagsItemContext);
         pathsTable.setOnContextMenuRequested(event -> {
             if(pathsTable.getSelectionModel().getSelectedItems().size() == 1){
@@ -995,6 +1072,11 @@ public class MainWindowController {
                 openPathItemContext.setDisable(true);
                 openInFolderPathItemContext.setDisable(true);
                 editPathItemContext.setDisable(true);
+            }
+            if(tagsTree.getSelectionModel().getSelectedItems().size() > 0){
+                addPathSelectedWithTagsItemContextPaths.setDisable(false);
+            }else{
+                addPathSelectedWithTagsItemContextPaths.setDisable(true);
             }
         });
         pathsTable.setContextMenu(serchedPathsContextMenu);
@@ -1018,9 +1100,9 @@ public class MainWindowController {
                 }
             }
         });
-        //</serached paths listView ContextMenu>=========
+        //</paths ContextMenu>===========================
 
-        //<tags listView ContextMenu>====================
+        //<tags ContextMenu>=============================
         ContextMenu tagsTreeContextMenu = new ContextMenu();
         MenuItem renameTagItemContext = new MenuItem("Edit Tag");
         renameTagItemContext.setGraphic(new ImageView(editIcon));
@@ -1038,7 +1120,7 @@ public class MainWindowController {
         tagsTreeContextMenu.getItems().add(new SeparatorMenuItem());
         tagsTreeContextMenu.getItems().add(removeTagItemContext);
         tagsTree.setContextMenu(tagsTreeContextMenu);
-        //</tags listView ContextMenu>===================
+        //</tags ContextMenu>============================
 
         //<menu edit>====================================
         MenuItem addTagItem = new MenuItem("Add Tag");
@@ -1097,6 +1179,16 @@ public class MainWindowController {
             }
         };
 
+        EventHandler<ActionEvent> addPathSelectedWithTags = event -> {
+            ArrayList<Tag> tags1 = new ArrayList<>();
+            for(TreeItem<Tag> tagItem: tagsTree.getSelectionModel().getSelectedItems()){
+                tags1.add(tagItem.getValue());
+            }
+
+            addEditPathDialogController.setAddPath(tags1);
+            addEditPathDialogController.open();
+        };
+
         stage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (event.getCode() == KeyCode.T && event.isControlDown()) {
                 tagsTree.requestFocus();
@@ -1113,68 +1205,18 @@ public class MainWindowController {
         editPathItem.setOnAction(editPath);
         removeTagItem.setOnAction(event -> removeSelectedTagsConfirm());
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Path does not exist");
-        alert.setHeaderText("Path does not exist, Remove this path?");
-
-        openPathItemContext.setOnAction(event -> {
-            desktopOpenFile(new File(pathsTable.getSelectionModel().getSelectedItem().getPath()));
-        });
-        openInFolderPathItemContext.setOnAction(event -> {
-            File file = new File(pathsTable.getSelectionModel().getSelectedItem().getPath());
-
-            if(!file.exists()){
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    Path path = pathsTable.getSelectionModel().getSelectedItem();
-                    path.removeTags(path.getTags());
-                    paths.remove(path);
-
-                    saveTagsFile(tagsFile);
-                }
-            }else{
-                if (Desktop.isDesktopSupported()) {
-                    new Thread(() -> {
-                        try {
-                            if(!file.exists()){
-                            }else{
-                                String[] command;
-                                if(openInFolderArgument.length() > 0){
-                                    command = new String[3];
-                                    command[0] = openInFolderCommand;
-                                    command[1] = openInFolderArgument;
-                                    command[2] = file.getAbsolutePath();
-                                }else{
-                                    command = new String[2];
-                                    command[0] = openInFolderCommand;
-                                    command[1] = file.getAbsolutePath();
-                                }
-
-                                Runtime.getRuntime().exec(command);
-                            }
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }).start();
-                }
-            }
-        });
+        openPathItemContext.setOnAction(event -> desktopOpenFile(new File(pathsTable.getSelectionModel().getSelectedItem().getPath())));
+        openInFolderPathItemContext.setOnAction(event -> desktopOpenInFolder(new File(pathsTable.getSelectionModel().getSelectedItem().getPath())));
         addPathItemContext.setOnAction(addPath);
         editPathItemContext.setOnAction(editPath);
+        removePathsItemContext.setOnAction(event -> removeSelectedPathsConfirm());
         removePathsFromSelectedTagsItemContext.setOnAction(event -> removeSelectedPathsFromSelectedTagsConfirm());
 
         addTagItemContext.setOnAction(addTag);
         renameTagItemContext.setOnAction(editTag);
         removeTagItemContext.setOnAction(event -> removeSelectedTagsConfirm());
-        addPathSelectedWithTagsItemContext.setOnAction(event -> {
-            ArrayList<Tag> tags1 = new ArrayList<>();
-            for(TreeItem<Tag> tagItem: tagsTree.getSelectionModel().getSelectedItems()){
-                tags1.add(tagItem.getValue());
-            }
-
-            addEditPathDialogController.setAddPath(tags1);
-            addEditPathDialogController.open();
-        });
+        addPathSelectedWithTagsItemContext.setOnAction(addPathSelectedWithTags);
+        addPathSelectedWithTagsItemContextPaths.setOnAction(addPathSelectedWithTags);
         tagsTree.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
                 tagsTreeContextMenu.show(tagsTree, event.getScreenX(), event.getScreenY());

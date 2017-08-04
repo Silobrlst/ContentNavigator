@@ -1,13 +1,1939 @@
 {
-     "paths": {"/home/q/Загрузки/ContentNavigator/guiSettings.json": {
-          "name": "guiSettings.json",
-          "tags": {"dkljf": ""}
-     }},
+     "paths": {
+          "/media/q/windows data/Downloaded torrents/Megadeth": {
+               "name": "Megadeth",
+               "tags": {"Metal : Thrash": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Pete Thorn - Guitar Nerd": {
+               "name": "Pete Thorn - Guitar Nerd",
+               "tags": {"Rock : Instrumental": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Demian Heuke - 2014 - Treumal": {
+               "name": "Demian Heuke - 2014 - Treumal",
+               "tags": {"Rock : Instrumental": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Imagine Dragons - Discography - 2009-2015": {
+               "name": "Imagine Dragons - Discography - 2009-2015",
+               "tags": {"Rock : Alternative": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/BLUE STONE": {
+               "name": "BLUE STONE",
+               "tags": {
+                    "Electro : Ambient": "",
+                    "Electro : New Age": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Hail Spirit Noir 2012-2014 (Discography 2 CD)": {
+               "name": "Hail Spirit Noir 2012-2014 (Discography 2 CD)",
+               "tags": {"Metal : Black": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Oni[torrents.ru]": {
+               "name": "Oni[torrents.ru]",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Radiohead": {
+               "name": "Radiohead",
+               "tags": {"Rock : Indie": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Hiroyuki Oda - Thirty (OTOC1) - 2010": {
+               "name": "Hiroyuki Oda - Thirty (OTOC1) - 2010",
+               "tags": {"Electro : Trance": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Lost Midas - Off the Course (2014)": {
+               "name": "Lost Midas - Off the Course (2014)",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/X. Superbox [Origins]": {
+               "name": "X. Superbox [Origins]",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Satyricon": {
+               "name": "Satyricon",
+               "tags": {"Metal : Black": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/kokohana": {
+               "name": "kokohana",
+               "tags": {"Electro : New Age": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/SlipKnot": {
+               "name": "SlipKnot",
+               "tags": {"Metal : Nu": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Nasum": {
+               "name": "Nasum",
+               "tags": {"Punk : Grindcore": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Worship": {
+               "name": "Worship",
+               "tags": {"Metal : Doom : Funeral": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Rammstein": {
+               "name": "Rammstein",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Foo Fighters - Discography - 1995-2014": {
+               "name": "Foo Fighters - Discography - 1995-2014",
+               "tags": {"Rock : Alternative": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Elane/(2008) Elane - The Silver Falls (320 kbps)": {
+               "name": "(2008) Elane - The Silver Falls (320 kbps)",
+               "tags": {"Rock : Folk": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Diverse System/2012.05.27 [DVSP-0077] thE3 [例大祭9]": {
+               "name": "2012.05.27 [DVSP-0077] thE3 [例大祭9]",
+               "tags": {"Electro : Touhou": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Depressed Mode": {
+               "name": "Depressed Mode",
+               "tags": {"Metal : Doom : Death": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Blastromen - 2014 - Reality Opens": {
+               "name": "Blastromen - 2014 - Reality Opens",
+               "tags": {"Electro : Nu": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Neurotech - The Ophidian Symphony (2015)": {
+               "name": "Neurotech - The Ophidian Symphony (2015)",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Oneiroid Psychosis": {
+               "name": "Oneiroid Psychosis",
+               "tags": {"Electro : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Powerman 5000 Discography": {
+               "name": "Powerman 5000 Discography",
+               "tags": {
+                    "Metal : Nu": "",
+                    "Metal : Alternative": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Helalyn Flowers - White Me In-Black Me Out (Deluxe Limited Edition) - 2013 (320 kbps)": {
+               "name": "Helalyn Flowers - White Me In-Black Me Out (Deluxe Limited Edition) - 2013 (320 kbps)",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/Dungeon of the Endless Soundtrack (FlybyNo) - 2014": {
+               "name": "Dungeon of the Endless Soundtrack (FlybyNo) - 2014",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/De-Phazz": {
+               "name": "De-Phazz",
+               "tags": {"Jazz : Nu": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Geskia - Eclipse 323 (2009)": {
+               "name": "Geskia - Eclipse 323 (2009)",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Synthetic Breed": {
+               "name": "Synthetic Breed",
+               "tags": {"Metal : Death : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/[-SITD-] Discography": {
+               "name": "[-SITD-] Discography",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/X-Fusion": {
+               "name": "X-Fusion",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Graveworm": {
+               "name": "Graveworm",
+               "tags": {"Metal : Black : Symphonic": ""}
+          },
+          "/media/q/3Q HDD External/Documents and Settings/z1i1k/Мои документы/Downloads/Various - Незнайка на Луне - 2000": {
+               "name": "Various - Незнайка на Луне - 2000",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Neurotech (Slovenia)": {
+               "name": "Neurotech (Slovenia)",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Serph - Vent (2010)": {
+               "name": "Serph - Vent (2010)",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Assemblage 23 (Discography)/Albums": {
+               "name": "Assemblage 23 (Discography)/Albums",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Combichrist - Discography (2003-2014)": {
+               "name": "Combichrist - Discography (2003-2014)",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Be'Lakor - Discography": {
+               "name": "Be'Lakor - Discography",
+               "tags": {"Metal : Death : Melodic": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Spacebase DF-9 by Chris Remo (2013) [MP3, V0]": {
+               "name": "Spacebase DF-9 by Chris Remo (2013) [MP3, V0]",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Matryoshka - Laideronnette (2012)": {
+               "name": "Matryoshka - Laideronnette (2012)",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Gustavo Guerra - 2013 - Nada Era a Favor": {
+               "name": "Gustavo Guerra - 2013 - Nada Era a Favor",
+               "tags": {"Rock : Instrumental": ""}
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/Aes Dana feat. MikTek - Alkaline (2015)": {
+               "name": "Aes Dana feat. MikTek - Alkaline (2015)",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Testament": {
+               "name": "Testament",
+               "tags": {"Metal : Thrash": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Anaal Nathrakh - The Whole of the Law (2016)": {
+               "name": "Anaal Nathrakh - The Whole of the Law (2016)",
+               "tags": {
+                    "Metal : Black": "",
+                    "Punk : Grindcore": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Himekami": {
+               "name": "Himekami",
+               "tags": {"Electro : New Age": ""}
+          },
+          "/home/q/Рабочий стол/3Q HDD External/Downloaded torrents/Resident Evil Discography": {
+               "name": "Resident Evil Discography",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Dark Funeral": {
+               "name": "Dark Funeral",
+               "tags": {"Metal : Black": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Cryptopsy - Discography (1991-2012)": {
+               "name": "Cryptopsy - Discography (1991-2012)",
+               "tags": {"Metal : Death : Brutal": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Ludovico Einaudi - 2013 - In A Time Lapse": {
+               "name": "Ludovico Einaudi - 2013 - In A Time Lapse",
+               "tags": {"Modern Classical": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Helium Vola - Discography": {
+               "name": "Helium Vola - Discography",
+               "tags": {"Electro : Industrial : Darkwave": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/The Flashbulb - 2014 - Nothing Is Real": {
+               "name": "The Flashbulb - 2014 - Nothing Is Real",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Jennifer Zulli": {
+               "name": "Jennifer Zulli",
+               "tags": {"Electro : New Age": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/In Mourning": {
+               "name": "In Mourning",
+               "tags": {
+                    "Metal : Death : Progressive": "",
+                    "Metal : Death : Melodic": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Grendel": {
+               "name": "Grendel",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Cerce - 2012 - Cerce 7''": {
+               "name": "Cerce - 2012 - Cerce 7''",
+               "tags": {"Punk : Powerviolence": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Kashiwa Daisuke - 88 (2011) [320]": {
+               "name": "Kashiwa Daisuke - 88 (2011) [320]",
+               "tags": {"Modern Classical": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Moonsorrow": {
+               "name": "Moonsorrow",
+               "tags": {
+                    "Metal : Viking": "",
+                    "Metal : Folk": "",
+                    "Metal : Pagan": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Cradle Of Filth дискография": {
+               "name": "Cradle Of Filth дискография",
+               "tags": {"Metal : Black : Symphonic": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Sybreed -Dyscography": {
+               "name": "Sybreed -Dyscography",
+               "tags": {
+                    "Metal : Groove": "",
+                    "Metal : Industrial": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Woods Of Desolation дискография": {
+               "name": "Woods Of Desolation дискография",
+               "tags": {"Metal : Black : Atmospheric": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Velvet Acid Christ - Discography (1994-2016)": {
+               "name": "Velvet Acid Christ - Discography (1994-2016)",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Okkulta - Horrors (2013)": {
+               "name": "Okkulta - Horrors (2013)",
+               "tags": {
+                    "Electro : Industrial : EBM": "",
+                    "Electro : Trance": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Skinny Puppy": {
+               "name": "Skinny Puppy",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Gothminister": {
+               "name": "Gothminister",
+               "tags": {"Metal : Industrial : Gothic": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Origin": {
+               "name": "Origin",
+               "tags": {
+                    "Metal : Death : Brutal": "",
+                    "Metal : Death : Technical": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Naglfar (Swe)": {
+               "name": "Naglfar (Swe)",
+               "tags": {"Metal : Black : Melodic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Liquid Mind": {
+               "name": "Liquid Mind",
+               "tags": {"Electro : New Age": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Limbonic Art": {
+               "name": "Limbonic Art",
+               "tags": {"Metal : Black : Symphonic": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/The Retrosic [Discography]": {
+               "name": "The Retrosic [Discography]",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Kalisia - Cybion 2009": {
+               "name": "Kalisia - Cybion 2009",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Matenrou Opera [Discography]": {
+               "name": "Matenrou Opera [Discography]",
+               "tags": {
+                    "Metal : Symphonic": "",
+                    "Rock : J": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Mors Principium Est": {
+               "name": "Mors Principium Est",
+               "tags": {"Metal : Death : Melodic": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Cephalgy - Gott Maschine Vaterland (2017)": {
+               "name": "Cephalgy - Gott Maschine Vaterland (2017)",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Seraphyde": {
+               "name": "Seraphyde",
+               "tags": {
+                    "Metal : Dark": "",
+                    "Metal : Avant-garde": "",
+                    "Metal : Black : Industrial": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Keiko Matsui - Soul Quest (2013, Shanachie)": {
+               "name": "Keiko Matsui - Soul Quest (2013, Shanachie)",
+               "tags": {"Jazz": ""}
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/The Elder Scrolls V Skyrim - The Original Game Soundtrack (320 kbps)": {
+               "name": "The Elder Scrolls V Skyrim - The Original Game Soundtrack (320 kbps)",
+               "tags": {"OST": ""}
+          },
+          "/home/q/Рабочий стол/3Q HDD External/Downloaded torrents/Neurotech - Stigma [2015]": {
+               "name": "Neurotech - Stigma [2015]",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Blurry Lights": {
+               "name": "Blurry Lights",
+               "tags": {
+                    "Electro : Ambient": "",
+                    "Rock : Post": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/L'Ame Immortelle - Fragmente (2012)": {
+               "name": "L'Ame Immortelle - Fragmente (2012)",
+               "tags": {"Electro : Industrial : Darkwave": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/John Petrucci (2005)": {
+               "name": "John Petrucci (2005)",
+               "tags": {"Rock : Instrumental": ""}
+          },
+          "/home/q/F:/Downloaded torrents/ACxDC": {
+               "name": "ACxDC",
+               "tags": {"Punk : Powerviolence": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Samael": {
+               "name": "Samael",
+               "tags": {
+                    "Metal : Dark": "",
+                    "Metal : Industrial": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Nevermore/Nevermore": {
+               "name": "Nevermore",
+               "tags": {
+                    "Rock : Alternative": "",
+                    "Metal : Progressive": "",
+                    "Metal : Thrash": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/NeverHood+Soundtracks[nnm-club.info]": {
+               "name": "NeverHood+Soundtracks[nnm-club.info]",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Eisbrecher [Discography]": {
+               "name": "Eisbrecher [Discography]",
+               "tags": {"Metal : Industrial : Gothic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Maxxess": {
+               "name": "Maxxess",
+               "tags": {"Rock : Instrumental": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Amorphis": {
+               "name": "Amorphis",
+               "tags": {
+                    "Metal : Progressive": "",
+                    "Metal : Doom": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Aphorism - Surge - 2009": {
+               "name": "Aphorism - Surge - 2009",
+               "tags": {
+                    "Electro : IDM": "",
+                    "Electro : Industrial": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Katharsis": {
+               "name": "Katharsis",
+               "tags": {"Metal : Black : True": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Sopor Aeternus & The Ensemble Of Shadows - Mitternacht (2014)": {
+               "name": "Sopor Aeternus & The Ensemble Of Shadows - Mitternacht (2014)",
+               "tags": {"Electro : Industrial : Darkwave": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Magrudergrind - Discography 2003-2010": {
+               "name": "Magrudergrind - Discography 2003-2010",
+               "tags": {"Punk : Powerviolence": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Headscan": {
+               "name": "Headscan",
+               "tags": {
+                    "Electro : Industrial : EBM": "",
+                    "Electro : Trance": "",
+                    "Electro : Techno": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Darkseed": {
+               "name": "Darkseed",
+               "tags": {"Metal : Gothic": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Souldrainer": {
+               "name": "Souldrainer",
+               "tags": {"Metal : Death : Melodic": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Treibhaus": {
+               "name": "Treibhaus",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/Binary Domain by Mitsuharu Fukuyama 2012": {
+               "name": "Binary Domain by Mitsuharu Fukuyama 2012",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Placebo - Discography - 1996-2013": {
+               "name": "Placebo - Discography - 1996-2013",
+               "tags": {"Rock : Alternative": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Immolation - mp3 320 CBR": {
+               "name": "Immolation - mp3 320 CBR",
+               "tags": {"Metal : Death": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Rage": {
+               "name": "Rage",
+               "tags": {
+                    "Metal : Heavy": "",
+                    "Metal : Power": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Starbound Official": {
+               "name": "Starbound Official",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Delta-S": {
+               "name": "Delta-S",
+               "tags": {"Electro : Industrial": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Dhamika - Floating - 2013 - FLAC": {
+               "name": "Dhamika - Floating - 2013 - FLAC",
+               "tags": {"Electro : PsyChill": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Dismantled": {
+               "name": "Dismantled",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Apoptose - Ana Liil (2014)": {
+               "name": "Apoptose - Ana Liil (2014)",
+               "tags": {"Electro : Dark Ambient": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Mirzadeh": {
+               "name": "Mirzadeh",
+               "tags": {"Metal : Black : Melodic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/China Sky - China Sky II (2015)": {
+               "name": "China Sky - China Sky II (2015)",
+               "tags": {"Rock : Hard": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Carlo Castellano - The Swapper Original Soundtrack (2013) [flac]": {
+               "name": "Carlo Castellano - The Swapper Original Soundtrack (2013) [flac]",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Jens Buchert - Electronic Space Lounge - Three (2014)": {
+               "name": "Jens Buchert - Electronic Space Lounge - Three (2014)",
+               "tags": {"Electro : Chillout": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Maple Bee": {
+               "name": "Maple Bee",
+               "tags": {"Folk": ""}
+          },
+          "/home/q/F:/Downloaded torrents/FGFC820": {
+               "name": "FGFC820",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/TES II Daggerfall Music": {
+               "name": "TES II Daggerfall Music",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Whitechapel": {
+               "name": "Whitechapel",
+               "tags": {"Punk : Deathcore": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/GITS OST`s": {
+               "name": "GITS OST`s",
+               "tags": {"OST": ""}
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/Final Fantasy Soundtrack Collection": {
+               "name": "Final Fantasy Soundtrack Collection",
+               "tags": {"OST": ""}
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/Dark Sanctuary": {
+               "name": "Dark Sanctuary",
+               "tags": {"Electro : Dark Ambient": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Overlord & Overlord II OST [Michiel van den Bos]": {
+               "name": "Overlord & Overlord II OST [Michiel van den Bos]",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Hellgate London": {
+               "name": "Hellgate London",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Amethystium": {
+               "name": "Amethystium",
+               "tags": {
+                    "Electro : Ambient": "",
+                    "Electro : New Age": ""
+               }
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/Agalloch": {
+               "name": "Agalloch",
+               "tags": {"Metal : Black : Atmospheric": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Alexandra Zerner - 2014 - 9 Stories": {
+               "name": "Alexandra Zerner - 2014 - 9 Stories",
+               "tags": {"Rock : Instrumental": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Metallica (mp3)": {
+               "name": "Metallica (mp3)",
+               "tags": {"Metal : Thrash": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Manzana": {
+               "name": "Manzana",
+               "tags": {"Metal : Industrial : Gothic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Kojima Mayumi": {
+               "name": "Kojima Mayumi",
+               "tags": {"Jazz": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Kasabian Discography": {
+               "name": "Kasabian Discography",
+               "tags": {"Rock : Indie": ""}
+          },
+          "/home/q/Рабочий стол/3Q HDD External/Downloaded torrents/Front Line Assembly - AirMech - 2012 (320 kbps)": {
+               "name": "Front Line Assembly - AirMech - 2012 (320 kbps)",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Fusigi - Solitary Wonderland - 2013": {
+               "name": "Fusigi - Solitary Wonderland - 2013",
+               "tags": {"Electro : Folktronica": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Ministry (mp3)": {
+               "name": "Ministry (mp3)",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/In Flames - Discography - 1994-2014": {
+               "name": "In Flames - Discography - 1994-2014",
+               "tags": {"Metal : Death : Melodic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Jazztronik": {
+               "name": "Jazztronik",
+               "tags": {"Jazz : Nu": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Guitarsnake - 2011 - Around The World": {
+               "name": "Guitarsnake - 2011 - Around The World",
+               "tags": {"Rock : Instrumental": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Talamasca - Psychedelic Trance (2013)": {
+               "name": "Talamasca - Psychedelic Trance (2013)",
+               "tags": {"Electro : Trance": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Belphegor (Aut)": {
+               "name": "Belphegor (Aut)",
+               "tags": {"Metal : Black : Death": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/2015. Francia Jazzline Orchestra - Piccadilly Circus": {
+               "name": "2015. Francia Jazzline Orchestra - Piccadilly Circus",
+               "tags": {"Jazz": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Arch Enemy": {
+               "name": "Arch Enemy",
+               "tags": {"Metal : Death : Melodic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Geskia! - Silent Of Light (2013)": {
+               "name": "Geskia! - Silent Of Light (2013)",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Hanzel Und Gretyl": {
+               "name": "Hanzel Und Gretyl",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Monoral": {
+               "name": "Monoral",
+               "tags": {"Rock : Alternative": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Tristania": {
+               "name": "Tristania",
+               "tags": {"Metal : Gothic": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Hour Of Penance": {
+               "name": "Hour Of Penance",
+               "tags": {
+                    "Metal : Death : Brutal": "",
+                    "Metal : Death : Technical": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/GENE": {
+               "name": "GENE",
+               "tags": {"Electro : New Age": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Serph - Heartstrings (2011)": {
+               "name": "Serph - Heartstrings (2011)",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/David Darling - Cello Blue (2001)": {
+               "name": "David Darling - Cello Blue (2001)",
+               "tags": {"Electro : New Age": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Crematory (Germany)": {
+               "name": "Crematory (Germany)",
+               "tags": {
+                    "Metal : Gothic": "",
+                    "Metal : Death": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Behemoth": {
+               "name": "Behemoth",
+               "tags": {"Metal : Black : Death": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Ensiferum - One Man Army (Limited Edition) 2015": {
+               "name": "Ensiferum - One Man Army (Limited Edition) 2015",
+               "tags": {
+                    "Metal : Viking": "",
+                    "Metal : Folk": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Resident Evil Soundtrack (2002-2007)": {
+               "name": "Resident Evil Soundtrack (2002-2007)",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Keiko Matsui": {
+               "name": "Keiko Matsui",
+               "tags": {"Jazz": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Theatre of Tragedy [Discography]": {
+               "name": "Theatre of Tragedy [Discography]",
+               "tags": {"Metal : Gothic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Liv Moon": {
+               "name": "Liv Moon",
+               "tags": {
+                    "Metal : Gothic": "",
+                    "Metal : Symphonic": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Saturnus": {
+               "name": "Saturnus",
+               "tags": {"Metal : Doom : Death": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Phantasy Star Original Soundtrack's Collection": {
+               "name": "Phantasy Star Original Soundtrack's Collection",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Satanic Warmaster": {
+               "name": "Satanic Warmaster",
+               "tags": {"Metal : Black": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Debauchery - Discography": {
+               "name": "Debauchery - Discography",
+               "tags": {"Metal : Death : Death'n'Roll": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Angel Vivaldi (Instrumental Progressive Metal \u2022 United States) (mp3)": {
+               "name": "Angel Vivaldi (Instrumental Progressive Metal \u2022 United States) (mp3)",
+               "tags": {"Metal : Progressive": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Scandroid - 2016 - Scandroid": {
+               "name": "Scandroid - 2016 - Scandroid",
+               "tags": {"Electro : Synthwave": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Septic Flesh (Septicflesh) [rutracker.org]": {
+               "name": "Septic Flesh (Septicflesh) [rutracker.org]",
+               "tags": {"Metal : Death": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Mononoke Hime OST [FLAC]": {
+               "name": "Mononoke Hime OST [FLAC]",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Dol Ammad (Greece_ Symphonic Metal)": {
+               "name": "Dol Ammad (Greece_ Symphonic Metal)",
+               "tags": {
+                    "Metal : Progressive": "",
+                    "Metal : Symphonic": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Nox Arcana": {
+               "name": "Nox Arcana",
+               "tags": {
+                    "Electro : Industrial : Darkwave": "",
+                    "Electro : Dark Ambient": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Fall Ov Serafim - 2006 - Nex Iehovae": {
+               "name": "Fall Ov Serafim - 2006 - Nex Iehovae",
+               "tags": {
+                    "Metal : Black : Symphonic": "",
+                    "Metal : Black : Death": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Valkyrie Profile Original Soundtrack": {
+               "name": "Valkyrie Profile Original Soundtrack",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/NeverHood+Soundtracks[nnm-club.info]": {
+               "name": "NeverHood+Soundtracks[nnm-club.info]",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Tiamat": {
+               "name": "Tiamat",
+               "tags": {
+                    "Metal : Gothic": "",
+                    "Metal : Doom": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Megaherz [Discography]": {
+               "name": "Megaherz [Discography]",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Diablo OST": {
+               "name": "Diablo OST",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Doom VS": {
+               "name": "Doom VS",
+               "tags": {"Metal : Doom : Death": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Vesania": {
+               "name": "Vesania",
+               "tags": {
+                    "Metal : Black : Symphonic": "",
+                    "Metal : Black : Death": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Mutiilation - Discography": {
+               "name": "Mutiilation - Discography",
+               "tags": {"Metal : Black": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Bend The Sky - Origins (2012)": {
+               "name": "Bend The Sky - Origins (2012)",
+               "tags": {
+                    "Metal : Progressive": "",
+                    "Metal : Symphonic": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Tycho": {
+               "name": "Tycho",
+               "tags": {
+                    "Electro : Ambient": "",
+                    "Electro : IDM": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Sonic Official Music": {
+               "name": "Sonic Official Music",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Collapse soundtrack": {
+               "name": "Collapse soundtrack",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Turmion Kätilöt - Diskovibrator (2015)": {
+               "name": "Turmion Kätilöt - Diskovibrator (2015)",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Red Harvest": {
+               "name": "Red Harvest",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/JUDAS ISCARIOT_ALL[torrents.ru]": {
+               "name": "JUDAS ISCARIOT_ALL[torrents.ru]",
+               "tags": {"Metal : Black : True": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Fear Of Eternity дискография": {
+               "name": "Fear Of Eternity дискография",
+               "tags": {"Metal : Black : Atmospheric": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/FELT": {
+               "name": "FELT",
+               "tags": {"Electro : Touhou": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Cabal_Music": {
+               "name": "Cabal_Music",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Powerglove": {
+               "name": "Powerglove",
+               "tags": {"OST : Arrangement": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Levon Vincent \u2013 Levon Vincent (2015)": {
+               "name": "Levon Vincent \u2013 Levon Vincent (2015)",
+               "tags": {"Electro": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Viral Millennium - Vomitosis (2011)": {
+               "name": "Viral Millennium - Vomitosis (2011)",
+               "tags": {
+                    "Metal : Black : Industrial": "",
+                    "Metal : Industrial": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Kataklysm": {
+               "name": "Kataklysm",
+               "tags": {"Metal : Death": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Psyclon Nine": {
+               "name": "Psyclon Nine",
+               "tags": {
+                    "Electro : Industrial : EBM": "",
+                    "Metal : Black : Industrial": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Totalselfhatred - Totalselfhatred (2008 Finland)": {
+               "name": "Totalselfhatred - Totalselfhatred (2008 Finland)",
+               "tags": {"Metal : Black : Atmospheric": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Voicians-2014-A Matter Of Time": {
+               "name": "Voicians-2014-A Matter Of Time",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Opeth": {
+               "name": "Opeth",
+               "tags": {"Metal : Death : Progressive": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Artas - Discography - 2008-2011 (320 kbps)": {
+               "name": "Artas - Discography - 2008-2011 (320 kbps)",
+               "tags": {
+                    "Metal : Death : Melodic": "",
+                    "Metal : Thrash": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Tycho - Awake - 2014 (320 kbps)": {
+               "name": "Tycho - Awake - 2014 (320 kbps)",
+               "tags": {
+                    "Electro : Ambient": "",
+                    "Electro : IDM": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Infected Mushroom - Discography": {
+               "name": "Infected Mushroom - Discography",
+               "tags": {"Electro : Trance": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Vital Remains - mp3 320 CBR": {
+               "name": "Vital Remains - mp3 320 CBR",
+               "tags": {"Metal : Death": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Children Of Bodom - дискография": {
+               "name": "Children Of Bodom - дискография",
+               "tags": {"Metal : Death : Melodic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Guilty Gear OST": {
+               "name": "Guilty Gear OST",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Remember Me [GameRip] [2013]": {
+               "name": "Remember Me [GameRip] [2013]",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/KARI BREMNES [Discography]": {
+               "name": "KARI BREMNES [Discography]",
+               "tags": {
+                    "Jazz": "",
+                    "Folk": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Audioslave - Discography": {
+               "name": "Audioslave - Discography",
+               "tags": {"Rock : Alternative": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Skinny Puppy - Discography": {
+               "name": "Skinny Puppy - Discography",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Kammarheit": {
+               "name": "Kammarheit",
+               "tags": {"Electro : Dark Ambient": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/The Birthday Massacre": {
+               "name": "The Birthday Massacre",
+               "tags": {"Rock : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Vomitory - mp3 320 CBR": {
+               "name": "Vomitory - mp3 320 CBR",
+               "tags": {"Metal : Death": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Pantera Discography": {
+               "name": "Pantera Discography",
+               "tags": {"Metal : Thrash": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Abigor": {
+               "name": "Abigor",
+               "tags": {"Metal : Black": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Mayhem": {
+               "name": "Mayhem",
+               "tags": {"Metal : Black": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/While Heaven Wept-2014-Suspended At Aphelion": {
+               "name": "While Heaven Wept-2014-Suspended At Aphelion",
+               "tags": {"Metal : Doom": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Aes Dana - Pollen (2012)": {
+               "name": "Aes Dana - Pollen (2012)",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Echoes Of Eternity": {
+               "name": "Echoes Of Eternity",
+               "tags": {
+                    "Metal : Gothic": "",
+                    "Metal : Progressive": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Maxxess - 2014 - Green Fairy": {
+               "name": "Maxxess - 2014 - Green Fairy",
+               "tags": {
+                    "Rock : Instrumental": "",
+                    "Rock : Electro": ""
+               }
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/Graveworm - Ascending Hate (2015)": {
+               "name": "Graveworm - Ascending Hate (2015)",
+               "tags": {"Metal : Black : Symphonic": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Fireflight": {
+               "name": "Fireflight",
+               "tags": {"Rock : Alternative": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Wagakki Band": {
+               "name": "Wagakki Band",
+               "tags": {"Rock : J": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Front Mission Original Soundtracks": {
+               "name": "Front Mission Original Soundtracks",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Paul Gilbert": {
+               "name": "Paul Gilbert",
+               "tags": {"Rock : Instrumental": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Halcyon Hall": {
+               "name": "Halcyon Hall",
+               "tags": {
+                    "Electro : IDM": "",
+                    "Electro : PsyChill": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Joe Satriani - Unstoppable Momentum - 2013 (320 kbps)": {
+               "name": "Joe Satriani - Unstoppable Momentum - 2013 (320 kbps)",
+               "tags": {"Rock : Instrumental": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Machine Head": {
+               "name": "Machine Head",
+               "tags": {
+                    "Metal : Groove": "",
+                    "Metal : Thrash": ""
+               }
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/Front Mission Original Soundtracks": {
+               "name": "Front Mission Original Soundtracks",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Stahlhammer": {
+               "name": "Stahlhammer",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Neurotech-2014-Infra Versus Ultra": {
+               "name": "Neurotech-2014-Infra Versus Ultra",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Alpha Wave Movement - 2014, Celestial Chronicles": {
+               "name": "Alpha Wave Movement - 2014, Celestial Chronicles",
+               "tags": {"Electro : Ambient": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Kenny G - Brazilian Nights (2015) [FLAC]": {
+               "name": "Kenny G - Brazilian Nights (2015) [FLAC]",
+               "tags": {"Jazz": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Retox": {
+               "name": "Retox",
+               "tags": {"Punk : Powerviolence": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Yacøpsæ (Yacopsae)": {
+               "name": "Yacøpsæ (Yacopsae)",
+               "tags": {"Punk : Powerviolence": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Sepultura": {
+               "name": "Sepultura",
+               "tags": {"Metal : Thrash": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Metal Gear Soundtrack Collection": {
+               "name": "Metal Gear Soundtrack Collection",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Krisiun": {
+               "name": "Krisiun",
+               "tags": {"Metal : Death": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Powerwolf - Дискография": {
+               "name": "Powerwolf - Дискография",
+               "tags": {"Metal : Power": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Susperia": {
+               "name": "Susperia",
+               "tags": {
+                    "Metal : Black : Melodic": "",
+                    "Metal : Thrash": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Solar Fields": {
+               "name": "Solar Fields",
+               "tags": {"Electro : PsyChill": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/KMFDM": {
+               "name": "KMFDM",
+               "tags": {"Rock : Industrial": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Criminal Element mp3 [rutracker.org]": {
+               "name": "Criminal Element mp3 [rutracker.org]",
+               "tags": {
+                    "Punk : Grindcore": "",
+                    "Metal : Death": ""
+               }
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/Scar Symmetry": {
+               "name": "Scar Symmetry",
+               "tags": {"Metal : Death : Melodic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Aquascape - Underwater Stranger (Altar Records 2012)": {
+               "name": "Aquascape - Underwater Stranger (Altar Records 2012)",
+               "tags": {"Electro : PsyChill": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Arts The Beatdoctor (2007-2013)": {
+               "name": "Arts The Beatdoctor (2007-2013)",
+               "tags": {"Jazz : Nu": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Cosmic Gate - Materia Chapter.One (The Extended Mixes) - 2017 (320 kbps)": {
+               "name": "Cosmic Gate - Materia Chapter.One (The Extended Mixes) - 2017 (320 kbps)",
+               "tags": {"Electro : Trance": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Debussy - Complete Piano Works (Philippe Cassard)": {
+               "name": "Debussy - Complete Piano Works (Philippe Cassard)",
+               "tags": {"Classical": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Full of Hell": {
+               "name": "Full of Hell",
+               "tags": {"Punk : Powerviolence": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Tomandandy - Resident Evil - Retribution (2012)": {
+               "name": "Tomandandy - Resident Evil - Retribution (2012)",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/MegaMan X": {
+               "name": "MegaMan X",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Nexus Inferus-2012-A Vision Of The Final Earth": {
+               "name": "Nexus Inferus-2012-A Vision Of The Final Earth",
+               "tags": {
+                    "Metal : Black : Industrial": "",
+                    "Metal : Black : Death": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Voicians-2014-A Matter Of Time": {
+               "name": "Voicians-2014-A Matter Of Time",
+               "tags": {
+                    "Rock : Industrial": "",
+                    "Metal : Industrial": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Unter Null [Discography]": {
+               "name": "Unter Null [Discography]",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/Dark Trance vs Neo-Goth vol.1": {
+               "name": "Dark Trance vs Neo-Goth vol.1",
+               "tags": {
+                    "Electro : Industrial : EBM": "",
+                    "Electro : Trance": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Fear Factory - Discography": {
+               "name": "Fear Factory - Discography",
+               "tags": {
+                    "Metal : Death : Industrial": "",
+                    "Metal : Groove": "",
+                    "Metal : Industrial": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Killing Joke": {
+               "name": "Killing Joke",
+               "tags": {
+                    "Rock : Industrial": "",
+                    "Punk": ""
+               }
+          },
+          "/home/q/F:/Downloaded torrents/Wolfbrigade - Damned (2012)": {
+               "name": "Wolfbrigade - Damned (2012)",
+               "tags": {"Punk : Crust": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Wintersun": {
+               "name": "Wintersun",
+               "tags": {"Metal : Death : Melodic": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Trail Of Tears": {
+               "name": "Trail Of Tears",
+               "tags": {
+                    "Metal : Gothic": "",
+                    "Metal : Black : Symphonic": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Emperor": {
+               "name": "Emperor",
+               "tags": {"Metal : Black : Symphonic": ""}
+          },
+          "/home/q/F:/Downloaded torrents/The Kill": {
+               "name": "The Kill",
+               "tags": {"Punk : Powerviolence": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Ironomi": {
+               "name": "Ironomi",
+               "tags": {
+                    "Modern Classical": "",
+                    "Electro : Ambient": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Metome-2013-Object": {
+               "name": "Metome-2013-Object",
+               "tags": {
+                    "Electro : IDM": "",
+                    "Jazz : Nu": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Front Line Assembly": {
+               "name": "Front Line Assembly",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Cybo [Discography]": {
+               "name": "Cybo [Discography]",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Tekken - Soundtrack Collection [26 CD] (1995-2012)": {
+               "name": "Tekken - Soundtrack Collection [26 CD] (1995-2012)",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Mega Drive Last Action Heroes": {
+               "name": "Mega Drive Last Action Heroes",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Kiborg. Официальная дискография": {
+               "name": "Kiborg. Официальная дискография",
+               "tags": {"Punk": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Dark Tranquillity (Sweden)": {
+               "name": "Dark Tranquillity (Sweden)",
+               "tags": {"Metal : Death : Melodic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/IRON ATTACK!": {
+               "name": "IRON ATTACK!",
+               "tags": {"Metal : Power": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Medwyn Goodall Discography (1987-2010) [rutracker.org]": {
+               "name": "Medwyn Goodall Discography (1987-2010) [rutracker.org]",
+               "tags": {"Electro : New Age": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Classical Gold - 50 CD Box Set": {
+               "name": "Classical Gold - 50 CD Box Set",
+               "tags": {"Classical": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Cuélebre": {
+               "name": "Cuélebre",
+               "tags": {"Folk : Pagan": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Punch": {
+               "name": "Punch",
+               "tags": {"Punk : Powerviolence": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Astarte (Grc)": {
+               "name": "Astarte (Grc)",
+               "tags": {"Metal : Black : Death": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Rin Toshite Shigure": {
+               "name": "Rin Toshite Shigure",
+               "tags": {
+                    "Rock : Indie": "",
+                    "Punk : Hardcore : Post": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Dimmu Borgir": {
+               "name": "Dimmu Borgir",
+               "tags": {
+                    "Metal : Black : Melodic": "",
+                    "Metal : Black : Symphonic": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/And Oceans & Havoc Unit  - Discography": {
+               "name": "And Oceans & Havoc Unit  - Discography",
+               "tags": {
+                    "Metal : Black : Industrial": "",
+                    "Metal : Black : Symphonic": ""
+               }
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/Resident Evil (Score)": {
+               "name": "Resident Evil (Score)",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Torrent Vaccine - 2008 - Tentative Response (lossless, tracks)": {
+               "name": "Torrent Vaccine - 2008 - Tentative Response (lossless, tracks)",
+               "tags": {
+                    "Electro : IDM": "",
+                    "Electro : Industrial": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Pain": {
+               "name": "Pain",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Hizaki Grace Project": {
+               "name": "Hizaki Grace Project",
+               "tags": {
+                    "Metal : Symphonic": "",
+                    "Rock : J": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Akshan - The Tree Of Life (2012)": {
+               "name": "Akshan - The Tree Of Life (2012)",
+               "tags": {"Electro : PsyChill": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Reaktor 4 - 2009 - Reaktor 4": {
+               "name": "Reaktor 4 - 2009 - Reaktor 4",
+               "tags": {"Metal : Black : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Linkin Park": {
+               "name": "Linkin Park",
+               "tags": {"Rock : Alternative": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Dark At Dawn": {
+               "name": "Dark At Dawn",
+               "tags": {"Metal : Power": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Metal Slug X": {
+               "name": "Metal Slug X",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Entombed": {
+               "name": "Entombed",
+               "tags": {"Metal : Death : Death'n'Roll": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Serph - Accidental Tourist (2009)": {
+               "name": "Serph - Accidental Tourist (2009)",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Abney Park - Nomad (2014)": {
+               "name": "Abney Park - Nomad (2014)",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Geskia! - 323 Sayonara Memories (2012) MP3-320": {
+               "name": "Geskia! - 323 Sayonara Memories (2012) MP3-320",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Orphanage": {
+               "name": "Orphanage",
+               "tags": {
+                    "Metal : Gothic": "",
+                    "Metal : Death": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/(Score)Shiro Kohmoto - Biohazard Gun Survivor - 2000, OGG, 350 kbps": {
+               "name": "(Score)Shiro Kohmoto - Biohazard Gun Survivor - 2000, OGG, 350 kbps",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Daft Punk - TRON Legacy (Recording Sessions) (2010)": {
+               "name": "Daft Punk - TRON Legacy (Recording Sessions) (2010)",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Oomph! [rutracker.org]": {
+               "name": "Oomph! [rutracker.org]",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/The Cranberries": {
+               "name": "The Cranberries",
+               "tags": {"Rock : Alternative": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Anaal Nathrakh": {
+               "name": "Anaal Nathrakh",
+               "tags": {
+                    "Metal : Black": "",
+                    "Punk : Grindcore": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/VNV Nation - Discography (1995-2015)": {
+               "name": "VNV Nation - Discography (1995-2015)",
+               "tags": {"Electro : Synthwave": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Sirenia": {
+               "name": "Sirenia",
+               "tags": {"Metal : Gothic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Joji Hirota": {
+               "name": "Joji Hirota",
+               "tags": {"Folk : Japanese": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Nails": {
+               "name": "Nails",
+               "tags": {"Punk : Powerviolence": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Like A Storm - Awaken The Fire - 2015": {
+               "name": "Like A Storm - Awaken The Fire - 2015",
+               "tags": {"Rock : Alternative": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Korn 01 Official Discography [rutracker.org]": {
+               "name": "Korn 01 Official Discography [rutracker.org]",
+               "tags": {"Metal : Nu": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Morgul - Discography (1994-2005)": {
+               "name": "Morgul - Discography (1994-2005)",
+               "tags": {"Metal : Black": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Forgotten Tomb": {
+               "name": "Forgotten Tomb",
+               "tags": {
+                    "Metal : Black": "",
+                    "Metal : Doom": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Tiesto - Дискография": {
+               "name": "Tiesto - Дискография",
+               "tags": {"Electro : Trance": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Escape the Fate - Full Discography [2004-2011]. MP3. 128-320 kbps. Exclusive rutracker.org": {
+               "name": "Escape the Fate - Full Discography [2004-2011]. MP3. 128-320 kbps. Exclusive rutracker.org",
+               "tags": {"Punk : Hardcore : Post": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Raubtier": {
+               "name": "Raubtier",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Triarii": {
+               "name": "Triarii",
+               "tags": {"Electro : Industrial : Martial Industrial": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Pure Reason Revolution - Discography (2001-2011)": {
+               "name": "Pure Reason Revolution - Discography (2001-2011)",
+               "tags": {
+                    "Rock : Alternative": "",
+                    "Rock : Progressive": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Scarve": {
+               "name": "Scarve",
+               "tags": {"Metal : Death : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Hocico - Discography (1994-2015)": {
+               "name": "Hocico - Discography (1994-2015)",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Club des Belugas - Discography [mp3-320]": {
+               "name": "Club des Belugas - Discography [mp3-320]",
+               "tags": {"Jazz : Nu": ""}
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/Leaves` Eyes": {
+               "name": "Leaves` Eyes",
+               "tags": {
+                    "Metal : Gothic": "",
+                    "Metal : Symphonic": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Chihiro Yamanaka. mp3@320": {
+               "name": "Chihiro Yamanaka. mp3@320",
+               "tags": {"Jazz": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/The Exploited": {
+               "name": "The Exploited",
+               "tags": {"Punk : Hardcore": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Ez3kiel": {
+               "name": "Ez3kiel",
+               "tags": {"Electro : Trip-Hop": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Blockhead - Bells and Whistles (2014)": {
+               "name": "Blockhead - Bells and Whistles (2014)",
+               "tags": {"Electro : Trip-Hop": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Deuter - Mystic Voyage (2015)": {
+               "name": "Deuter - Mystic Voyage (2015)",
+               "tags": {"Electro : New Age": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/The Enigma TNG - Discography (2011-2012)": {
+               "name": "The Enigma TNG - Discography (2011-2012)",
+               "tags": {"Electro : Industrial": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/fripSide": {
+               "name": "fripSide",
+               "tags": {"Electro : Trance": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Fanisk": {
+               "name": "Fanisk",
+               "tags": {"Metal : Black : National Socialistic (NSBM)": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Celldweller (MP3)": {
+               "name": "Celldweller (MP3)",
+               "tags": {
+                    "Rock : Industrial": "",
+                    "Electro : Industrial": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Crossfade": {
+               "name": "Crossfade",
+               "tags": {"Rock : Alternative": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Tyr - Discography": {
+               "name": "Tyr - Discography",
+               "tags": {
+                    "Metal : Viking": "",
+                    "Metal : Progressive": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Alghazanth": {
+               "name": "Alghazanth",
+               "tags": {"Metal : Black : Symphonic": ""}
+          },
+          "/media/q/3Q HDD External/Documents and Settings/z1i1k/Мои документы/Downloads/OST - Dave Mirra Freestyle BMX": {
+               "name": "OST - Dave Mirra Freestyle BMX",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Thy Art is Murder": {
+               "name": "Thy Art is Murder",
+               "tags": {"Punk : Deathcore": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Scala & Kolacny Brothers": {
+               "name": "Scala & Kolacny Brothers",
+               "tags": {"Other": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Falkenbach": {
+               "name": "Falkenbach",
+               "tags": {"Metal : Viking": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Deus Ex Game of the Year Edition Soundtrack - Alexander Brandon, Michiel van den Bos, Dan Gardopee (2001)": {
+               "name": "Deus Ex Game of the Year Edition Soundtrack - Alexander Brandon, Michiel van den Bos, Dan Gardopee (2001)",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/EastNewSound": {
+               "name": "EastNewSound",
+               "tags": {"Electro : Touhou": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Eliwagar (2009)": {
+               "name": "Eliwagar (2009)",
+               "tags": {"Folk : Pagan": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Geskia! - Alien (2011)": {
+               "name": "Geskia! - Alien (2011)",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/E-Mantra - Raining Lights (2015)": {
+               "name": "E-Mantra - Raining Lights (2015)",
+               "tags": {"Electro : Trance": ""}
+          },
+          "/home/q/Рабочий стол/3Q HDD External/Downloaded torrents/Neurotech - Evasive (2015)": {
+               "name": "Neurotech - Evasive (2015)",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Three Days Grace - Discography - 2003-2015": {
+               "name": "Three Days Grace - Discography - 2003-2015",
+               "tags": {"Rock : Alternative": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Bonobo": {
+               "name": "Bonobo",
+               "tags": {"Electro : Trip-Hop": ""}
+          },
+          "/home/q/Рабочий стол/3Q HDD External/Downloaded torrents/Final Fantasy Soundtrack Collection": {
+               "name": "Final Fantasy Soundtrack Collection",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/James Hannigan - Freelancer - 2003": {
+               "name": "James Hannigan - Freelancer - 2003",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Absurd Minds - Discography(1996-2010)": {
+               "name": "Absurd Minds - Discography(1996-2010)",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/God Module (TFN)": {
+               "name": "God Module (TFN)",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/The Enigma TNG - Kill X(2015)": {
+               "name": "The Enigma TNG - Kill X(2015)",
+               "tags": {"Electro : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Tyrant Of Death": {
+               "name": "Tyrant Of Death",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Covenant & The Kovenant": {
+               "name": "Covenant & The Kovenant",
+               "tags": {
+                    "Metal : Black : Industrial": "",
+                    "Metal : Industrial": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Zyclon": {
+               "name": "Zyclon",
+               "tags": {"Metal : Black : Death": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Haujobb - Discography (1993-2016)": {
+               "name": "Haujobb - Discography (1993-2016)",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Max Richter - Retrospective (2014)": {
+               "name": "Max Richter - Retrospective (2014)",
+               "tags": {"Modern Classical": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Fractal-Philosophy.nekalihen": {
+               "name": "Fractal-Philosophy.nekalihen",
+               "tags": {"Electro : PsyChill": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Carpathian Forest": {
+               "name": "Carpathian Forest",
+               "tags": {"Metal : Black : True": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Novembers Doom (USA)": {
+               "name": "Novembers Doom (USA)",
+               "tags": {"Metal : Doom": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Acheron": {
+               "name": "Acheron",
+               "tags": {"Metal : Death": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/PAINBASTARD OFFICIAL DISCOGRAPHY": {
+               "name": "PAINBASTARD OFFICIAL DISCOGRAPHY",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Tormentor Allegoria": {
+               "name": "Tormentor Allegoria",
+               "tags": {
+                    "Metal : Black : Symphonic": "",
+                    "Metal : Black : Death": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Swallow The Sun (Finland)": {
+               "name": "Swallow The Sun (Finland)",
+               "tags": {"Metal : Doom : Death": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/HB - Discography - MP3": {
+               "name": "HB - Discography - MP3",
+               "tags": {"Metal : Gothic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Metal Gear Rising Revengeance Vocal Tracks - 2013 (320)": {
+               "name": "Metal Gear Rising Revengeance Vocal Tracks - 2013 (320)",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Voicians": {
+               "name": "Voicians",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Toto - XIV (2015)": {
+               "name": "Toto - XIV (2015)",
+               "tags": {"Rock": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Alexei Zakharov - X3 Albion Prelude 2012": {
+               "name": "Alexei Zakharov - X3 Albion Prelude 2012",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Aborym": {
+               "name": "Aborym",
+               "tags": {"Metal : Black : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Dry Kill Logic": {
+               "name": "Dry Kill Logic",
+               "tags": {"Metal : Nu": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/From Autumn to Ashes": {
+               "name": "From Autumn to Ashes",
+               "tags": {"Punk : Hardcore : Post": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Illidiance": {
+               "name": "Illidiance",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Herrschaft": {
+               "name": "Herrschaft",
+               "tags": {"Metal : Black : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Deathspell Omega": {
+               "name": "Deathspell Omega",
+               "tags": {"Metal : Black": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Static-X": {
+               "name": "Static-X",
+               "tags": {
+                    "Metal : Nu": "",
+                    "Metal : Industrial": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Sonic Syndicate": {
+               "name": "Sonic Syndicate",
+               "tags": {"Metal : Death : Melodic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Geskia - Silent 77 (2008)": {
+               "name": "Geskia - Silent 77 (2008)",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Nitronoise": {
+               "name": "Nitronoise",
+               "tags": {"Electro : Industrial": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Jon_Hopkins-Insides_[2009].nekalihen": {
+               "name": "Jon_Hopkins-Insides_[2009].nekalihen",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/home/q/F:/Downloaded torrents/XMH": {
+               "name": "XMH",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Shadowrun Returns Soundtrack - Gavin Parker, Marshall Parker, Sam Powell - 2013": {
+               "name": "Shadowrun Returns Soundtrack - Gavin Parker, Marshall Parker, Sam Powell - 2013",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Access To Arasaka": {
+               "name": "Access To Arasaka",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Therion [Discography]": {
+               "name": "Therion [Discography]",
+               "tags": {"Metal : Symphonic": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Sulphur Aeon": {
+               "name": "Sulphur Aeon",
+               "tags": {"Metal : Black : Death": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Deus Ex Invisible War Soundtrack (remastered by fishonthecarpet)": {
+               "name": "Deus Ex Invisible War Soundtrack (remastered by fishonthecarpet)",
+               "tags": {"OST": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Cold Womb Descent - 2011 - Cold Womb Descent": {
+               "name": "Cold Womb Descent - 2011 - Cold Womb Descent",
+               "tags": {"Electro : Dark Ambient": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/SEGA Soundtrack": {
+               "name": "SEGA Soundtrack",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Max Richter": {
+               "name": "Max Richter",
+               "tags": {"Modern Classical": ""}
+          },
+          "/home/q/F:/Downloaded torrents/ES23 - Erase My Heart (2017)": {
+               "name": "ES23 - Erase My Heart (2017)",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Abney Park": {
+               "name": "Abney Park",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Krusseldorf": {
+               "name": "Krusseldorf",
+               "tags": {
+                    "Electro : Ambient": "",
+                    "Electro : IDM": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Nest_all[torrents.ru]": {
+               "name": "Nest_all[torrents.ru]",
+               "tags": {"Folk : Dark": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Slayer": {
+               "name": "Slayer",
+               "tags": {"Metal : Thrash": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/RTPN": {
+               "name": "RTPN",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/the GazettE": {
+               "name": "the GazettE",
+               "tags": {"Rock : J": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Ragnarok Online Music Collection": {
+               "name": "Ragnarok Online Music Collection",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Deathstars": {
+               "name": "Deathstars",
+               "tags": {"Metal : Industrial : Gothic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Ramin Djawadi - Pacific Rim (2013)": {
+               "name": "Ramin Djawadi - Pacific Rim (2013)",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Nihil Novi Sub Sole - Jupiter Temple 2010 (320 kbps)": {
+               "name": "Nihil Novi Sub Sole - Jupiter Temple 2010 (320 kbps)",
+               "tags": {"Electro : Industrial : Martial Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Cyanotic": {
+               "name": "Cyanotic",
+               "tags": {"Metal : Industrial": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Blue Stahli": {
+               "name": "Blue Stahli",
+               "tags": {
+                    "Rock : Industrial": "",
+                    "Electro : Industrial": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/This Ending - Garden of Death (2016)": {
+               "name": "This Ending - Garden of Death (2016)",
+               "tags": {"Metal : Death : Melodic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Human Error - Trivial Fiction (2014) FLAC-Web": {
+               "name": "Human Error - Trivial Fiction (2014) FLAC-Web",
+               "tags": {"Electro : IDM": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Remember Me by Olivier Deriviere (2013)": {
+               "name": "Remember Me by Olivier Deriviere (2013)",
+               "tags": {"OST": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Nurzery [Rhymes]": {
+               "name": "Nurzery [Rhymes]",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/3Q HDD External/Downloaded torrents/Immortal": {
+               "name": "Immortal",
+               "tags": {"Metal : Black": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Feint": {
+               "name": "Feint",
+               "tags": {"Electro : Drum & Bass": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Hypocrisy": {
+               "name": "Hypocrisy",
+               "tags": {"Metal : Death : Melodic": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Steve Vai - Where The Wild Things Are mp3": {
+               "name": "Steve Vai - Where The Wild Things Are mp3",
+               "tags": {"Rock : Instrumental": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Bach - Cantatas (Suzuki) [1995-2013, mp3]": {
+               "name": "Bach - Cantatas (Suzuki) [1995-2013, mp3]",
+               "tags": {"Classical": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Trifonic - Ninth Wave (2012)": {
+               "name": "Trifonic - Ninth Wave (2012)",
+               "tags": {
+                    "Electro : IDM": "",
+                    "Rock : Post": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Misanthropic Art [rutracker.org]": {
+               "name": "Misanthropic Art [rutracker.org]",
+               "tags": {"Metal : Black": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Acid King": {
+               "name": "Acid King",
+               "tags": {"Metal : Stoner": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Agonoize [Discography]": {
+               "name": "Agonoize [Discography]",
+               "tags": {"Electro : Industrial : EBM": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Device - Device [Best Buy Edition] (2013)": {
+               "name": "Device - Device [Best Buy Edition] (2013)",
+               "tags": {
+                    "Rock : Industrial": "",
+                    "Metal : Alternative": ""
+               }
+          },
+          "/media/q/windows data/Downloaded torrents/Venom": {
+               "name": "Venom",
+               "tags": {"Metal : Thrash": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Atreyu": {
+               "name": "Atreyu",
+               "tags": {"Punk : Hardcore : Post": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Anorexia Nervosa": {
+               "name": "Anorexia Nervosa",
+               "tags": {"Metal : Black : Symphonic": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Rapture": {
+               "name": "Rapture",
+               "tags": {"Metal : Doom : Death": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Primordia by Nathaniel Chambers (2012)": {
+               "name": "Primordia by Nathaniel Chambers (2012)",
+               "tags": {"OST": ""}
+          },
+          "/home/q/F:/Downloaded torrents/Weekend Nachos": {
+               "name": "Weekend Nachos",
+               "tags": {"Punk : Powerviolence": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/DDBY - Discography": {
+               "name": "DDBY - Discography",
+               "tags": {"Jazz": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/Blastromen - Discography (2004-2010)": {
+               "name": "Blastromen - Discography (2004-2010)",
+               "tags": {"Electro : Nu": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/October Tide": {
+               "name": "October Tide",
+               "tags": {"Metal : Doom : Death": ""}
+          },
+          "/media/q/windows data/Downloaded torrents/All That Remains - Discography - 1999-2015": {
+               "name": "All That Remains - Discography - 1999-2015",
+               "tags": {
+                    "Punk : Metalcore": "",
+                    "Metal : Death : Melodic": ""
+               }
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Shane Cough - 2005 - Intraneineuse": {
+               "name": "Shane Cough - 2005 - Intraneineuse",
+               "tags": {"Rock : Industrial": ""}
+          },
+          "/media/q/547425A174258738/Documents and Settings/z1i1k/Мои документы/Downloads/Gabrielle Chiararo - Sensual Elegance (Deluxe Edition) - (2013)": {
+               "name": "Gabrielle Chiararo - Sensual Elegance (Deluxe Edition) - (2013)",
+               "tags": {"Jazz : Nu": ""}
+          }
+     },
      "tags": {
-          "df;gkljfg": {"tags": {"fsdgsr": {"tags": {}}}},
-          "dkljf": {"tags": {}},
-          "ewryrey": {"tags": {"vbdfg": {"tags": {"fgwertwe": {"tags": {}}}}}},
-          "xcvbfdg": {"tags": {}},
-          "sdfgsdf": {"tags": {}}
+          "OST": {"tags": {
+               "Games": {"tags": {
+                    "PS": {"tags": {}},
+                    "PC": {"tags": {}}
+               }},
+               "Arrangement": {"tags": {}}
+          }},
+          "Modern Classical": {"tags": {}},
+          "Rock": {"tags": {
+               "Progressive": {"tags": {}},
+               "Alternative": {"tags": {}},
+               "Indie": {"tags": {}},
+               "Industrial": {"tags": {}},
+               "Post": {"tags": {}},
+               "Hard": {"tags": {}},
+               "Folk": {"tags": {}},
+               "J": {"tags": {}},
+               "Electro": {"tags": {}},
+               "Instrumental": {"tags": {}}
+          }},
+          "Punk": {"tags": {
+               "Crust": {"tags": {}},
+               "Metalcore": {"tags": {}},
+               "Hardcore": {"tags": {"Post": {"tags": {}}}},
+               "Grindcore": {"tags": {}},
+               "Deathcore": {"tags": {}},
+               "Powerviolence": {"tags": {}}
+          }},
+          "Jazz": {"tags": {"Nu": {"tags": {}}}},
+          "Folk": {"tags": {
+               "Dark": {"tags": {}},
+               "Pagan": {"tags": {}},
+               "Japanese": {"tags": {}}
+          }},
+          "Classical": {"tags": {}},
+          "Metal": {"tags": {
+               "Heavy": {"tags": {}},
+               "Alternative": {"tags": {}},
+               "Industrial": {"tags": {"Gothic": {"tags": {}}}},
+               "Nu": {"tags": {}},
+               "Doom": {"tags": {
+                    "Death": {"tags": {}},
+                    "Funeral": {"tags": {}}
+               }},
+               "Symphonic": {"tags": {}},
+               "Folk": {"tags": {}},
+               "Black": {"tags": {
+                    "Industrial": {"tags": {}},
+                    "National Socialistic (NSBM)": {"tags": {}},
+                    "Symphonic": {"tags": {}},
+                    "True": {"tags": {}},
+                    "Death": {"tags": {}},
+                    "Melodic": {"tags": {}},
+                    "Atmospheric": {"tags": {}}
+               }},
+               "Gothic": {"tags": {}},
+               "Avant-garde": {"tags": {}},
+               "Progressive": {"tags": {}},
+               "Viking": {"tags": {}},
+               "Stoner": {"tags": {}},
+               "Dark": {"tags": {}},
+               "Pagan": {"tags": {}},
+               "Groove": {"tags": {}},
+               "Death": {"tags": {
+                    "Progressive": {"tags": {}},
+                    "Industrial": {"tags": {}},
+                    "Death'n'Roll": {"tags": {}},
+                    "Technical": {"tags": {}},
+                    "Brutal": {"tags": {}},
+                    "Melodic": {"tags": {}}
+               }},
+               "Thrash": {"tags": {}},
+               "Power": {"tags": {}}
+          }},
+          "Electro": {"tags": {
+               "Chillout": {"tags": {}},
+               "Techno": {"tags": {}},
+               "New Age": {"tags": {}},
+               "Industrial": {"tags": {
+                    "EBM": {"tags": {}},
+                    "Martial Industrial": {"tags": {}},
+                    "Darkwave": {"tags": {}}
+               }},
+               "Trance": {"tags": {}},
+               "Nu": {"tags": {}},
+               "PsyChill": {"tags": {}},
+               "Folktronica": {"tags": {}},
+               "Drum & Bass": {"tags": {}},
+               "IDM": {"tags": {}},
+               "Ambient": {"tags": {}},
+               "Trip-Hop": {"tags": {}},
+               "Dark Ambient": {"tags": {}},
+               "Synthwave": {"tags": {}},
+               "Touhou": {"tags": {}}
+          }},
+          "Other": {"tags": {}}
      }
 }

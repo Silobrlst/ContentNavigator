@@ -33,6 +33,12 @@ public class Paths extends ArrayList<Path> {
         return path;
     }
 
+    public void removePath(Path pathIn){
+        pathIn.removeTagsWithoutNotifing();
+        this.remove(pathIn);
+        listeners.forEach(pathListener -> pathListener.removedPath(pathIn));
+    }
+
     boolean checkPathExist(String pathIn){
         for(Path path: this){
             if(pathIn.equals(path.getPath())){
