@@ -65,7 +65,7 @@ public class Tag {
 
     public void rename(String nameIn){
         name = nameIn;
-        tagListeners.forEach(tagListener -> tagListener.editedTag(this));
+        tagListeners.forEach(tagListener -> tagListener.renamedTag(this));
     }
 
     public ArrayList<Path> getPaths(){
@@ -77,7 +77,11 @@ public class Tag {
     }
 
     public void setParentTag(Tag tagIn){
+        Tag prevParent = parent;
         parent = tagIn;
+        parent.getChildren().add(this);
+        prevParent.getChildren().remove(this);
+        tagListeners.forEach(tagListener -> tagListener.changedParent(this, prevParent));
     }
 
     public Tag getParent(){

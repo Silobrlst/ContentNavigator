@@ -1,25 +1,27 @@
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.Comparator;
+import java.util.Optional;
+
 public class AddEditTagDialogController {
     @FXML
     private TextField tagName;
     @FXML
-    private TextField parent;
+    private ComboBox<String> parent;
     @FXML
     private Button ok;
     @FXML
     private Button cancel;
 
-    private boolean renaming;
-    private Tag renamingTag;
+    private boolean editing;
+    private Tag editingTag;
     private Tag parentTag;
 
     private Tags tags;
@@ -27,6 +29,8 @@ public class AddEditTagDialogController {
     private Stage stage;
 
     private String styleFileName;
+
+    private final Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
 
     @FXML
     public void initialize() {
@@ -49,24 +53,7 @@ public class AddEditTagDialogController {
         stage.setScene(scene);
         stage.initOwner(parentStageIn);
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setOnShown(event -> {
-            tagName.requestFocus();
-
-            if(renaming){
-                tagName.setText(renamingTag.getName());
-                tagName.selectAll();
-
-                if(renamingTag.getParent() != tags){
-                    parent.setText(tags.getTagId(renamingTag.getParent()));
-                }
-            }else{
-                tagName.setText("");
-
-                if(parentTag != null && parentTag != tags){
-                    parent.setText(tags.getTagId(parentTag));
-                }
-            }
-        });
+        stage.setOnShown(event -> onShown());
         stage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
                 onCancel();
@@ -74,38 +61,96 @@ public class AddEditTagDialogController {
         });
     }
 
+    private void onShown(){
+        tagName.requestFocus();
+
+        parent.getItems().clear();
+        parent.getItems().add("");
+        parent.getItems().addAll(tags.getTagsIds());
+        parent.getItems().sort(Comparator.naturalOrder());
+
+        new ComboBoxAutoComplete<>(parent);
+
+        if(editing){
+            tagName.setText(editingTag.getName());
+            tagName.selectAll();
+
+            if(editingTag.getParent() != tags){
+                parent.getSelectionModel().select(tags.getTagId(editingTag.getParent()));
+            }
+        }else{
+            tagName.setText("");
+
+            if(parentTag != null && parentTag != tags){
+                parent.getSelectionModel().select(tags.getTagId(parentTag));
+            }
+        }
+
+        stage.sizeToScene();
+    }
+
     public void setAddTag(){
-        stage.setTitle("Add Tag");
-        renaming = false;
-        renamingTag = null;
-        parentTag = null;
+        setAddTag(null);
     }
 
     public void setAddTag(Tag parentIn){
         stage.setTitle("Add Tag");
-        renaming = false;
-        renamingTag = null;
+        editing = false;
+        editingTag = null;
         parentTag = parentIn;
+
+        if(parentIn == null){
+            parent.getSelectionModel().select("");
+        }
+
+        tagName.setText("");
     }
 
-    public void setRenameTag(Tag tagIn){
-        stage.setTitle("Rename Tag");
-        renaming = true;
-        renamingTag = tagIn;
+    public void setEditTag(Tag tagIn){
+        stage.setTitle("Edit Tag");
+        editing = true;
+        editingTag = tagIn;
     }
 
     private void onOK() {
-        if(renaming){
-            renamingTag.rename(tagName.getText());
+        boolean valid = true;
+
+        if(editing){
+            if(!tagName.getText().equals(editingTag.getName())){
+                editingTag.rename(tagName.getText());
+            }
+
+            if(parent.getSelectionModel().getSelectedItem().isEmpty()){
+                editingTag.setParentTag(tags);
+            }else{
+                Tag newParent = tags.getTagById(parent.getSelectionModel().getSelectedItem());
+
+                //проверяем чтобы новый родительский тег не был потомком текущего тега либо самим потомком
+                boolean recursiveParent = parent.getSelectionModel().getSelectedItem().contains(tags.getTagId(editingTag));
+                if(!recursiveParent){
+                    editingTag.setParentTag(newParent);
+                }
+
+                if(recursiveParent){
+                    alertConfirm.setTitle("Incorrect parent");
+                    alertConfirm.setHeaderText("Choosed parent is sub-child of current tag.\nPlease choose parent that is not child of current tag");
+                    Optional<ButtonType> result = alertConfirm.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                        valid = false;
+                    }
+                }
+            }
         }else{
             if(parentTag == null || parentTag == tags){
                 tags.newTag(tagName.getText());
             }else{
-                tags.newTag(tagName.getText(), tags.getTagById(parent.getText()));
+                tags.newTag(tagName.getText(), tags.getTagById(parent.getSelectionModel().getSelectedItem()));
             }
         }
 
-        stage.hide();
+        if(valid){
+            stage.hide();
+        }
     }
 
     private void onCancel() {

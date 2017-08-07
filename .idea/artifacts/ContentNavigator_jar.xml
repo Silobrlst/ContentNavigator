@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="ContentNavigator:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/ContentNavigator_jar</output-path>
-    <root id="archive" name="ContentNavigator.jar">
-      <element id="module-output" name="ContentNavigator" />
-    </root>
-  </artifact>
-</component>

@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 
 public class SettingsDialogController {
     @FXML
@@ -98,6 +99,7 @@ public class SettingsDialogController {
                 style.getItems().add(listOfFiles[i].getName());
             }
         }
+        style.getItems().sort(Comparator.naturalOrder());
         style.getSelectionModel().select(mainWindowController.getStyle().replace("file:styles/", ""));
 
         openInFolderCommand.setText(mainWindowController.getOpenInFolderCommand());

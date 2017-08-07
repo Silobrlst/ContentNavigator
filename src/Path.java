@@ -7,6 +7,7 @@ import java.util.Collection;
 public class Path implements Comparable<Path> {
     private StringProperty path;
     private StringProperty name;
+    private StringProperty date;
 
     private ArrayList<Tag> tags;
     private ArrayList<PathListener> pathListeners;
@@ -14,6 +15,7 @@ public class Path implements Comparable<Path> {
     public Path(ArrayList<PathListener> pathListenersIn, String pathIn, String nameIn){
         path = new SimpleStringProperty(pathIn);
         name = new SimpleStringProperty(nameIn);
+        date = new SimpleStringProperty("");
         tags = new ArrayList<>();
         pathListeners = pathListenersIn;
     }
@@ -23,6 +25,8 @@ public class Path implements Comparable<Path> {
         String regex = "/";
         String[] splited = getPath().split(regex);
         name = new SimpleStringProperty(splited[splited.length-1]);
+
+        date = new SimpleStringProperty("");
 
         tags = new ArrayList<>();
         pathListeners = pathListenersIn;
@@ -38,6 +42,10 @@ public class Path implements Comparable<Path> {
         pathListeners.forEach(pathListener -> pathListener.renamed(this));
     }
 
+    public void setDateAdded(String dateTimeIn){
+        date.set(dateTimeIn);
+    }
+
     public String getPath(){
         return path.get();
     }
@@ -46,12 +54,20 @@ public class Path implements Comparable<Path> {
         return name.get();
     }
 
+    public String getDateAdded(){
+        return date.get();
+    }
+
     public StringProperty getNameProperty(){
         return name;
     }
 
     public StringProperty getPathProperty(){
         return path;
+    }
+
+    public StringProperty getDateProperty(){
+        return date;
     }
 
     public void addTagWithoutNotifing(Tag tagIn){

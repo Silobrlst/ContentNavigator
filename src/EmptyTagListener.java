@@ -1,6 +1,6 @@
 public class EmptyTagListener implements TagListener {
     public void createdTag(Tag tagIn, Tag parentIn) {}
-    public void editedTag(Tag tagIn) {}
+    public void renamedTag(Tag tagIn) {}
     public void addedPathToTag(Tag tagIn, Path pathIn) {}
     public void removedPathFromTag(Tag tagIn, Path pathIn) {}
     public void removed(Tag tagIn) {}

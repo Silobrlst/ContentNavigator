@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TagFileNavigator:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/TagFileNavigator_jar</output-path>
+    <root id="archive" name="TagFileNavigator.jar">
+      <element id="module-output" name="TagFileNavigator" />
+    </root>
+  </artifact>
+</component>

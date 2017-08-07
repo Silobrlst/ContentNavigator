@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Tags extends Tag {
     private ArrayList<TagListener> listeners;
@@ -81,5 +82,44 @@ public class Tags extends Tag {
         }
 
         return id;
+    }
+
+    public List<String> getTagsIds(List<Tag> tagsIn){
+        ArrayList<String> ids = new ArrayList<>();
+        for(Tag tag: tagsIn){
+            if(tag != this){
+                ids.add(this.getTagId(tag));
+            }
+        }
+        return ids;
+    }
+
+    public List<String> getTagsIds(){
+        ArrayList<String> ids = new ArrayList<>();
+        for(Tag tag: getAllSubTags()){
+            if(tag != this){
+                ids.add(this.getTagId(tag));
+            }
+        }
+        return ids;
+    }
+
+    public void getAllSubTags(Tag parentIn, List<Tag> tagsOut){
+        if(parentIn != this){
+            tagsOut.add(parentIn);
+        }
+        for(Tag tag: parentIn.getChildren()){
+            getAllSubTags(tag, tagsOut);
+        }
+    }
+
+    public List<Tag> getAllSubTags(Tag parentIn){
+        ArrayList<Tag> allTags = new ArrayList<>();
+        getAllSubTags(parentIn, allTags);
+        return allTags;
+    }
+
+    public List<Tag> getAllSubTags(){
+        return getAllSubTags(this);
     }
 }

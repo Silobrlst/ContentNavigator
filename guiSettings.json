@@ -1,22 +1,39 @@
 {
      "settingsWindow": {
-          "exploreCurrentDirectory": "/home/q/Загрузки/ContentNavigator",
+          "exploreCurrentDirectory": "/home/q/IdeaProjects/TagFileNavigator",
           "x": 524,
           "width": 872,
           "y": 118,
           "height": 700
      },
      "mainWindow": {
-          "x": 658,
-          "width": 1098,
-          "y": 208,
-          "tagsPathsSplitPosition": 0.2042124542124542,
-          "height": 759
+          "maximized": false,
+          "x": 659,
+          "width": 985,
+          "y": 209,
+          "tagsPathsSplitPosition": 0.33537206931702346,
+          "height": 580
      },
-     "searchedPathsNameWidth": 394.00000607967377,
-     "searchedPathsPathWidth": 407,
+     "searchedPathsNameWidth": 207.00000607967377,
+     "searchedPathsAddedWidth": 123.99996948242188,
+     "searchedPathsPathWidth": 271.9999694824219,
      "recent": [
-          "/home/q/Загрузки/ContentNavigator/sdf.json",
-          "/home/q/Рабочий стол/qwerty.json"
-     ]
+          "/home/q/IdeaProjects/TagFileNavigator/sdf.json",
+          "/home/q/IdeaProjects/TagFileNavigator/xcvxcv.json"
+     ],
+     "AddEditPathsDialog": {
+          "pathsTableName": 283,
+          "x": 548,
+          "width": 824,
+          "y": 131,
+          "pathsTablePath": 527,
+          "height": 659
+     },
+     "AddEditPathDialog": {
+          "exploreCurrentDirectory": "/home/q/IdeaProjects/TagFileNavigator",
+          "x": 560,
+          "width": 801,
+          "y": 113,
+          "height": 714
+     }
 }

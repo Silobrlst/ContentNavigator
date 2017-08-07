@@ -1,4 +1,6 @@
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Paths extends ArrayList<Path> {
     private ArrayList<PathListener> listeners;
@@ -13,11 +15,13 @@ public class Paths extends ArrayList<Path> {
 
     public Path newPath(String pathIn, String nameIn){
         Path path = newPathWithoutNotifing(pathIn, nameIn);
+        path.setDateAdded(new SimpleDateFormat("dd.MM.yy HH:mm").format(new Date()));
         listeners.forEach(pathListener -> pathListener.created(path));
         return path;
     }
     public Path newPath(String pathIn){
         Path path = newPathWithoutNotifing(pathIn);
+        path.setDateAdded(new SimpleDateFormat("dd.MM.yy HH:mm").format(new Date()));
         listeners.forEach(pathListener -> pathListener.created(path));
         return path;
     }

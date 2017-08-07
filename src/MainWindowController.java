@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.Duration;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,9 +38,11 @@ public class MainWindowController {
     @FXML
     private TableColumn<Path, String> searchedPathsPath;
     @FXML
+    private TableColumn<Path, String> searchedPathsAdded;
+    @FXML
     private TreeView<Tag> tagsTree;
     @FXML
-    private SplitPane tagsPathsSpliter;
+    private SplitPane tagsPathsSplitter;
     @FXML
     private MenuBar menuBar;
     @FXML
@@ -81,6 +84,7 @@ public class MainWindowController {
     private static final String nameJSONName = "name";
     private static final String searchedPathsNameWidth = "searchedPathsNameWidth";
     private static final String searchedPathsPathWidth = "searchedPathsPathWidth";
+    private static final String searchedPathsAddedWidth = "searchedPathsAddedWidth";
     private static final File guiSettings = new File("guiSettings.json");
     //</JSON names>===========================
 
@@ -97,8 +101,9 @@ public class MainWindowController {
     private SettingsDialogController settingsDialogController;
     private AddEditPathDialogController addEditPathDialogController;
     private AddEditTagDialogController addEditTagDialogController;
+    private AddEditPathsDialogController addEditPathsDialogController;
 
-    private File tagsFile;
+    private File tagFile;
 
     //проверяем что Enter был нажат пока фокус был на таблице
     private boolean enterPressed = false;
@@ -108,7 +113,7 @@ public class MainWindowController {
     }
 
     public void setTagsStage(Stage stageIn, FXMLLoader loaderIn)throws Exception{
-        tagsFile = null;
+        tagFile = null;
 
         stage = stageIn;
         stage.setOnCloseRequest(event -> saveAppGuiSettings());
@@ -121,30 +126,30 @@ public class MainWindowController {
         paths.addListener(new EmptyPathListener(){
             @Override
             public void created(Path pathIn) {
-                saveTagsFile(tagsFile);
+                saveTagsFile(tagFile);
             }
 
             @Override
             public void renamed(Path pathIn) {
-                saveTagsFile(tagsFile);
+                saveTagsFile(tagFile);
                 filterPathsBySelectedTags();
             }
 
             @Override
             public void removedTag(Path pathIn, Tag tagIn) {
-                saveTagsFile(tagsFile);
+                saveTagsFile(tagFile);
                 filterPathsBySelectedTags();
             }
 
             @Override
             public void removedTags(Path pathIn, Collection<Tag> tagsIn) {
-                saveTagsFile(tagsFile);
+                saveTagsFile(tagFile);
                 filterPathsBySelectedTags();
             }
 
             @Override
             public void addedTags(Path pathIn, Collection<Tag> tagsIn) {
-                saveTagsFile(tagsFile);
+                saveTagsFile(tagFile);
                 filterPathsBySelectedTags();
                 pathsTable.getSelectionModel().select(pathIn);
                 pathsTable.refresh();
@@ -169,7 +174,7 @@ public class MainWindowController {
                 });
                 tagsTree.refresh();
 
-                saveTagsFile(tagsFile);
+                saveTagsFile(tagFile);
             }
 
             @Override
@@ -178,16 +183,34 @@ public class MainWindowController {
             }
 
             @Override
-            public void editedTag(Tag tagIn) {
+            public void renamedTag(Tag tagIn) {
                 getTreeItemByTag(tagIn.getParent()).getChildren().sort((o1, o2) -> {
                     return o1.getValue().getName().compareTo(o2.getValue().getName());
                 });
                 tagsTree.refresh();
-                saveTagsFile(tagsFile);
+                saveTagsFile(tagFile);
+            }
+
+            @Override
+            public void changedParent(Tag tagIn, Tag oldParentIn) {
+                TreeItem<Tag> tagTreeItem = getTreeItemByTag(tagIn);
+                TreeItem<Tag> newParentTreeItem =  getTreeItemByTag(tagIn.getParent());
+                getTreeItemByTag(oldParentIn).getChildren().remove(tagTreeItem);
+                newParentTreeItem.getChildren().add(tagTreeItem);
+
+                tagsTree.getSelectionModel().clearSelection();
+                tagsTree.getSelectionModel().select(tagTreeItem);
+                tagsTree.scrollTo(tagsTree.getRow(tagTreeItem));
+
+                newParentTreeItem.getChildren().sort((o1, o2) -> {
+                    return o1.getValue().getName().compareTo(o2.getValue().getName());
+                });
+                tagsTree.refresh();
+                saveTagsFile(tagFile);
             }
         });
 
-        //<tagsTree>=================================
+        //<tagsTree>============================================
         TreeItem<Tag> root = new TreeItem<>(tags);
         root.setExpanded(true);
         tagsTree.setRoot(root);
@@ -199,20 +222,80 @@ public class MainWindowController {
             }
         });
         tagsTree.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        tagsTree.setCellFactory(param -> new TreeCell<Tag>() {
+        tagsTree.setCellFactory(new Callback<TreeView<Tag>, TreeCell<Tag>>() {
             @Override
-            protected void updateItem(Tag tagIn, boolean empty) {
-                super.updateItem(tagIn, empty);
-                if (tagIn != null) {
-                    setText(tagIn.getName());
-                } else {
-                    setText("");   // <== clear the now empty cell.
-                }
+            public TreeCell<Tag> call(TreeView<Tag> stringTreeView) {
+                TreeCell<Tag> treeCell = new TreeCell<Tag>() {
+                    protected void updateItem(Tag itemIn, boolean empty) {
+                        super.updateItem(itemIn, empty);
+                        if (itemIn != null) {
+                            setText(itemIn.getName());
+                        } else {
+                            setText("");   // <== clear the now empty cell.
+                        }
+                    }
+                };
+
+                treeCell.setOnDragDetected(event -> {
+                    Dragboard db = treeCell.startDragAndDrop(TransferMode.MOVE);
+
+                    ClipboardContent content = new ClipboardContent();
+                    content.putString(tags.getTagId(treeCell.getTreeItem().getValue()));
+                    db.setContent(content);
+
+                    event.consume();
+                });
+
+                treeCell.setOnDragEntered(event -> {
+                    if (event.getGestureSource() != treeCell && event.getDragboard().hasString()) {
+                        treeCell.setGraphic(new ImageView(addIcon));
+                        treeCell.getTreeItem().setExpanded(true);
+                    }
+
+                    event.consume();
+                });
+
+                treeCell.setOnDragExited(event -> {
+                    if (event.getGestureSource() != treeCell) {
+                        treeCell.setGraphic(null);
+                    }
+
+                    event.consume();
+                });
+
+                treeCell.setOnDragOver(new EventHandler<DragEvent>() {
+                    public void handle(DragEvent event) {
+                        if (event.getGestureSource() != treeCell && event.getDragboard().hasString()) {
+                            event.acceptTransferModes(TransferMode.MOVE);
+                        }
+
+                        event.consume();
+                    }
+                });
+
+                treeCell.setOnDragDropped(event -> {
+                    Dragboard db = event.getDragboard();
+                    boolean success = false;
+
+                    boolean condition = event.getGestureSource() != treeCell;
+                    condition = condition && db.hasString();
+                    condition = condition && !tags.getTagId(treeCell.getTreeItem().getValue()).contains(tags.getTagId(((TreeCell<Tag>)event.getGestureSource()).getTreeItem().getValue()));
+                    if (condition) {
+                        System.out.println(db.getString());
+                        tags.getTagById(db.getString()).setParentTag(treeCell.getTreeItem().getValue());
+                        success = true;
+                    }
+
+                    event.setDropCompleted(success);
+                    event.consume();
+                });
+
+                return treeCell;
             }
         });
-        //</tagsTree>================================
+        //</tagsTree>===========================================
 
-        //<pathsTable>============================
+        //<pathsTable>==========================================
         pathsTable.setDisable(true);
         pathsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         pathsTable.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
@@ -221,7 +304,23 @@ public class MainWindowController {
             }
         });
         pathsTable.setRowFactory( tv -> {
-            TableRow<Path> row = new TableRow<>();
+            TableRow<Path> row = new TableRow<Path>(){
+                private Tooltip tooltip = new Tooltip();
+                @Override
+                public void updateItem(Path pathIn, boolean empty) {
+                    super.updateItem(pathIn, empty);
+                    if (pathIn == null) {
+                        setTooltip(null);
+                    } else {
+                        String message = "Tags:";
+                        for(Tag tag: pathIn.getTags()){
+                            message += "\n" + tags.getTagId(tag);
+                        }
+                        tooltip.setText(message);
+                        setTooltip(tooltip);
+                    }
+                }
+            };
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     Path path = row.getItem();
@@ -230,7 +329,7 @@ public class MainWindowController {
             });
             return row;
         });
-        //</pathsTable>===========================
+        //</pathsTable>=========================================
 
         //<addEditTagDialogController>==========================
         FXMLLoader loader = new FXMLLoader(getClass().getResource("AddEditTagDialog.fxml"));
@@ -246,11 +345,19 @@ public class MainWindowController {
         addEditPathDialogController.setPathsTagsParent(stage, loader, paths, tags);
         //</addEditPathDialogController>========================
 
-        MainWindowController mainWindowControllerContext = this;
+        //<addEditPathsDialogController>========================
+        loader = new FXMLLoader(getClass().getResource("AddEditPathsDialog.fxml"));
+        loader.load();
+        addEditPathsDialogController = loader.getController();
+        addEditPathsDialogController.setPathsTagsParent(stage, loader, paths, tags);
+        //</addEditPathsDialogController>=======================
+
         //<SettingsDialogController>============================
         loader = new FXMLLoader(getClass().getResource("SettingsDialog.fxml"));
         loader.load();
         settingsDialogController = loader.getController();
+
+        MainWindowController mainWindowControllerContext = this;
         settingsDialogController.setParentStage(stage, loader, this, () -> {
             openInFolderCommand = settingsDialogController.getOpenInFolderCommand();
             openInFolderArgument = settingsDialogController.getOpenInFolderArgument();
@@ -278,7 +385,7 @@ public class MainWindowController {
         loadAppGuiSettings();
 
         if (openRecentMenu.getItems().size() > 0) {
-            loadTagsFile(new File(openRecentMenu.getItems().get(0).getText()));
+            loadTagFile(new File(openRecentMenu.getItems().get(0).getText()));
         }
     }
 
@@ -286,6 +393,7 @@ public class MainWindowController {
     public void initialize() {
         searchedPathsName.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         searchedPathsPath.setCellValueFactory(cellData -> cellData.getValue().getPathProperty());
+        searchedPathsAdded.setCellValueFactory(cellData -> cellData.getValue().getDateProperty());
     }
 
     private void removeSelectedTags() {
@@ -420,12 +528,18 @@ public class MainWindowController {
         if (!mainWindowJSON.has("tagsPathsSplitPosition")) {
             mainWindowJSON.put("tagsPathsSplitPosition", 0.2d);
         }
+        if (!mainWindowJSON.has("maximized")) {
+            mainWindowJSON.put("maximized", false);
+        }
 
         if (!appGuiSettingsJsonIn.has(searchedPathsNameWidth)) {
             appGuiSettingsJsonIn.put(searchedPathsNameWidth, 0.d);
         }
         if (!appGuiSettingsJsonIn.has(searchedPathsPathWidth)) {
             appGuiSettingsJsonIn.put(searchedPathsPathWidth, 0.d);
+        }
+        if (!appGuiSettingsJsonIn.has(searchedPathsAddedWidth)) {
+            appGuiSettingsJsonIn.put(searchedPathsAddedWidth, 0.d);
         }
     }
 
@@ -456,13 +570,18 @@ public class MainWindowController {
             stage.setHeight(mainWindowJSON.getDouble("height"));
         }
 
+        stage.setMaximized(mainWindowJSON.getBoolean("maximized"));
+
         new Timeline(new KeyFrame(Duration.millis(1000), e -> {
-            tagsPathsSpliter.setDividerPositions(mainWindowJSON.getDouble("tagsPathsSplitPosition"));
+            tagsPathsSplitter.setDividerPositions(mainWindowJSON.getDouble("tagsPathsSplitPosition"));
             if(appGuiJson.getDouble(searchedPathsNameWidth) != 0.d){
                 searchedPathsName.setPrefWidth(appGuiJson.getDouble(searchedPathsNameWidth));
             }
             if(appGuiJson.getDouble(searchedPathsPathWidth) != 0.d){
                 searchedPathsPath.setPrefWidth(appGuiJson.getDouble(searchedPathsPathWidth));
+            }
+            if(appGuiJson.getDouble(searchedPathsAddedWidth) != 0.d){
+                searchedPathsAdded.setPrefWidth(appGuiJson.getDouble(searchedPathsAddedWidth));
             }
         })).play();
 
@@ -472,7 +591,7 @@ public class MainWindowController {
     }
 
     private void loadTagsFileGuiSettings(){
-        JSONObject tagsFileGuiSettingsJson = JSONLoader.loadJSON(new File(tagsFile.getName() + ".guiSettings.json"));
+        JSONObject tagsFileGuiSettingsJson = JSONLoader.loadJSON(new File(tagFile.getName() + ".guiSettings.json"));
         validateTagsFileGuiSettings(tagsFileGuiSettingsJson);
 
         JSONObject tagsExpandJSON = tagsFileGuiSettingsJson.getJSONObject("tagsExpand");
@@ -483,6 +602,8 @@ public class MainWindowController {
         }
 
         new Timeline(new KeyFrame(Duration.millis(1000), e -> {
+            tagsTree.getSelectionModel().clearSelection();
+
             JSONArray selectedTagsJSON = tagsFileGuiSettingsJson.getJSONArray("selectedTags");
             for (int i = 0; i < selectedTagsJSON.length(); i++) {
                 tagsTree.getSelectionModel().select(getTreeItemByTag(tags.getTagById(selectedTagsJSON.getString(i))));
@@ -522,14 +643,18 @@ public class MainWindowController {
 
         appGuiJson.put("recent", recentJSON);
         JSONObject mainWindowJSON = appGuiJson.getJSONObject("mainWindow");
-        mainWindowJSON.put("x", stage.getX());
-        mainWindowJSON.put("y", stage.getY());
-        mainWindowJSON.put("width", stage.getWidth());
-        mainWindowJSON.put("height", stage.getHeight());
-        mainWindowJSON.put("tagsPathsSplitPosition", tagsPathsSpliter.getDividerPositions()[0]);
+        mainWindowJSON.put("tagsPathsSplitPosition", tagsPathsSplitter.getDividerPositions()[0]);
+        if(!stage.isMaximized()){
+            mainWindowJSON.put("x", stage.getX());
+            mainWindowJSON.put("y", stage.getY());
+            mainWindowJSON.put("width", stage.getWidth());
+            mainWindowJSON.put("height", stage.getHeight());
+        }
+        mainWindowJSON.put("maximized", stage.isMaximized());
 
         appGuiJson.put(searchedPathsNameWidth, searchedPathsName.getWidth());
         appGuiJson.put(searchedPathsPathWidth, searchedPathsPath.getWidth());
+        appGuiJson.put(searchedPathsAddedWidth, searchedPathsAdded.getWidth());
 
         JSONLoader.saveJSON(guiSettings, appGuiJson);
     }
@@ -552,7 +677,11 @@ public class MainWindowController {
         }
         tagsFileGuiSettingsJson.put("tagsExpand", tagsExpandJSON);
 
-        JSONLoader.saveJSON(new File(tagsFile.getName() + ".guiSettings.json"), tagsFileGuiSettingsJson);
+        System.out.println(tagFile);
+
+        if(tagFile != null){
+            JSONLoader.saveJSON(new File(tagFile.getName() + ".guiSettings.json"), tagsFileGuiSettingsJson);
+        }
     }
     //</GUI settings i/o>=====================
 
@@ -569,8 +698,24 @@ public class MainWindowController {
         MenuItem menuItem = new MenuItem(fileIn.getAbsolutePath());
         menuItem.setOnAction(e -> {
             File file = new File(menuItem.getText());
-            loadTagsFile(file);
-            addRecent(file, true);
+
+            if(!file.exists()){
+                alertConfirm.setTitle("Path does not exist");
+                alertConfirm.setHeaderText("Path does not exist, Remove this path?");
+                Optional<ButtonType> result = alertConfirm.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    openRecentMenu.getItems().remove(menuItem);
+                    saveAppGuiSettings();
+                }
+            }else{
+                if(tagFile == null){
+                    loadTagFile(file);
+                    addRecent(file, true);
+                }else if(!tagFile.getAbsolutePath().equals(file.getAbsolutePath())){
+                    loadTagFile(file);
+                    addRecent(file, true);
+                }
+            }
         });
 
         openRecentMenu.getItems().add(0, menuItem);
@@ -651,7 +796,7 @@ public class MainWindowController {
 
         if(byNameSearch.getText().length() > 0){
             for(Path path: paths){
-                if(path.getName().toLowerCase().matches(".*" + byNameSearch.getText().toLowerCase() + ".*")){
+                if(path.getName().toLowerCase().contains(byNameSearch.getText().toLowerCase())){
                     pathsTable.getItems().add(path);
                 }
             }
@@ -674,7 +819,7 @@ public class MainWindowController {
 
         if(byPathSearch.getText().length() > 0){
             for(Path path: paths){
-                if(path.getPath().toLowerCase().matches(".*" + byPathSearch.getText().toLowerCase() + ".*")){
+                if(path.getPath().toLowerCase().contains(byPathSearch.getText().toLowerCase())){
                     pathsTable.getItems().add(path);
                 }
             }
@@ -713,6 +858,10 @@ public class MainWindowController {
             if(!pathJSONObj.has(nameJSONName)){
                 pathJSONObj.put(nameJSONName, "");
             }
+
+            if(!pathJSONObj.has("dateAdded")){
+                pathJSONObj.put("dateAdded", "");
+            }
         }
     }
 
@@ -742,13 +891,16 @@ public class MainWindowController {
         });
     }
 
-    private void loadTagsFile(File fileIn) {
+    private void loadTagFile(File fileIn) {
         if(!fileIn.exists()){
             return;
         }
 
-        if(tagsFile != null){
+        //если уже был открыт другой тег-файл сохраняем его
+        if(tagFile != null){
+            saveTagsFile(tagFile);
             saveTagsFileGuiSettings();
+            clearTagFile();
         }
 
         JSONObject json = JSONLoader.loadJSON(fileIn);
@@ -785,6 +937,8 @@ public class MainWindowController {
                 path = paths.newPathWithoutNotifing(pathJSONKey);
             }
 
+            path.setDateAdded(pathJSON.getString("dateAdded"));
+
             for(String tagJSON: pathJSON.getJSONObject(tagsJSONName).keySet()){
                 Tag tag = tags.getTagById(tagJSON);
 
@@ -800,7 +954,7 @@ public class MainWindowController {
 
         menuEdit.setDisable(false);
 
-        tagsFile = fileIn;
+        tagFile = fileIn;
         stage.setTitle("[" + fileIn.getName() + "] " + appName);
 
         loadTagsFileGuiSettings();
@@ -840,6 +994,7 @@ public class MainWindowController {
                 JSONObject pathTagsJSON = new JSONObject();
                 pathJSON.put(tagsJSONName, pathTagsJSON);
                 pathJSON.put(nameJSONName, path.getName());
+                pathJSON.put("dateAdded", path.getDateAdded());
 
                 for(Tag tag: path.getTags()){
                     pathTagsJSON.put(tags.getTagId(tag), "");
@@ -847,16 +1002,25 @@ public class MainWindowController {
             }
         }
 
-        //JSONLoader.saveJSON(fileIn, json);
+        JSONLoader.saveJSON(fileIn, json);
     }
 
     private void newTagsFile(File fileIn) {
-        menuEdit.setDisable(false);
+        clearTagFile();
+
+        tagFile = fileIn;
+        stage.setTitle(appName + " [" + fileIn.getName() + "]");
+    }
+
+    private void clearTagFile(){
+        paths.clear();
+        tags.getChildren().clear();
         pathsTable.getItems().clear();
         tagsTree.getRoot().getChildren().clear();
 
-        tagsFile = fileIn;
-        stage.setTitle(appName + " [" + fileIn.getName() + "]");
+        tagFile = null;
+
+        menuEdit.setDisable(false);
     }
     //</Tag file i/o>=========================
 
@@ -869,7 +1033,7 @@ public class MainWindowController {
         if (result.get() == ButtonType.OK) {
             removeSelectedTags();
             byTagsSearch.setText("");
-            saveTagsFile(tagsFile);
+            saveTagsFile(tagFile);
         }
     }
 
@@ -891,7 +1055,7 @@ public class MainWindowController {
             }
             pathsTable.getItems().removeAll(pathsTable.getSelectionModel().getSelectedItems());
 
-            saveTagsFile(tagsFile);
+            saveTagsFile(tagFile);
         }
     }
 
@@ -907,7 +1071,7 @@ public class MainWindowController {
             }
             pathsTable.getItems().removeAll(pathsTable.getSelectionModel().getSelectedItems());
 
-            saveTagsFile(tagsFile);
+            saveTagsFile(tagFile);
         }
     }
 
@@ -919,7 +1083,7 @@ public class MainWindowController {
                 path.removeTags(path.getTags());
                 paths.removePath(path);
 
-                saveTagsFile(tagsFile);
+                saveTagsFile(tagFile);
             }
         }else{
             if (Desktop.isDesktopSupported()) {
@@ -959,7 +1123,7 @@ public class MainWindowController {
                 path.removeTags(path.getTags());
                 paths.removePath(path);
 
-                saveTagsFile(tagsFile);
+                saveTagsFile(tagFile);
             }
         }else{
             if (Desktop.isDesktopSupported()) {
@@ -1003,7 +1167,7 @@ public class MainWindowController {
             fileChooser.setTitle("Open content info file");
             File file = fileChooser.showOpenDialog(stage);
             if (file != null) {
-                loadTagsFile(file);
+                loadTagFile(file);
                 addRecent(file, true);
             }
         });
@@ -1033,8 +1197,8 @@ public class MainWindowController {
         openPathItemContext.setGraphic(new ImageView(openIcon));
         MenuItem openInFolderPathItemContext = new MenuItem("Open in folder");
         openInFolderPathItemContext.setGraphic(new ImageView(openIcon));
-        MenuItem editPathItemContext = new MenuItem("Edit Path");
-        editPathItemContext.setGraphic(new ImageView(editIcon));
+        MenuItem editPathsItemContext = new MenuItem("Edit Paths");
+        editPathsItemContext.setGraphic(new ImageView(editIcon));
         MenuItem addPathItemContext = new MenuItem("Add Path");
         addPathItemContext.setGraphic(new ImageView(addIcon));
         MenuItem addPathSelectedWithTagsItemContextPaths = new MenuItem("Add Path with selected tags");
@@ -1050,7 +1214,7 @@ public class MainWindowController {
         serchedPathsContextMenu.getItems().add(addPathItemContext);
         serchedPathsContextMenu.getItems().add(addPathSelectedWithTagsItemContextPaths);
         serchedPathsContextMenu.getItems().add(new SeparatorMenuItem());
-        serchedPathsContextMenu.getItems().add(editPathItemContext);
+        serchedPathsContextMenu.getItems().add(editPathsItemContext);
         serchedPathsContextMenu.getItems().add(new SeparatorMenuItem());
         serchedPathsContextMenu.getItems().add(removePathsItemContext);
         serchedPathsContextMenu.getItems().add(removePathsFromSelectedTagsItemContext);
@@ -1059,19 +1223,19 @@ public class MainWindowController {
                 removePathsFromSelectedTagsItemContext.setDisable(false);
                 openPathItemContext.setDisable(false);
                 openInFolderPathItemContext.setDisable(false);
-                editPathItemContext.setDisable(false);
+                editPathsItemContext.setDisable(false);
             }
             if(pathsTable.getSelectionModel().getSelectedItems().size() > 1){
                 removePathsFromSelectedTagsItemContext.setDisable(false);
                 openPathItemContext.setDisable(true);
                 openInFolderPathItemContext.setDisable(true);
-                editPathItemContext.setDisable(true);
+                editPathsItemContext.setDisable(false);
             }
             if(pathsTable.getSelectionModel().getSelectedItems().size() == 0){
                 removePathsFromSelectedTagsItemContext.setDisable(true);
                 openPathItemContext.setDisable(true);
                 openInFolderPathItemContext.setDisable(true);
-                editPathItemContext.setDisable(true);
+                editPathsItemContext.setDisable(true);
             }
             if(tagsTree.getSelectionModel().getSelectedItems().size() > 0){
                 addPathSelectedWithTagsItemContextPaths.setDisable(false);
@@ -1087,13 +1251,15 @@ public class MainWindowController {
             }
         });
         pathsTable.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if (event.getCode() == KeyCode.CONTEXT_MENU) {
+                Bounds boundsInScene = pathsTable.localToScene(pathsTable.getBoundsInLocal());
+                Bounds boundsInScreen = pathsTable.localToScreen(pathsTable.getBoundsInLocal());
+                pathsTable.fireEvent(new ContextMenuEvent(ContextMenuEvent.CONTEXT_MENU_REQUESTED, boundsInScene.getMinX(), boundsInScene.getMinY(), boundsInScreen.getMinX(), boundsInScreen.getMinY(), true, null));
+            }
+
             if(enterPressed){
                 enterPressed = false;
-                if (event.getCode() == KeyCode.ENTER && event.isControlDown()) {
-                    Bounds boundsInScene = pathsTable.localToScene(pathsTable.getBoundsInLocal());
-                    Bounds boundsInScreen = pathsTable.localToScreen(pathsTable.getBoundsInLocal());
-                    pathsTable.fireEvent(new ContextMenuEvent(ContextMenuEvent.CONTEXT_MENU_REQUESTED, boundsInScene.getMinX(), boundsInScene.getMinY(), boundsInScreen.getMinX(), boundsInScreen.getMinY(), true, null));
-                }else if(event.getCode() == KeyCode.ENTER){
+                if(event.getCode() == KeyCode.ENTER){
                     if(pathsTable.getSelectionModel().getSelectedItems().size() == 1){
                         desktopOpenFile(new File(pathsTable.getSelectionModel().getSelectedItem().getPath()));
                     }
@@ -1120,6 +1286,13 @@ public class MainWindowController {
         tagsTreeContextMenu.getItems().add(new SeparatorMenuItem());
         tagsTreeContextMenu.getItems().add(removeTagItemContext);
         tagsTree.setContextMenu(tagsTreeContextMenu);
+        tagsTree.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if (event.getCode() == KeyCode.CONTEXT_MENU) {
+                Bounds boundsInScene = tagsTree.localToScene(tagsTree.getBoundsInLocal());
+                Bounds boundsInScreen = tagsTree.localToScreen(tagsTree.getBoundsInLocal());
+                tagsTree.fireEvent(new ContextMenuEvent(ContextMenuEvent.CONTEXT_MENU_REQUESTED, boundsInScene.getMinX(), boundsInScene.getMinY(), boundsInScreen.getMinX(), boundsInScreen.getMinY(), true, null));
+            }
+        });
         //</tags ContextMenu>============================
 
         //<menu edit>====================================
@@ -1129,7 +1302,7 @@ public class MainWindowController {
         addPathItem.setGraphic(new ImageView(addIcon));
         renameTagItem = new MenuItem("Edit Tag");
         renameTagItem.setGraphic(new ImageView(editIcon));
-        MenuItem editPathItem = new MenuItem("Edit Path");
+        MenuItem editPathItem = new MenuItem("Edit Paths");
         editPathItem.setGraphic(new ImageView(editIcon));
         MenuItem removeTagItem = new MenuItem("Remove Tags");
         removeTagItem.setGraphic(new ImageView(removeIcon));
@@ -1145,6 +1318,14 @@ public class MainWindowController {
         menuEditItems.add(removeTagItem);
         menuEdit.setDisable(true);
         //</menu edit>====================================
+
+        //<menu utils>====================================
+        MenuItem copyPathsAsListItem = new MenuItem("Copy selected paths as list");
+
+        Menu menuUtils = new Menu("Utils");
+        ObservableList<MenuItem> menuUtilsItems = menuUtils.getItems();
+        menuUtilsItems.add(copyPathsAsListItem);
+        //</menu utils>===================================
 
         //<menu events>===================================
         EventHandler<ActionEvent> addTag = (event) -> {
@@ -1164,18 +1345,22 @@ public class MainWindowController {
 
         EventHandler<ActionEvent> editTag = (event) -> {
             if (tagsTree.getSelectionModel().getSelectedItems().size() == 1) {
-                addEditTagDialogController.setRenameTag(tagsTree.getSelectionModel().getSelectedItem().getValue());
+                addEditTagDialogController.setEditTag(tagsTree.getSelectionModel().getSelectedItem().getValue());
                 addEditTagDialogController.open();
             }
         };
 
-        EventHandler<ActionEvent> editPath = (event) -> {
+        EventHandler<ActionEvent> editPaths = (event) -> {
             if (pathsTable.getSelectionModel().getSelectedItems().size() == 1) {
-                editPathItemContext.setDisable(false);
+                editPathsItemContext.setDisable(false);
                 addEditPathDialogController.setEditPath(pathsTable.getSelectionModel().getSelectedItem());
                 addEditPathDialogController.open();
-            } else {
-                editPathItemContext.setDisable(true);
+            } else if(pathsTable.getSelectionModel().getSelectedItems().size() > 1){
+                editPathsItemContext.setDisable(false);
+                addEditPathsDialogController.setEditPaths(pathsTable.getSelectionModel().getSelectedItems());
+                addEditPathsDialogController.open();
+            }else{
+                editPathsItemContext.setDisable(true);
             }
         };
 
@@ -1189,6 +1374,38 @@ public class MainWindowController {
             addEditPathDialogController.open();
         };
 
+        EventHandler<DragEvent> dropFiles = event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasFiles()) {
+                success = true;
+
+                ArrayList<Tag> selectedTags = new ArrayList<>();
+                for(TreeItem<Tag> tagTreeItem: tagsTree.getSelectionModel().getSelectedItems()){
+                    selectedTags.add(tagTreeItem.getValue());
+                }
+
+                if(db.getFiles().size() == 1){
+                    addEditPathDialogController.setAddPath(selectedTags);
+                    addEditPathDialogController.open();
+                }else{
+                    addEditPathsDialogController.setAddPaths(db.getFiles(), selectedTags);
+                    addEditPathsDialogController.open();
+                }
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        };
+
+        EventHandler<DragEvent> dragOverFiles = event -> {
+            Dragboard db = event.getDragboard();
+            if (db.hasFiles()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            } else {
+                event.consume();
+            }
+        };
+
         stage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (event.getCode() == KeyCode.T && event.isControlDown()) {
                 tagsTree.requestFocus();
@@ -1199,16 +1416,34 @@ public class MainWindowController {
             }
         });
 
+        tagsTree.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if (event.getCode() == KeyCode.F2) {
+                editTag.handle(new ActionEvent());
+            }
+        });
+
+        pathsTable.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if (event.getCode() == KeyCode.F2) {
+                editPaths.handle(new ActionEvent());
+            }
+        });
+
+        pathsTable.setOnDragDropped(dropFiles);
+        pathsTable.setOnDragOver(dragOverFiles);
+
+        tagsTree.setOnDragDropped(dropFiles);
+        tagsTree.setOnDragOver(dragOverFiles);
+
         addTagItem.setOnAction(addTag);
         addPathItem.setOnAction(addPath);
         renameTagItem.setOnAction(editTag);
-        editPathItem.setOnAction(editPath);
+        editPathItem.setOnAction(editPaths);
         removeTagItem.setOnAction(event -> removeSelectedTagsConfirm());
 
         openPathItemContext.setOnAction(event -> desktopOpenFile(new File(pathsTable.getSelectionModel().getSelectedItem().getPath())));
         openInFolderPathItemContext.setOnAction(event -> desktopOpenInFolder(new File(pathsTable.getSelectionModel().getSelectedItem().getPath())));
         addPathItemContext.setOnAction(addPath);
-        editPathItemContext.setOnAction(editPath);
+        editPathsItemContext.setOnAction(editPaths);
         removePathsItemContext.setOnAction(event -> removeSelectedPathsConfirm());
         removePathsFromSelectedTagsItemContext.setOnAction(event -> removeSelectedPathsFromSelectedTagsConfirm());
 
@@ -1240,10 +1475,24 @@ public class MainWindowController {
                 tagsTreeContextMenu.hide();
             }
         });
+
+        copyPathsAsListItem.setOnAction(event -> {
+            String copied = "";
+
+            for(Path path: pathsTable.getSelectionModel().getSelectedItems()){
+                copied += path.getPath() + "\n";
+            }
+
+            final Clipboard clipboard = Clipboard.getSystemClipboard();
+            final ClipboardContent content = new ClipboardContent();
+            content.putString(copied);
+            clipboard.setContent(content);
+        });
         //</menu events>====================================
 
         menuBar.getMenus().add(menuFile);
         menuBar.getMenus().add(menuEdit);
+        menuBar.getMenus().add(menuUtils);
     }
 
     public void setStyle(String styleFileNameIn){
@@ -1260,6 +1509,7 @@ public class MainWindowController {
         addEditTagDialogController.setStyle(styleFileName);
         addEditPathDialogController.setStyle(styleFileName);
         settingsDialogController.setStyle(styleFileName);
+        addEditPathsDialogController.setStyle(styleFileName);
     }
 
     public String getStyle(){

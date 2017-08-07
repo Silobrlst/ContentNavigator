@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddEditPathsDialogController">
+   <children>
+      <HBox VBox.vgrow="NEVER" />
+      <SplitPane dividerPositions="0.3" orientation="VERTICAL" VBox.vgrow="ALWAYS">
+        <items>
+          <AnchorPane>
+               <children>
+                  <TableView fx:id="pathsTable" layoutX="99.0" layoutY="-52.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columns>
+                      <TableColumn fx:id="pathsTablePath" prefWidth="384.0" text="Path" />
+                      <TableColumn fx:id="pathsTableName" minWidth="0.0" prefWidth="205.0" text="Name" />
+                    </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+          <AnchorPane>
+               <children>
+                  <GridPane hgap="5.0" layoutX="-19.0" layoutY="5.0" prefHeight="95.0" prefWidth="598.0" vgap="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                      <ColumnConstraints hgrow="NEVER" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" text="Avalilable tags">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="308.0" prefWidth="200.0">
+                                 <children>
+                                    <ListView fx:id="availableTags" layoutX="54.0" layoutY="-20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                        <GridPane alignment="CENTER" GridPane.columnIndex="1">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="NEVER" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Button fx:id="addTags" alignment="CENTER" mnemonicParsing="false" text="&gt;&gt;" GridPane.halignment="CENTER" />
+                              <Button fx:id="removeTags" mnemonicParsing="false" text="&lt;&lt;" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                           </children>
+                        </GridPane>
+                        <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" text="Added tags" GridPane.columnIndex="2">
+                          <content>
+                            <AnchorPane>
+                                 <children>
+                                    <ListView fx:id="addedTags" layoutX="34.0" layoutY="12.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                     </children>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+      <HBox alignment="TOP_RIGHT" spacing="5.0">
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </VBox.margin>
+         <children>
+            <Button fx:id="ok" minWidth="65.0" mnemonicParsing="false" text="Ok" />
+            <Button fx:id="cancel" minWidth="65.0" mnemonicParsing="false" text="Cancel" />
+            <Button fx:id="apply" minWidth="65.0" mnemonicParsing="false" text="Apply" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

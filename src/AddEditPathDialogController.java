@@ -15,7 +15,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class AddEditPathDialogController {
     private boolean editing;
@@ -53,14 +55,16 @@ public class AddEditPathDialogController {
     private TextField name;
 
     //<string names>======================
-    private static final String settingsWindow = "settingsWindow";
-    private static final String x = "x";
-    private static final String y = "y";
-    private static final String width = "width";
-    private static final String height = "height";
+    private static final String AddEditPathDialogJsonName = "AddEditPathDialog";
+    private static final String xJsonName = "x";
+    private static final String yJsonName = "y";
+    private static final String widthJsonName = "width";
+    private static final String heightJsonName = "height";
     private static final String exploreCurrentDirectory = "exploreCurrentDirectory";
     private static final File guiSettings = new File("guiSettings.json");
     //</string names>=====================
+
+    private final Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
 
     private Paths paths;
 
@@ -80,7 +84,9 @@ public class AddEditPathDialogController {
             File file = fileChooser.showOpenDialog(stage);
             if(file != null){
                 path.setText(file.getAbsolutePath());
-                name.setText(file.getName());
+                if(name.getText().isEmpty()){
+                    name.setText(file.getName());
+                }
                 pathValidation.setText("");
                 initialDirectory = new File(file.getAbsolutePath().split("[/\\\\][^\\\\/]*$")[0]);
             }
@@ -90,21 +96,43 @@ public class AddEditPathDialogController {
             File file = directoryChooser.showDialog(stage);
             if(file != null){
                 path.setText(file.getAbsolutePath());
-                name.setText(file.getName());
+                if(name.getText().isEmpty()){
+                    name.setText(file.getName());
+                }
                 pathValidation.setText("");
                 initialDirectory = new File(file.getAbsolutePath().split("[/\\\\][^\\\\/]*$")[0]);
             }
         });
 
         addTags.setOnAction(event -> {
-            addedTags.getItems().addAll(availableTags.getSelectionModel().getSelectedItems());
+            List<String> selectedTags = availableTags.getSelectionModel().getSelectedItems();
+            addedTags.getItems().addAll(selectedTags);
+            addedTags.getItems().sort(Comparator.naturalOrder());
+
+            for(String selectedTag: selectedTags){
+                addedTags.getSelectionModel().select(selectedTag);
+            }
+
             availableTags.getItems().removeAll(availableTags.getSelectionModel().getSelectedItems());
+            availableTags.getSelectionModel().clearSelection();
         });
 
         removeTags.setOnAction(event -> {
+            List<String> selectedTags = addedTags.getSelectionModel().getSelectedItems();
             availableTags.getItems().addAll(addedTags.getSelectionModel().getSelectedItems());
-            addedTags.getItems().removeAll(addedTags.getSelectionModel().getSelectedItems());
+            availableTags.getItems().sort(Comparator.naturalOrder());
+
+            for(String selectedTag: selectedTags){
+                availableTags.getSelectionModel().select(selectedTag);
+            }
+
+            addedTags.getItems().removeAll(selectedTags);
+            addedTags.getSelectionModel().clearSelection();
         });
+
+        path.setOnAction(event -> onOK());
+
+        name.setOnAction(event -> onOK());
 
         availableTags.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         addedTags.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -128,33 +156,35 @@ public class AddEditPathDialogController {
             }
         });
 
-        stage.setOnShown(event -> {
-            pathValidation.setText("");
-
-            getTags(tagsIn);
-            availableTags.getItems().clear();
-            availableTags.getItems().addAll(getTagIds(getTags(tagsIn)));
-
-            if(editing){
-                addedTags.getItems().clear();
-                addedTags.getItems().addAll(getTagIds(tagsTemp));
-                availableTags.getItems().removeAll(addedTags.getItems());
-            }else{
-                path.setText("");
-                addedTags.getItems().clear();
-
-                if(tagsTemp != null){
-                    addedTags.getItems().addAll(getTagIds(tagsTemp));
-                    availableTags.getItems().removeAll(addedTags.getItems());
-                }
-            }
-
-            path.requestFocus();
-        });
+        stage.setOnShown(event -> onShown());
 
         loadGuiSettings();
 
         setAddPath();
+    }
+
+    private void onShown(){
+        pathValidation.setText("");
+
+        availableTags.getItems().clear();
+        availableTags.getItems().addAll(tags.getTagsIds());
+        availableTags.getItems().sort(Comparator.naturalOrder());
+
+        if(editing){
+            addedTags.getItems().clear();
+            addedTags.getItems().addAll(tags.getTagsIds(tagsTemp));
+            availableTags.getItems().removeAll(addedTags.getItems());
+        }else{
+            path.setText("");
+            addedTags.getItems().clear();
+
+            if(tagsTemp != null){
+                addedTags.getItems().addAll(tags.getTagsIds(tagsTemp));
+                availableTags.getItems().removeAll(addedTags.getItems());
+            }
+        }
+
+        path.requestFocus();
     }
 
     public AddEditPathDialogController()throws Exception{
@@ -162,16 +192,6 @@ public class AddEditPathDialogController {
         directoryChooser = new DirectoryChooser();
         initialDirectory = new File(System.getProperty("user.dir"));
         styleFileName = "";
-    }
-
-    private List<String> getTagIds(List<Tag> tagsIn){
-        ArrayList<String> ids = new ArrayList<>();
-        for(Tag tag: tagsIn){
-            if(tag != tags){
-                ids.add(tags.getTagId(tag));
-            }
-        }
-        return ids;
     }
 
     private List<Tag> getTagsByIds(List<String> idsIn){
@@ -184,39 +204,24 @@ public class AddEditPathDialogController {
         return tags_;
     }
 
-    private void getTags(Tag parentIn, List<Tag> tagsOut){
-        if(parentIn != tags){
-            tagsOut.add(parentIn);
-        }
-        for(Tag tag: parentIn.getChildren()){
-            getTags(tag, tagsOut);
-        }
-    }
-
-    private List<Tag> getTags(Tag parentIn){
-        ArrayList<Tag> allTags = new ArrayList<>();
-        getTags(parentIn, allTags);
-        return allTags;
-    }
-
     //<GUI settings i/o>======================
     private void validateGuiSettings(JSONObject jsonIn) {
-        if (!jsonIn.has(settingsWindow)) {
-            jsonIn.put(settingsWindow, new JSONObject());
+        if (!jsonIn.has(AddEditPathDialogJsonName)) {
+            jsonIn.put(AddEditPathDialogJsonName, new JSONObject());
         }
 
-        JSONObject settingsWindowJSON = jsonIn.getJSONObject(settingsWindow);
-        if (!settingsWindowJSON.has(x)) {
-            settingsWindowJSON.put(x, 0.d);
+        JSONObject settingsWindowJSON = jsonIn.getJSONObject(AddEditPathDialogJsonName);
+        if (!settingsWindowJSON.has(xJsonName)) {
+            settingsWindowJSON.put(xJsonName, 0.d);
         }
-        if (!settingsWindowJSON.has(x)) {
-            settingsWindowJSON.put(y, 0.d);
+        if (!settingsWindowJSON.has(xJsonName)) {
+            settingsWindowJSON.put(yJsonName, 0.d);
         }
-        if (!settingsWindowJSON.has(width)) {
-            settingsWindowJSON.put(width, 0.d);
+        if (!settingsWindowJSON.has(widthJsonName)) {
+            settingsWindowJSON.put(widthJsonName, 0.d);
         }
-        if (!settingsWindowJSON.has(height)) {
-            settingsWindowJSON.put(height, 0.d);
+        if (!settingsWindowJSON.has(heightJsonName)) {
+            settingsWindowJSON.put(heightJsonName, 0.d);
         }
         if (!settingsWindowJSON.has(exploreCurrentDirectory)) {
             settingsWindowJSON.put(exploreCurrentDirectory, initialDirectory.getAbsolutePath());
@@ -227,20 +232,22 @@ public class AddEditPathDialogController {
         JSONObject guiJSON = JSONLoader.loadJSON(guiSettings);
         validateGuiSettings(guiJSON);
 
-        JSONObject mainWindowJSON = guiJSON.getJSONObject(settingsWindow);
-        if (mainWindowJSON.getDouble(width) > 0) {
-            stage.setWidth(mainWindowJSON.getDouble(width));
+        JSONObject mainWindowJSON = guiJSON.getJSONObject(AddEditPathDialogJsonName);
+        if (mainWindowJSON.getDouble(widthJsonName) > 0) {
+            stage.setWidth(mainWindowJSON.getDouble(widthJsonName));
         }
-        if (mainWindowJSON.getDouble(height) > 0) {
-            stage.setHeight(mainWindowJSON.getDouble(height));
+        if (mainWindowJSON.getDouble(heightJsonName) > 0) {
+            stage.setHeight(mainWindowJSON.getDouble(heightJsonName));
         }
 
         new Timeline(new KeyFrame(Duration.millis(1000), e -> {
             if (mainWindowJSON.getString(exploreCurrentDirectory).length() > 0) {
                 File file = new File(mainWindowJSON.getString(exploreCurrentDirectory));
-                fileChooser.setInitialDirectory(file);
-                directoryChooser.setInitialDirectory(file);
-                initialDirectory = file;
+                if(file.exists()){
+                    fileChooser.setInitialDirectory(file);
+                    directoryChooser.setInitialDirectory(file);
+                    initialDirectory = file;
+                }
             }
         })).play();
     }
@@ -249,11 +256,11 @@ public class AddEditPathDialogController {
         JSONObject guiJSON = JSONLoader.loadJSON(guiSettings);
         validateGuiSettings(guiJSON);
 
-        JSONObject settingsWindowJSON = guiJSON.getJSONObject(settingsWindow);
-        settingsWindowJSON.put(x, stage.getX());
-        settingsWindowJSON.put(y, stage.getY());
-        settingsWindowJSON.put(width, stage.getWidth());
-        settingsWindowJSON.put(height, stage.getHeight());
+        JSONObject settingsWindowJSON = guiJSON.getJSONObject(AddEditPathDialogJsonName);
+        settingsWindowJSON.put(xJsonName, stage.getX());
+        settingsWindowJSON.put(yJsonName, stage.getY());
+        settingsWindowJSON.put(widthJsonName, stage.getWidth());
+        settingsWindowJSON.put(heightJsonName, stage.getHeight());
         settingsWindowJSON.put(exploreCurrentDirectory, initialDirectory.getAbsolutePath());
 
         JSONLoader.saveJSON(guiSettings, guiJSON);
@@ -284,33 +291,49 @@ public class AddEditPathDialogController {
         tagsTemp = pathIn.getTags();
     }
 
-    private void onOK() {
-        if(new File(path.getText()).exists()){
-            List<Tag> addedTagsTemp = getTagsByIds(addedTags.getItems());
+    private void saveAndExit(){
+        List<Tag> addedTagsTemp = getTagsByIds(addedTags.getItems());
 
-            if(editing){
-                ArrayList<Tag> tagsToRemove = new ArrayList<>();
-                tagsToRemove.addAll(editingPath.getTags());
-                tagsToRemove.removeAll(addedTagsTemp);
+        if(editing){
+            ArrayList<Tag> tagsToRemove = new ArrayList<>();
+            tagsToRemove.addAll(editingPath.getTags());
+            tagsToRemove.removeAll(addedTagsTemp);
 
-                editingPath.setPath(path.getText());
-                editingPath.setName(name.getText());
-                editingPath.removeTags(tagsToRemove);
-                editingPath.addTags(addedTagsTemp);
+            editingPath.setPath(path.getText());
+            editingPath.setName(name.getText());
+            editingPath.removeTags(tagsToRemove);
+            editingPath.addTags(addedTagsTemp);
+
+            stage.hide();
+        }else{
+            if(!paths.checkPathExist(path.getText())){
+                Path newPath;
+
+                if(name.getText().isEmpty()){
+                    newPath = paths.newPath(path.getText());
+                }else{
+                    newPath = paths.newPath(path.getText(), name.getText());
+                }
+
+                newPath.addTags(addedTagsTemp);
 
                 stage.hide();
             }else{
-                if(!paths.checkPathExist(path.getText())){
-                    Path newPath = paths.newPath(path.getText());
-                    newPath.addTags(addedTagsTemp);
-
-                    stage.hide();
-                }else{
-                    pathValidation.setText("This path is already added");
-                }
+                pathValidation.setText("This path is already added");
             }
+        }
+    }
+
+    private void onOK() {
+        if(new File(path.getText()).exists()){
+            saveAndExit();
         }else{
-            pathValidation.setText("Path does not exists");
+            alertConfirm.setTitle("Path does not exists");
+            alertConfirm.setHeaderText("Path does not exists, save anyway?");
+            Optional<ButtonType> result = alertConfirm.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                saveAndExit();
+            }
         }
     }
 
