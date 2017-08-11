@@ -4,25 +4,28 @@ import java.util.List;
 
 public class Tag {
     private String name;
+    private String description;
+    private String htmlDescription;
     private ArrayList<Path> paths;
     private ArrayList<TagListener> tagListeners;
     private Tag parent;
     private ArrayList<Tag> children;
 
-    public Tag(ArrayList<TagListener> tagListenersIn, String nameIn, Tag parentIn){
+
+    private void init(ArrayList<TagListener> tagListenersIn, String nameIn, Tag parentIn){
         name = nameIn;
         paths = new ArrayList<>();
+        description = "";
+        htmlDescription = "";
         tagListeners = tagListenersIn;
         parent = parentIn;
         children = new ArrayList<>();
     }
-
+    public Tag(ArrayList<TagListener> tagListenersIn, String nameIn, Tag parentIn){
+        init(tagListenersIn, nameIn, parentIn);
+    }
     public Tag(ArrayList<TagListener> tagListenersIn, String nameIn){
-        name = nameIn;
-        paths = new ArrayList<>();
-        tagListeners = tagListenersIn;
-        parent = null;
-        children = new ArrayList<>();
+        init(tagListenersIn, nameIn, null);
     }
 
     public void addPath(Path pathIn){
@@ -66,6 +69,32 @@ public class Tag {
     public void rename(String nameIn){
         name = nameIn;
         tagListeners.forEach(tagListener -> tagListener.renamedTag(this));
+    }
+
+    public void setDescriptionWithoutNotify(String descriptionIn){
+        description = descriptionIn;
+    }
+
+    public void setHtmlDescriptionWithoutNotify(String htmlDescriptionIn){
+        htmlDescription = htmlDescriptionIn;
+    }
+
+    public void setDescription(String descriptionIn){
+        setDescriptionWithoutNotify(descriptionIn);
+        tagListeners.forEach(tagListener -> tagListener.changedDescriptions(this));
+    }
+
+    public void setHtmlDescription(String htmlDescriptionIn){
+        setHtmlDescriptionWithoutNotify(htmlDescriptionIn);
+        tagListeners.forEach(tagListener -> tagListener.changedDescriptions(this));
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+    public String getHtmlDescription(){
+        return htmlDescription;
     }
 
     public ArrayList<Path> getPaths(){

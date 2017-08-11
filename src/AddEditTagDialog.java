@@ -4,13 +4,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.Comparator;
 import java.util.Optional;
 
-public class AddEditTagDialogController {
+public class AddEditTagDialog {
     @FXML
     private TextField tagName;
     @FXML
@@ -19,18 +21,23 @@ public class AddEditTagDialogController {
     private Button ok;
     @FXML
     private Button cancel;
+    @FXML
+    private Button exploreHtml;
+    @FXML
+    private TextField htmlFile;
+    @FXML
+    private TextArea description;
+
+    private Stage stage;
+    private SavableStyledGui savableStyledGui;
 
     private boolean editing;
     private Tag editingTag;
     private Tag parentTag;
-
     private Tags tags;
 
-    private Stage stage;
-
-    private String styleFileName;
-
     private final Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
+    private final FileChooser fileChooser = new FileChooser();
 
     @FXML
     public void initialize() {
@@ -38,31 +45,48 @@ public class AddEditTagDialogController {
         cancel.setOnAction(event -> onCancel());
 
         tagName.setOnAction(event -> onOK());
+
+        exploreHtml.setOnAction(event -> onExploreHtmlFile());
     }
 
-    public AddEditTagDialogController(){
-        styleFileName = "";
-    }
+    public AddEditTagDialog(){}
 
-    public void setTagsParent(Stage parentStageIn, FXMLLoader loaderIn, Tags tagsIn){
+    public void init(Stage parentStageIn, FXMLLoader loaderIn, Tags tagsIn){
         tags = tagsIn;
 
+        String windowName = "addEditTagDialog";
+
         Scene scene = new Scene(loaderIn.getRoot());
-        scene.getRoot().setId("addEditTagDialogRoot");
+        scene.getRoot().setId(windowName + "Root");
         stage = new Stage();
         stage.setScene(scene);
         stage.initOwner(parentStageIn);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setOnShown(event -> onShown());
+        stage.setOnHidden(event -> savableStyledGui.save());
         stage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
                 onCancel();
             }
         });
+
+        savableStyledGui = new SavableStyledGui(windowName, stage);
+        savableStyledGui.load();
+    }
+
+    //<on>====================================
+    private void onExploreHtmlFile(){
+        File file = fileChooser.showOpenDialog(stage);
+        if(file != null){
+            htmlFile.setText(file.toURI().toString());
+        }
     }
 
     private void onShown(){
         tagName.requestFocus();
+
+        description.setText("");
+        htmlFile.setText("");
 
         parent.getItems().clear();
         parent.getItems().add("");
@@ -75,8 +99,13 @@ public class AddEditTagDialogController {
             tagName.setText(editingTag.getName());
             tagName.selectAll();
 
+            description.setText(editingTag.getDescription());
+            htmlFile.setText(editingTag.getHtmlDescription());
+
             if(editingTag.getParent() != tags){
                 parent.getSelectionModel().select(tags.getTagId(editingTag.getParent()));
+            }else{
+                parent.getSelectionModel().select("");
             }
         }else{
             tagName.setText("");
@@ -85,44 +114,27 @@ public class AddEditTagDialogController {
                 parent.getSelectionModel().select(tags.getTagId(parentTag));
             }
         }
-
-        stage.sizeToScene();
-    }
-
-    public void setAddTag(){
-        setAddTag(null);
-    }
-
-    public void setAddTag(Tag parentIn){
-        stage.setTitle("Add Tag");
-        editing = false;
-        editingTag = null;
-        parentTag = parentIn;
-
-        if(parentIn == null){
-            parent.getSelectionModel().select("");
-        }
-
-        tagName.setText("");
-    }
-
-    public void setEditTag(Tag tagIn){
-        stage.setTitle("Edit Tag");
-        editing = true;
-        editingTag = tagIn;
     }
 
     private void onOK() {
         boolean valid = true;
 
         if(editing){
+            if(!editingTag.getDescription().equals(description.getText())){
+                editingTag.setDescription(description.getText());
+            }
+
+            if(!editingTag.getHtmlDescription().equals(htmlFile.getText())){
+                editingTag.setHtmlDescription(htmlFile.getText());
+            }
+
             if(!tagName.getText().equals(editingTag.getName())){
                 editingTag.rename(tagName.getText());
             }
 
-            if(parent.getSelectionModel().getSelectedItem().isEmpty()){
+            if(parent.getSelectionModel().getSelectedItem().isEmpty() && tags != editingTag.getParent()){
                 editingTag.setParentTag(tags);
-            }else{
+            }else if(!parent.getSelectionModel().getSelectedItem().equals(tags.getTagId(editingTag.getParent()))){
                 Tag newParent = tags.getTagById(parent.getSelectionModel().getSelectedItem());
 
                 //проверяем чтобы новый родительский тег не был потомком текущего тега либо самим потомком
@@ -141,11 +153,16 @@ public class AddEditTagDialogController {
                 }
             }
         }else{
+            Tag tag;
+
             if(parentTag == null || parentTag == tags){
-                tags.newTag(tagName.getText());
+                tag = tags.newTag(tagName.getText());
             }else{
-                tags.newTag(tagName.getText(), tags.getTagById(parent.getSelectionModel().getSelectedItem()));
+                tag = tags.newTag(tagName.getText(), tags.getTagById(parent.getSelectionModel().getSelectedItem()));
             }
+
+            tag.setDescription(description.getText());
+            tag.setHtmlDescription(htmlFile.getText());
         }
 
         if(valid){
@@ -156,24 +173,38 @@ public class AddEditTagDialogController {
     private void onCancel() {
         stage.hide();
     }
+    //</on>===================================
 
-    public void open() {
-        stage.showAndWait();
+    //<set>===================================
+    public void setAddTag(){
+        setAddTag(null);
+    }
+
+    public void setAddTag(Tag parentIn){
+        stage.setTitle("Add Tag");
+        editing = false;
+        editingTag = null;
+        parentTag = parentIn;
+
+        if(parentIn == null || parentIn == tags){
+            parent.getSelectionModel().select("");
+        }
+
+        tagName.setText("");
+    }
+
+    public void setEditTag(Tag tagIn){
+        stage.setTitle("Edit Tag");
+        editing = true;
+        editingTag = tagIn;
     }
 
     public void setStyle(String styleFileNameIn){
-        if(styleFileNameIn.equals("default")){
-            if(styleFileName.length() > 0){
-                stage.getScene().getStylesheets().remove(styleFileName);
-            }
-            styleFileName = "";
-            return;
-        }
+        savableStyledGui.setStyle(styleFileNameIn);
+    }
+    //</set>==================================
 
-        if(styleFileName.length() > 0){
-            stage.getScene().getStylesheets().remove(styleFileName);
-        }
-        styleFileName = styleFileNameIn;
-        stage.getScene().getStylesheets().add(styleFileName);
+    public void open() {
+        stage.showAndWait();
     }
 }

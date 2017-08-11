@@ -31,31 +31,30 @@ public class SettingsDialogController {
     private ComboBox<String> style;
 
     private Stage stage;
-
-    //стиль этого окна
-    private String styleFileName;
+    private SavableStyledGui savableStyledGui;
 
     private MainWindowController mainWindowController;
-
     private SettingsDialogInterface settingsDialogInterface;
-
-    public SettingsDialogController(){
-        styleFileName = "";
-    }
 
     @FXML
     public void initialize() {
     }
 
-    public void setParentStage(Stage parentStageIn, FXMLLoader loaderIn, MainWindowController mainWindowControllerIn, SettingsDialogInterface settingsDialogInterfaceIn){
+    public SettingsDialogController(){}
+
+    public void init(Stage parentStageIn, FXMLLoader loaderIn, MainWindowController mainWindowControllerIn, SettingsDialogInterface settingsDialogInterfaceIn){
         mainWindowController = mainWindowControllerIn;
         settingsDialogInterface = settingsDialogInterfaceIn;
 
+        String windowName = "settingsDialog";
+
         Scene scene = new Scene(loaderIn.getRoot());
+        scene.getRoot().setId(windowName + "Root");
         stage = new Stage();
         stage.setScene(scene);
         stage.initOwner(parentStageIn);
         stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setOnHidden(event -> savableStyledGui.save());
         stage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
                 onCancel();
@@ -77,8 +76,12 @@ public class SettingsDialogController {
                 }).start();
             }
         });
+
+        savableStyledGui = new SavableStyledGui(windowName, stage);
+        savableStyledGui.load();
     }
 
+    //<set>===================================
     private void onCancel() {
         stage.hide();
     }
@@ -87,6 +90,29 @@ public class SettingsDialogController {
         settingsDialogInterface.applied();
         stage.hide();
     }
+    //</set>==================================
+
+    public void setStyle(String styleFileNameIn) {
+        savableStyledGui.setStyle(styleFileNameIn);
+    }
+
+    //<get>===================================
+    public String getOpenInFolderCommand(){
+        return openInFolderCommand.getText();
+    }
+    public String getOpenInFolderArgument(){
+        return openInFolderArgument.getText();
+    }
+    public String getSelectedStyle(){
+        String selectedStyle = style.getSelectionModel().getSelectedItem();
+
+        if(selectedStyle.equals("default")){
+            return "default";
+        }
+
+        return "file:styles/" + style.getSelectionModel().getSelectedItem();
+    }
+    //</get>==================================
 
     public void open() {
         File folder = new File("styles");
@@ -105,37 +131,5 @@ public class SettingsDialogController {
         openInFolderCommand.setText(mainWindowController.getOpenInFolderCommand());
         openInFolderArgument.setText(mainWindowController.getOpenInFolderArgument());
         stage.showAndWait();
-    }
-
-    public void setStyle(String styleFileNameIn){
-        if(styleFileNameIn.equals("default")){
-            if(styleFileName.length() > 0){
-                stage.getScene().getStylesheets().remove(styleFileName);
-            }
-            styleFileName = "";
-            return;
-        }
-
-        if(styleFileName.length() > 0){
-            stage.getScene().getStylesheets().remove(styleFileName);
-        }
-        styleFileName = styleFileNameIn;
-        stage.getScene().getStylesheets().add(styleFileName);
-    }
-
-    public String getOpenInFolderCommand(){
-        return openInFolderCommand.getText();
-    }
-    public String getOpenInFolderArgument(){
-        return openInFolderArgument.getText();
-    }
-    public String getSelectedStyle(){
-        String selectedStyle = style.getSelectionModel().getSelectedItem();
-
-        if(selectedStyle.equals("default")){
-            return "default";
-        }
-
-        return "file:styles/" + style.getSelectionModel().getSelectedItem();
     }
 }

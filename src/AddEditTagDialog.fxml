@@ -7,40 +7,79 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddEditTagDialogController">
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddEditTagDialog">
    <children>
       <GridPane hgap="5.0" vgap="5.0">
         <columnConstraints>
-          <ColumnConstraints />
           <ColumnConstraints hgrow="SOMETIMES" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints vgrow="SOMETIMES" />
           <RowConstraints vgrow="SOMETIMES" />
+          <RowConstraints vgrow="ALWAYS" />
+            <RowConstraints minHeight="-Infinity" />
+            <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField fx:id="tagName" GridPane.columnIndex="1" />
-            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Name" GridPane.halignment="RIGHT" />
-            <Label text="Parent" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-            <ComboBox fx:id="parent" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <GridPane hgap="5.0" vgap="5.0">
+              <columnConstraints>
+                <ColumnConstraints />
+                <ColumnConstraints hgrow="SOMETIMES" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <TextField fx:id="tagName" GridPane.columnIndex="1" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Name" GridPane.halignment="RIGHT" />
+                  <Label text="Parent" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="parent" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+            <HBox alignment="BOTTOM_RIGHT" GridPane.rowIndex="4">
+               <children>
+                  <Button fx:id="ok" minWidth="65.0" mnemonicParsing="false" text="OK">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="cancel" minWidth="65.0" mnemonicParsing="false" text="Cancel">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <Label text="Description:" GridPane.rowIndex="1" />
+            <TextArea fx:id="description" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
+            <TitledPane animated="false" text="HTML description" GridPane.rowIndex="3" GridPane.vgrow="NEVER">
+              <content>
+                <AnchorPane>
+                     <children>
+                        <GridPane hgap="5.0" layoutY="-11.0" vgap="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                              <ColumnConstraints hgrow="SOMETIMES" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints />
+                          </rowConstraints>
+                           <children>
+                              <Label text="URL:" />
+                              <TextField fx:id="htmlFile" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+                              <Button fx:id="exploreHtml" mnemonicParsing="false" text="Explore local file..." GridPane.columnIndex="2" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </TitledPane>
          </children>
-         <VBox.margin>
+         <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </VBox.margin>
+         </padding>
       </GridPane>
-      <HBox alignment="BOTTOM_RIGHT">
-         <children>
-            <Button fx:id="ok" minWidth="65.0" mnemonicParsing="false" text="OK">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="cancel" minWidth="65.0" mnemonicParsing="false" text="Cancel">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Button>
-         </children>
-      </HBox>
    </children>
 </VBox>

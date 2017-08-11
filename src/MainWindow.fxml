@@ -50,14 +50,16 @@
                               <GridPane hgap="5.0" vgap="5.0" GridPane.rowIndex="1">
                                 <columnConstraints>
                                   <ColumnConstraints hgrow="NEVER" />
-                                  <ColumnConstraints hgrow="ALWAYS" />
+                                  <ColumnConstraints hgrow="NEVER" />
+                                    <ColumnConstraints hgrow="ALWAYS" />
                                 </columnConstraints>
                                 <rowConstraints>
                                   <RowConstraints vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Label fx:id="searchValidation" textFill="RED" GridPane.columnIndex="1" />
+                                    <Label fx:id="searchValidation" textFill="RED" GridPane.columnIndex="2" />
                                     <Button fx:id="searchByAll" mnemonicParsing="false" text="Search by all" />
+                                    <Button fx:id="showAllPaths" mnemonicParsing="false" text="Show all paths" GridPane.columnIndex="1" />
                                  </children>
                               </GridPane>
                            </children>

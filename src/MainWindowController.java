@@ -54,6 +54,8 @@ public class MainWindowController {
     @FXML
     private Button searchByAll;
     @FXML
+    private Button showAllPaths;
+    @FXML
     private TextField byNameSearch;
     @FXML
     private TextField byPathSearch;
@@ -76,12 +78,15 @@ public class MainWindowController {
     private final Image removeIcon = new Image("file:images/removeIcon.png");
     private final Image searchIcon = new Image("file:images/searchIcon.png");
     private final Image editIcon = new Image("file:images/editIcon.png");
+    private final Image showIcon = new Image("file:images/showIcon.png");
     //</icons>================================
 
     //<JSON names>============================
     private static final String tagsJSONName = "tags";
     private static final String pathsJSONName = "paths";
-    private static final String nameJSONName = "name";
+    private static final String nameJsonName = "name";
+    private static final String descriptionJsonName = "description";
+    private static final String htmlDescriptionJsonName = "descriptionHtml";
     private static final String searchedPathsNameWidth = "searchedPathsNameWidth";
     private static final String searchedPathsPathWidth = "searchedPathsPathWidth";
     private static final String searchedPathsAddedWidth = "searchedPathsAddedWidth";
@@ -92,37 +97,58 @@ public class MainWindowController {
     private Menu menuEdit;
     private MenuItem renameTagItem;
 
-    private Tags tags;
-    private Paths paths;
+    private Tags tags = new Tags();
+    private Paths paths = new Paths();
 
     private Stage stage;
-    private String styleFileName;
+    private String styleFileName = "";
 
     private SettingsDialogController settingsDialogController;
-    private AddEditPathDialogController addEditPathDialogController;
-    private AddEditTagDialogController addEditTagDialogController;
-    private AddEditPathsDialogController addEditPathsDialogController;
+    private AddEditPathDialog addEditPathDialogController;
+    private AddEditTagDialog addEditTagDialogController;
+    private AddEditPathsDialog addEditPathsDialogController;
+    private CheckNotAddedPathsWindowController checkNotAddedPathsWindow;
+    private HtmlWindow htmlWindow;
 
-    private File tagFile;
+    private File tagFile = null;
 
     //проверяем что Enter был нажат пока фокус был на таблице
     private boolean enterPressed = false;
 
-    public MainWindowController(){
-        styleFileName = "";
-    }
+    @FXML
+    public void initialize() {}
 
-    public void setTagsStage(Stage stageIn, FXMLLoader loaderIn)throws Exception{
-        tagFile = null;
+    public MainWindowController(){}
 
+    public void init(Stage stageIn, FXMLLoader loaderIn)throws Exception{
         stage = stageIn;
-        stage.setOnCloseRequest(event -> saveAppGuiSettings());
+        stage.setOnCloseRequest(event -> {
+            saveAppGuiSettings();
+
+            //закрываем все окна которые не являются диалоговыми
+            checkNotAddedPathsWindow.close();
+            htmlWindow.close();
+        });
         stage.setScene(new Scene(loaderIn.getRoot()));
         stage.getIcons().add(new Image("file:images/appIcon.png"));
         stage.show();
         stage.getScene().getRoot().setId("mainWindowRoot");
+        stage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if(event.isControlDown()){
+                switch (event.getCode()){
+                    case F:
+                        byNameSearch.requestFocus();
+                        break;
+                    case P:
+                        pathsTable.requestFocus();
+                        break;
+                    case T:
+                        tagsTree.requestFocus();
+                        break;
+                }
+            }
+        });
 
-        paths = new Paths();
         paths.addListener(new EmptyPathListener(){
             @Override
             public void created(Path pathIn) {
@@ -157,11 +183,10 @@ public class MainWindowController {
                 pathsTable.scrollTo(pathIn);
             }
         });
-
-        tags = new Tags();
         tags.addTagObserver(new EmptyTagListener(){
             @Override
             public void createdTag(Tag tagIn, Tag parentIn) {
+                System.out.println("44444444444444444444");
                 TreeItem<Tag> tagTreeItem = new TreeItem<>(tagIn);
                 getTreeItemByTag(parentIn).getChildren().add(tagTreeItem);
                 tagsTree.getSelectionModel().clearSelection();
@@ -179,11 +204,13 @@ public class MainWindowController {
 
             @Override
             public void removedPathFromTag(Tag tagIn, Path pathIn) {
+                System.out.println("33333333333333");
                 filterPathsBySelectedTags();
             }
 
             @Override
             public void renamedTag(Tag tagIn) {
+                System.out.println("2222222222222222");
                 getTreeItemByTag(tagIn.getParent()).getChildren().sort((o1, o2) -> {
                     return o1.getValue().getName().compareTo(o2.getValue().getName());
                 });
@@ -193,6 +220,7 @@ public class MainWindowController {
 
             @Override
             public void changedParent(Tag tagIn, Tag oldParentIn) {
+                System.out.println("1111111111111111");
                 TreeItem<Tag> tagTreeItem = getTreeItemByTag(tagIn);
                 TreeItem<Tag> newParentTreeItem =  getTreeItemByTag(tagIn.getParent());
                 getTreeItemByTag(oldParentIn).getChildren().remove(tagTreeItem);
@@ -206,6 +234,11 @@ public class MainWindowController {
                     return o1.getValue().getName().compareTo(o2.getValue().getName());
                 });
                 tagsTree.refresh();
+                saveTagsFile(tagFile);
+            }
+
+            @Override
+            public void changedDescriptions(Tag tagIn) {
                 saveTagsFile(tagFile);
             }
         });
@@ -298,6 +331,36 @@ public class MainWindowController {
         //<pathsTable>==========================================
         pathsTable.setDisable(true);
         pathsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        pathsTable.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if(event.isControlDown() && event.getCode() == KeyCode.V){
+                final Clipboard clipboard = Clipboard.getSystemClipboard();
+                if(clipboard.hasFiles()){
+                    if(clipboard.getFiles().size() == 1){
+                        addEditPathDialogController.setAddPath(getSelectedTags(), clipboard.getFiles().get(0));
+                        addEditPathDialogController.open();
+                    }else{
+                        addEditPathsDialogController.setAddPaths(clipboard.getFiles(), getSelectedTags());
+                        addEditPathsDialogController.open();
+                    }
+                }else if(clipboard.hasString()){
+                    String[] pathsStr = clipboard.getString().split("\\s*\\n\\s*");
+
+                    if(pathsStr.length == 1){
+                        addEditPathDialogController.setAddPath(getSelectedTags(), new File(pathsStr[0]));
+                        addEditPathDialogController.open();
+                    }else{
+                        ArrayList<File> files = new ArrayList<>();
+
+                        for(int i=0; i<pathsStr.length; i++){
+                            files.add(new File(pathsStr[i]));
+                        }
+
+                        addEditPathsDialogController.setAddPaths(files, getSelectedTags());
+                        addEditPathsDialogController.open();
+                    }
+                }
+            }
+        });
         pathsTable.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (event.getCode() == KeyCode.DELETE) {
                 removeSelectedTagsConfirm();
@@ -316,6 +379,22 @@ public class MainWindowController {
                         for(Tag tag: pathIn.getTags()){
                             message += "\n" + tags.getTagId(tag);
                         }
+
+                        message += "\n\nPath:\n" + pathIn.getPath();
+
+                        message += "\n\nDescription:\n";
+
+                        if(pathIn.getDescription() != null){
+                            if(pathIn.getDescription().length() > 100){
+                                message += pathIn.getDescription().substring(0, 100) + "...";
+                            }else{
+                                message += pathIn.getDescription();
+                            }
+                        }
+
+                        message += "\n\nHTML description:\n";
+                        message += pathIn.getHtmlDescription();
+
                         tooltip.setText(message);
                         setTooltip(tooltip);
                     }
@@ -329,27 +408,31 @@ public class MainWindowController {
             });
             return row;
         });
+
+        searchedPathsName.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        searchedPathsPath.setCellValueFactory(cellData -> cellData.getValue().getPathProperty());
+        searchedPathsAdded.setCellValueFactory(cellData -> cellData.getValue().getDateProperty());
         //</pathsTable>=========================================
 
         //<addEditTagDialogController>==========================
         FXMLLoader loader = new FXMLLoader(getClass().getResource("AddEditTagDialog.fxml"));
         loader.load();
         addEditTagDialogController = loader.getController();
-        addEditTagDialogController.setTagsParent(stage, loader, tags);
+        addEditTagDialogController.init(stage, loader, tags);
         //</addEditTagDialogController>=========================
 
         //<addEditPathDialogController>=========================
         loader = new FXMLLoader(getClass().getResource("AddEditPathDialog.fxml"));
         loader.load();
         addEditPathDialogController = loader.getController();
-        addEditPathDialogController.setPathsTagsParent(stage, loader, paths, tags);
+        addEditPathDialogController.init(stage, loader, paths, tags);
         //</addEditPathDialogController>========================
 
         //<addEditPathsDialogController>========================
         loader = new FXMLLoader(getClass().getResource("AddEditPathsDialog.fxml"));
         loader.load();
         addEditPathsDialogController = loader.getController();
-        addEditPathsDialogController.setPathsTagsParent(stage, loader, paths, tags);
+        addEditPathsDialogController.init(stage, loader, paths, tags);
         //</addEditPathsDialogController>=======================
 
         //<SettingsDialogController>============================
@@ -358,13 +441,27 @@ public class MainWindowController {
         settingsDialogController = loader.getController();
 
         MainWindowController mainWindowControllerContext = this;
-        settingsDialogController.setParentStage(stage, loader, this, () -> {
+        settingsDialogController.init(stage, loader, this, () -> {
             openInFolderCommand = settingsDialogController.getOpenInFolderCommand();
             openInFolderArgument = settingsDialogController.getOpenInFolderArgument();
             mainWindowControllerContext.setStyle(settingsDialogController.getSelectedStyle());
             saveSettings();
         });
         //</SettingsDialogController>===========================
+
+        //<CheckNotAddedPathsWindowController===================
+        loader = new FXMLLoader(getClass().getResource("CheckNotAddedPathsWindow.fxml"));
+        loader.load();
+        checkNotAddedPathsWindow = loader.getController();
+        checkNotAddedPathsWindow.init(loader, paths);
+        //</CheckNotAddedPathsWindowController==================
+
+        //<htmlWindow===========================================
+        loader = new FXMLLoader(getClass().getResource("HtmlWindow.fxml"));
+        loader.load();
+        htmlWindow = loader.getController();
+        htmlWindow.init(loader);
+        //</htmlWindow==========================================
 
         searchByName.setGraphic(new ImageView(searchIcon));
         searchByPath.setGraphic(new ImageView(searchIcon));
@@ -379,6 +476,8 @@ public class MainWindowController {
         byPathSearch.setOnAction(event -> filterPathsByPathQuery());
         byTagsSearch.setOnAction(event -> filterPathsBySelectedTags());
 
+        showAllPaths.setOnAction(event -> onShowAllPaths());
+
         initMenu();
 
         loadSettings();
@@ -389,12 +488,6 @@ public class MainWindowController {
         }
     }
 
-    @FXML
-    public void initialize() {
-        searchedPathsName.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
-        searchedPathsPath.setCellValueFactory(cellData -> cellData.getValue().getPathProperty());
-        searchedPathsAdded.setCellValueFactory(cellData -> cellData.getValue().getDateProperty());
-    }
 
     private void removeSelectedTags() {
         Collection<TreeItem<Tag>> selectedTags = tagsTree.getSelectionModel().getSelectedItems();
@@ -429,6 +522,20 @@ public class MainWindowController {
 
     private TreeItem<Tag> getTreeItemByTag(Tag tagIn){
         return getTreeItemByTag(tagIn, tagsTree.getRoot());
+    }
+
+    private List<Tag> getTagsByTreeItems(List<TreeItem<Tag>> treeItemsIn){
+        List<Tag> tags_ = new ArrayList<>();
+
+        for(TreeItem<Tag> tagTreeItem: treeItemsIn){
+            tags_.add(tagTreeItem.getValue());
+        }
+
+        return tags_;
+    }
+
+    private List<Tag> getSelectedTags(){
+        return getTagsByTreeItems(tagsTree.getSelectionModel().getSelectedItems());
     }
 
     private void reSortPaths(){
@@ -605,9 +712,17 @@ public class MainWindowController {
             tagsTree.getSelectionModel().clearSelection();
 
             JSONArray selectedTagsJSON = tagsFileGuiSettingsJson.getJSONArray("selectedTags");
-            for (int i = 0; i < selectedTagsJSON.length(); i++) {
-                tagsTree.getSelectionModel().select(getTreeItemByTag(tags.getTagById(selectedTagsJSON.getString(i))));
+
+            if(selectedTagsJSON.length() == 1){
+                TreeItem<Tag> tagTreeItem = getTreeItemByTag(tags.getTagById(selectedTagsJSON.getString(0)));
+                tagsTree.getSelectionModel().select(tagTreeItem);
+                tagsTree.scrollTo(tagsTree.getRow(tagTreeItem));
+            }else{
+                for (int i = 0; i < selectedTagsJSON.length(); i++) {
+                    tagsTree.getSelectionModel().select(getTreeItemByTag(tags.getTagById(selectedTagsJSON.getString(i))));
+                }
             }
+
 
             filterPathsBySelectedTags();
             tagsTree.requestFocus();
@@ -837,6 +952,24 @@ public class MainWindowController {
         }
     }
 
+    private void onShowAllPaths(){
+        pathsTable.getItems().clear();
+
+        for(Path path: paths){
+            pathsTable.getItems().add(path);
+        }
+    }
+
+    private void showNonexistentPaths(){
+        pathsTable.getItems().clear();
+
+        for(Path path: paths){
+            if(!paths.checkPathExist(path.getPath())){
+                pathsTable.getItems().add(path);
+            }
+        }
+    }
+
     //<Tag file i/o>==========================
     private void validateTagsFile(JSONObject jsonIn) {
         if (!jsonIn.has(tagsJSONName)) {
@@ -855,8 +988,8 @@ public class MainWindowController {
                 pathJSONObj.put(tagsJSONName, new JSONObject());
             }
 
-            if(!pathJSONObj.has(nameJSONName)){
-                pathJSONObj.put(nameJSONName, "");
+            if(!pathJSONObj.has(nameJsonName)){
+                pathJSONObj.put(nameJsonName, "");
             }
 
             if(!pathJSONObj.has("dateAdded")){
@@ -869,10 +1002,19 @@ public class MainWindowController {
         if(!jsonIn.has(tagsJSONName)){
             jsonIn.put(tagsJSONName, new JSONObject());
         }
+        if(!jsonIn.has(descriptionJsonName)){
+            jsonIn.put(descriptionJsonName, "");
+        }
+        if(!jsonIn.has(htmlDescriptionJsonName)){
+            jsonIn.put(htmlDescriptionJsonName, "");
+        }
     }
 
     private void loadTags(JSONObject parentTagJSONIn, Tag parentIn){
         validateTag(parentTagJSONIn);
+
+        parentIn.setDescriptionWithoutNotify(parentTagJSONIn.getString(descriptionJsonName));
+        parentIn.setHtmlDescriptionWithoutNotify(parentTagJSONIn.getString(htmlDescriptionJsonName));
 
         JSONObject tagsJSON = parentTagJSONIn.getJSONObject(tagsJSONName);
         for (String tagName : tagsJSON.keySet()) {
@@ -926,18 +1068,31 @@ public class MainWindowController {
         });
         //</load tags>===============================
 
+        //<load paths>===============================
         JSONObject pathsJSON = json.getJSONObject(pathsJSONName);
         for(String pathJSONKey: pathsJSON.keySet()){
             Path path;
             JSONObject pathJSON = pathsJSON.getJSONObject(pathJSONKey);
 
-            if(pathJSON.getString(nameJSONName).length() > 0){
-                path = paths.newPathWithoutNotifing(pathJSONKey, pathJSON.getString(nameJSONName));
+            if(pathJSON.getString(nameJsonName).length() > 0){
+                path = paths.newPathWithoutNotifing(pathJSONKey, pathJSON.getString(nameJsonName));
             }else{
                 path = paths.newPathWithoutNotifing(pathJSONKey);
             }
 
+            if(!pathJSON.has("dateAdded")){
+                pathJSON.put("dateAdded", "");
+            }
+            if(!pathJSON.has(descriptionJsonName)){
+                pathJSON.put(descriptionJsonName, "");
+            }
+            if(!pathJSON.has(htmlDescriptionJsonName)){
+                pathJSON.put(htmlDescriptionJsonName, "");
+            }
+
             path.setDateAdded(pathJSON.getString("dateAdded"));
+            path.setDescription(pathJSON.getString(descriptionJsonName));
+            path.setHtmlDescription(pathJSON.getString(htmlDescriptionJsonName));
 
             for(String tagJSON: pathJSON.getJSONObject(tagsJSONName).keySet()){
                 Tag tag = tags.getTagById(tagJSON);
@@ -947,6 +1102,7 @@ public class MainWindowController {
                 }
             }
         }
+        //</load paths>==============================
 
         tagsTree.setDisable(false);
         pathsTable.setDisable(false);
@@ -960,14 +1116,18 @@ public class MainWindowController {
         loadTagsFileGuiSettings();
     }
 
-    private void tagsToJSONRecursive(Tag tagIn, JSONObject tagJSONIn){
+    private void tagsToJsonRecursive(Tag tagIn, JSONObject tagJSONIn){
         validateTag(tagJSONIn);
+
+        tagJSONIn.put(descriptionJsonName, tagIn.getDescription());
+        tagJSONIn.put(htmlDescriptionJsonName, tagIn.getHtmlDescription());
+
         JSONObject tagsJSON = tagJSONIn.getJSONObject(tagsJSONName);
 
         for(Tag tag: tagIn.getChildren()){
             JSONObject tagJSON = new JSONObject();
             tagsJSON.put(tag.getName(), tagJSON);
-            tagsToJSONRecursive(tag, tagJSON);
+            tagsToJsonRecursive(tag, tagJSON);
         }
     }
 
@@ -983,7 +1143,7 @@ public class MainWindowController {
         for(Tag tag: tags.getChildren()){
             JSONObject tagJSON = new JSONObject();
             tagsJSON.put(tag.getName(), tagJSON);
-            tagsToJSONRecursive(tag, tagJSON);
+            tagsToJsonRecursive(tag, tagJSON);
         }
 
         for(Path path: paths){
@@ -993,8 +1153,10 @@ public class MainWindowController {
 
                 JSONObject pathTagsJSON = new JSONObject();
                 pathJSON.put(tagsJSONName, pathTagsJSON);
-                pathJSON.put(nameJSONName, path.getName());
+                pathJSON.put(nameJsonName, path.getName());
                 pathJSON.put("dateAdded", path.getDateAdded());
+                pathJSON.put(descriptionJsonName, path.getDescription());
+                pathJSON.put(htmlDescriptionJsonName, path.getHtmlDescription());
 
                 for(Tag tag: path.getTags()){
                     pathTagsJSON.put(tags.getTagId(tag), "");
@@ -1077,6 +1239,8 @@ public class MainWindowController {
 
     private void desktopOpenInFolder(File fileIn){
         if(!fileIn.exists()){
+            alertConfirm.setTitle("Path does not exist");
+            alertConfirm.setHeaderText("Path does not exist, Remove this path?");
             Optional<ButtonType> result = alertConfirm.showAndWait();
             if (result.get() == ButtonType.OK) {
                 Path path = pathsTable.getSelectionModel().getSelectedItem();
@@ -1142,7 +1306,7 @@ public class MainWindowController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All (*.*)", "*.*"));
 
-        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Content file info (*.json)", "*.json");
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("tag-files (*.json)", "*.json");
         fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.setSelectedExtensionFilter(extensionFilter);
 
@@ -1197,7 +1361,11 @@ public class MainWindowController {
         openPathItemContext.setGraphic(new ImageView(openIcon));
         MenuItem openInFolderPathItemContext = new MenuItem("Open in folder");
         openInFolderPathItemContext.setGraphic(new ImageView(openIcon));
-        MenuItem editPathsItemContext = new MenuItem("Edit Paths");
+        MenuItem showDescriptionPathsContext = new MenuItem("Show description");
+        showDescriptionPathsContext.setGraphic(new ImageView(showIcon));
+        MenuItem showHtmlDescriptionPathsContext = new MenuItem("Show HTML description");
+        showHtmlDescriptionPathsContext.setGraphic(new ImageView(showIcon));
+        MenuItem editPathsItemContext = new MenuItem("Edit Path/Paths");
         editPathsItemContext.setGraphic(new ImageView(editIcon));
         MenuItem addPathItemContext = new MenuItem("Add Path");
         addPathItemContext.setGraphic(new ImageView(addIcon));
@@ -1208,8 +1376,22 @@ public class MainWindowController {
         MenuItem removePathsFromSelectedTagsItemContext = new MenuItem("Remove Paths from selected tags");
         removePathsFromSelectedTagsItemContext.setGraphic(new ImageView(removeIcon));
 
+        ArrayList<MenuItem> singleSelectionPathsContextItems = new ArrayList<>();
+        singleSelectionPathsContextItems.add(openPathItemContext);
+        singleSelectionPathsContextItems.add(openInFolderPathItemContext);
+        singleSelectionPathsContextItems.add(showDescriptionPathsContext);
+        singleSelectionPathsContextItems.add(showHtmlDescriptionPathsContext);
+
+        ArrayList<MenuItem> oneOrMoreSelectionPathsContextItems = new ArrayList<>();
+        oneOrMoreSelectionPathsContextItems.add(editPathsItemContext);
+        oneOrMoreSelectionPathsContextItems.add(removePathsItemContext);
+        oneOrMoreSelectionPathsContextItems.add(removePathsFromSelectedTagsItemContext);
+
         serchedPathsContextMenu.getItems().add(openPathItemContext);
         serchedPathsContextMenu.getItems().add(openInFolderPathItemContext);
+        serchedPathsContextMenu.getItems().add(new SeparatorMenuItem());
+        serchedPathsContextMenu.getItems().add(showDescriptionPathsContext);
+        serchedPathsContextMenu.getItems().add(showHtmlDescriptionPathsContext);
         serchedPathsContextMenu.getItems().add(new SeparatorMenuItem());
         serchedPathsContextMenu.getItems().add(addPathItemContext);
         serchedPathsContextMenu.getItems().add(addPathSelectedWithTagsItemContextPaths);
@@ -1220,22 +1402,28 @@ public class MainWindowController {
         serchedPathsContextMenu.getItems().add(removePathsFromSelectedTagsItemContext);
         pathsTable.setOnContextMenuRequested(event -> {
             if(pathsTable.getSelectionModel().getSelectedItems().size() == 1){
-                removePathsFromSelectedTagsItemContext.setDisable(false);
-                openPathItemContext.setDisable(false);
-                openInFolderPathItemContext.setDisable(false);
-                editPathsItemContext.setDisable(false);
+                singleSelectionPathsContextItems.forEach(menuItem -> {
+                    menuItem.setDisable(false);
+                });
+                oneOrMoreSelectionPathsContextItems.forEach(menuItem -> {
+                    menuItem.setDisable(false);
+                });
             }
             if(pathsTable.getSelectionModel().getSelectedItems().size() > 1){
-                removePathsFromSelectedTagsItemContext.setDisable(false);
-                openPathItemContext.setDisable(true);
-                openInFolderPathItemContext.setDisable(true);
-                editPathsItemContext.setDisable(false);
+                singleSelectionPathsContextItems.forEach(menuItem -> {
+                    menuItem.setDisable(true);
+                });
+                oneOrMoreSelectionPathsContextItems.forEach(menuItem -> {
+                    menuItem.setDisable(false);
+                });
             }
             if(pathsTable.getSelectionModel().getSelectedItems().size() == 0){
-                removePathsFromSelectedTagsItemContext.setDisable(true);
-                openPathItemContext.setDisable(true);
-                openInFolderPathItemContext.setDisable(true);
-                editPathsItemContext.setDisable(true);
+                singleSelectionPathsContextItems.forEach(menuItem -> {
+                    menuItem.setDisable(false);
+                });
+                oneOrMoreSelectionPathsContextItems.forEach(menuItem -> {
+                    menuItem.setDisable(false);
+                });
             }
             if(tagsTree.getSelectionModel().getSelectedItems().size() > 0){
                 addPathSelectedWithTagsItemContextPaths.setDisable(false);
@@ -1274,11 +1462,18 @@ public class MainWindowController {
         renameTagItemContext.setGraphic(new ImageView(editIcon));
         MenuItem addTagItemContext = new MenuItem("Add Tag");
         addTagItemContext.setGraphic(new ImageView(addIcon));
+        MenuItem showDescriptionTagsContext = new MenuItem("Show description");
+        showDescriptionTagsContext.setGraphic(new ImageView(showIcon));
+        MenuItem showHtmlDescriptionTagsContext = new MenuItem("Show HTML description");
+        showHtmlDescriptionTagsContext.setGraphic(new ImageView(showIcon));
         MenuItem addPathSelectedWithTagsItemContext = new MenuItem("Add Path with selected tags");
         addPathSelectedWithTagsItemContext.setGraphic(new ImageView(addIcon));
         MenuItem removeTagItemContext = new MenuItem("Remove Tags");
         removeTagItemContext.setGraphic(new ImageView(removeIcon));
 
+        tagsTreeContextMenu.getItems().add(showDescriptionTagsContext);
+        tagsTreeContextMenu.getItems().add(showHtmlDescriptionTagsContext);
+        tagsTreeContextMenu.getItems().add(new SeparatorMenuItem());
         tagsTreeContextMenu.getItems().add(addTagItemContext);
         tagsTreeContextMenu.getItems().add(addPathSelectedWithTagsItemContext);
         tagsTreeContextMenu.getItems().add(new SeparatorMenuItem());
@@ -1321,10 +1516,14 @@ public class MainWindowController {
 
         //<menu utils>====================================
         MenuItem copyPathsAsListItem = new MenuItem("Copy selected paths as list");
+        MenuItem checkNotAddedPaths = new MenuItem("Check not added paths");
+        MenuItem showNonexistentPathsItem = new MenuItem("Show nonexistent paths");
 
         Menu menuUtils = new Menu("Utils");
         ObservableList<MenuItem> menuUtilsItems = menuUtils.getItems();
         menuUtilsItems.add(copyPathsAsListItem);
+        menuUtilsItems.add(checkNotAddedPaths);
+        menuUtilsItems.add(showNonexistentPathsItem);
         //</menu utils>===================================
 
         //<menu events>===================================
@@ -1352,19 +1551,15 @@ public class MainWindowController {
 
         EventHandler<ActionEvent> editPaths = (event) -> {
             if (pathsTable.getSelectionModel().getSelectedItems().size() == 1) {
-                editPathsItemContext.setDisable(false);
                 addEditPathDialogController.setEditPath(pathsTable.getSelectionModel().getSelectedItem());
                 addEditPathDialogController.open();
             } else if(pathsTable.getSelectionModel().getSelectedItems().size() > 1){
-                editPathsItemContext.setDisable(false);
                 addEditPathsDialogController.setEditPaths(pathsTable.getSelectionModel().getSelectedItems());
                 addEditPathsDialogController.open();
-            }else{
-                editPathsItemContext.setDisable(true);
             }
         };
 
-        EventHandler<ActionEvent> addPathSelectedWithTags = event -> {
+        EventHandler<ActionEvent> addPathWithSelectedTags = event -> {
             ArrayList<Tag> tags1 = new ArrayList<>();
             for(TreeItem<Tag> tagItem: tagsTree.getSelectionModel().getSelectedItems()){
                 tags1.add(tagItem.getValue());
@@ -1386,7 +1581,7 @@ public class MainWindowController {
                 }
 
                 if(db.getFiles().size() == 1){
-                    addEditPathDialogController.setAddPath(selectedTags);
+                    addEditPathDialogController.setAddPath(selectedTags, db.getFiles().get(0));
                     addEditPathDialogController.open();
                 }else{
                     addEditPathsDialogController.setAddPaths(db.getFiles(), selectedTags);
@@ -1406,15 +1601,6 @@ public class MainWindowController {
             }
         };
 
-        stage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if (event.getCode() == KeyCode.T && event.isControlDown()) {
-                tagsTree.requestFocus();
-            }else if (event.getCode() == KeyCode.P && event.isControlDown()) {
-                pathsTable.requestFocus();
-            }else if (event.getCode() == KeyCode.F && event.isControlDown()) {
-                byNameSearch.requestFocus();
-            }
-        });
 
         tagsTree.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (event.getCode() == KeyCode.F2) {
@@ -1450,8 +1636,8 @@ public class MainWindowController {
         addTagItemContext.setOnAction(addTag);
         renameTagItemContext.setOnAction(editTag);
         removeTagItemContext.setOnAction(event -> removeSelectedTagsConfirm());
-        addPathSelectedWithTagsItemContext.setOnAction(addPathSelectedWithTags);
-        addPathSelectedWithTagsItemContextPaths.setOnAction(addPathSelectedWithTags);
+        addPathSelectedWithTagsItemContext.setOnAction(addPathWithSelectedTags);
+        addPathSelectedWithTagsItemContextPaths.setOnAction(addPathWithSelectedTags);
         tagsTree.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
                 tagsTreeContextMenu.show(tagsTree, event.getScreenX(), event.getScreenY());
@@ -1488,6 +1674,18 @@ public class MainWindowController {
             content.putString(copied);
             clipboard.setContent(content);
         });
+
+        checkNotAddedPaths.setOnAction(event -> {
+            checkNotAddedPathsWindow.open();
+        });
+
+        showNonexistentPathsItem.setOnAction(event -> showNonexistentPaths());
+
+        showDescriptionPathsContext.setOnAction(event -> htmlWindow.openText(pathsTable.getSelectionModel().getSelectedItem().getDescription()));
+        showHtmlDescriptionPathsContext.setOnAction(event -> htmlWindow.openInternetLink(pathsTable.getSelectionModel().getSelectedItem().getHtmlDescription()));
+
+        showDescriptionTagsContext.setOnAction(event -> htmlWindow.openText(tagsTree.getSelectionModel().getSelectedItem().getValue().getDescription()));
+        showHtmlDescriptionTagsContext.setOnAction(event -> htmlWindow.openInternetLink(tagsTree.getSelectionModel().getSelectedItem().getValue().getHtmlDescription()));
         //</menu events>====================================
 
         menuBar.getMenus().add(menuFile);
@@ -1510,6 +1708,8 @@ public class MainWindowController {
         addEditPathDialogController.setStyle(styleFileName);
         settingsDialogController.setStyle(styleFileName);
         addEditPathsDialogController.setStyle(styleFileName);
+        checkNotAddedPathsWindow.setStyle(styleFileName);
+        htmlWindow.setStyle(styleFileName);
     }
 
     public String getStyle(){

@@ -67,6 +67,16 @@ public class Tags extends Tag {
         return null;
     }
 
+    public List<Tag> getTagsByIds(List<String> idsIn){
+        ArrayList<Tag> tags_ = new ArrayList<>();
+
+        for(String id: idsIn){
+            tags_.add(getTagById(id));
+        }
+
+        return tags_;
+    }
+
     public String getTagId(Tag tagIn){
         Tag currentTag = tagIn;
         String id = "";

@@ -7,4 +7,5 @@ public class EmptyTagListener implements TagListener {
     public void changedParent(Tag tagIn, Tag oldParentIn){}
     public void addedChild(Tag tagIn){}
     public void removedChild(Tag tagIn){}
+    public void changedDescriptions(Tag tagIn){}
 }

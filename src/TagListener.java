@@ -33,4 +33,5 @@ public interface TagListener {
     void changedParent(Tag tagIn, Tag oldParentIn);
     void addedChild(Tag tagIn);
     void removedChild(Tag tagIn);
+    void changedDescriptions(Tag tagIn);
 }

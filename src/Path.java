@@ -8,28 +8,28 @@ public class Path implements Comparable<Path> {
     private StringProperty path;
     private StringProperty name;
     private StringProperty date;
+    private String description;
+    private String htmlDescription;
 
     private ArrayList<Tag> tags;
     private ArrayList<PathListener> pathListeners;
 
-    public Path(ArrayList<PathListener> pathListenersIn, String pathIn, String nameIn){
+    private void init(ArrayList<PathListener> pathListenersIn, String pathIn, String nameIn){
         path = new SimpleStringProperty(pathIn);
         name = new SimpleStringProperty(nameIn);
         date = new SimpleStringProperty("");
+        description = "";
+        htmlDescription = "";
         tags = new ArrayList<>();
         pathListeners = pathListenersIn;
     }
+    public Path(ArrayList<PathListener> pathListenersIn, String pathIn, String nameIn){
+        init(pathListenersIn, pathIn, nameIn);
+    }
     public Path(ArrayList<PathListener> pathListenersIn, String pathIn){
-        path = new SimpleStringProperty(pathIn);
-
         String regex = "/";
         String[] splited = getPath().split(regex);
-        name = new SimpleStringProperty(splited[splited.length-1]);
-
-        date = new SimpleStringProperty("");
-
-        tags = new ArrayList<>();
-        pathListeners = pathListenersIn;
+        init(pathListenersIn, pathIn, splited[splited.length-1]);
     }
 
     public void setPath(String pathIn){
@@ -46,6 +46,14 @@ public class Path implements Comparable<Path> {
         date.set(dateTimeIn);
     }
 
+    public void setDescription(String descriptionIn){
+        description = descriptionIn;
+    }
+
+    public void setHtmlDescription(String htmlDescriptionIn){
+        htmlDescription = htmlDescriptionIn;
+    }
+
     public String getPath(){
         return path.get();
     }
@@ -56,6 +64,14 @@ public class Path implements Comparable<Path> {
 
     public String getDateAdded(){
         return date.get();
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+    public String getHtmlDescription(){
+        return htmlDescription;
     }
 
     public StringProperty getNameProperty(){

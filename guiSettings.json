@@ -9,14 +9,55 @@
      "mainWindow": {
           "maximized": false,
           "x": 659,
-          "width": 985,
+          "width": 1107,
           "y": 209,
-          "tagsPathsSplitPosition": 0.33537206931702346,
-          "height": 580
+          "tagsPathsSplitPosition": 0.23118766999093382,
+          "height": 797
+     },
+     "searchedPathsAddedWidth": 123.99996948242188,
+     "addEditPathDialog": {
+          "pathsTableName": 205,
+          "exploreCurrentDirectory": "/home/q/IdeaProjects/TagFileNavigator",
+          "x": 640,
+          "width": 641,
+          "y": 156,
+          "pathsTablePath": 384,
+          "height": 585
+     },
+     "AddEditPathDialog": {
+          "exploreCurrentDirectory": "/home/q/IdeaProjects/TagFileNavigator",
+          "x": 539,
+          "width": 801,
+          "y": 264,
+          "height": 714
+     },
+     "htmlWindow": {
+          "x": 220,
+          "width": 1481,
+          "y": 44,
+          "height": 920
+     },
+     "settingsDialog": {
+          "x": 520,
+          "width": 449,
+          "y": 420,
+          "height": 191
      },
      "searchedPathsNameWidth": 207.00000607967377,
-     "searchedPathsAddedWidth": 123.99996948242188,
+     "addEditTagDialog": {
+          "x": 417,
+          "width": 670,
+          "y": 312,
+          "height": 298
+     },
      "searchedPathsPathWidth": 271.9999694824219,
+     "checkNotAddedPathsDialog": {
+          "exploreCurrentDirectory": "/home/q/IdeaProjects/TagFileNavigator",
+          "x": 407,
+          "width": 1106,
+          "y": 70,
+          "height": 842
+     },
      "recent": [
           "/home/q/IdeaProjects/TagFileNavigator/sdf.json",
           "/home/q/IdeaProjects/TagFileNavigator/xcvxcv.json"
@@ -28,12 +69,5 @@
           "y": 131,
           "pathsTablePath": 527,
           "height": 659
-     },
-     "AddEditPathDialog": {
-          "exploreCurrentDirectory": "/home/q/IdeaProjects/TagFileNavigator",
-          "x": 560,
-          "width": 801,
-          "y": 113,
-          "height": 714
      }
 }

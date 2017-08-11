@@ -9,7 +9,7 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
         loader.load();
         MainWindowController mainWindowController = loader.getController();
-        mainWindowController.setTagsStage(primaryStageIn, loader);
+        mainWindowController.init(primaryStageIn, loader);
     }
 
     public static void main(String[] args) {
