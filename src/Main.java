@@ -8,8 +8,8 @@ public class Main extends Application {
     public void start(Stage primaryStageIn) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
         loader.load();
-        MainWindowController mainWindowController = loader.getController();
-        mainWindowController.init(primaryStageIn, loader);
+        MainWindow mainWindow = loader.getController();
+        mainWindow.init(primaryStageIn, loader);
     }
 
     public static void main(String[] args) {

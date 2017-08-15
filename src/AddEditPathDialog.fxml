@@ -67,7 +67,7 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" text="Avalilable tags">
+                              <TitledPane animated="false" collapsible="false" focusTraversable="false" maxHeight="1.7976931348623157E308" text="Avalilable tags">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="308.0" prefWidth="200.0">
                                        <children>
@@ -89,7 +89,7 @@
                                     <Button fx:id="removeTags" mnemonicParsing="false" text="&lt;&lt;" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                                  </children>
                               </GridPane>
-                              <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" text="Added tags" GridPane.columnIndex="2">
+                              <TitledPane animated="false" collapsible="false" focusTraversable="false" maxHeight="1.7976931348623157E308" text="Added tags" GridPane.columnIndex="2">
                                 <content>
                                   <AnchorPane>
                                        <children>
@@ -114,7 +114,9 @@
                               <RowConstraints minHeight="-Infinity" />
                           </rowConstraints>
                            <children>
-                              <TitledPane animated="false" text="HTML description" GridPane.rowIndex="2">
+                              <TextArea fx:id="description" prefHeight="71.0" prefWidth="625.0" GridPane.rowIndex="1" />
+                              <Label text="Description:" />
+                              <TitledPane animated="false" focusTraversable="false" text="HTML description" GridPane.rowIndex="2">
                                 <content>
                                   <AnchorPane>
                                        <children>
@@ -137,8 +139,6 @@
                                     </AnchorPane>
                                 </content>
                               </TitledPane>
-                              <TextArea fx:id="description" prefHeight="71.0" prefWidth="625.0" GridPane.rowIndex="1" />
-                              <Label text="Description:" />
                            </children>
                         </GridPane>
                      </children>

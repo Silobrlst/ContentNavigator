@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.*;
 import javafx.scene.layout.Region;
 import javafx.stage.Modality;
@@ -14,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class AddEditPathsDialog {
     @FXML
@@ -47,7 +49,8 @@ public class AddEditPathsDialog {
     private Paths paths;
     private Tags tags;
 
-    private final Alert alertConfirm = new Alert(Alert.AlertType.INFORMATION);
+    private final Alert alertInformation = new Alert(Alert.AlertType.INFORMATION);
+    private final Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
 
     @FXML
     public void initialize() {
@@ -56,22 +59,80 @@ public class AddEditPathsDialog {
         cancel.setOnAction(event -> onCancel());
 
         addTags.setOnAction(event -> {
-            addedTags.getItems().addAll(availableTags.getSelectionModel().getSelectedItems());
+            List<String> selectedTags = availableTags.getSelectionModel().getSelectedItems();
+            addedTags.getItems().addAll(selectedTags);
+            addedTags.getItems().sort(Comparator.naturalOrder());
+
+            for(String selectedTag: selectedTags){
+                addedTags.getSelectionModel().select(selectedTag);
+            }
+
             availableTags.getItems().removeAll(availableTags.getSelectionModel().getSelectedItems());
+            availableTags.getSelectionModel().clearSelection();
         });
 
         removeTags.setOnAction(event -> {
+            List<String> selectedTags = addedTags.getSelectionModel().getSelectedItems();
             availableTags.getItems().addAll(addedTags.getSelectionModel().getSelectedItems());
-            addedTags.getItems().removeAll(addedTags.getSelectionModel().getSelectedItems());
+            availableTags.getItems().sort(Comparator.naturalOrder());
+
+            for(String selectedTag: selectedTags){
+                availableTags.getSelectionModel().select(selectedTag);
+            }
+
+            addedTags.getItems().removeAll(selectedTags);
+            addedTags.getSelectionModel().clearSelection();
         });
 
         availableTags.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         addedTags.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         pathsTableName.setCellValueFactory(cellData -> cellData.getValue().nameText);
+        pathsTableName.setCellFactory(TextFieldTableCell.forTableColumn());
+        pathsTableName.setOnEditCommit(event -> {
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).nameText.set(event.getNewValue());
+        });
+
         pathsTablePath.setCellValueFactory(cellData -> cellData.getValue().pathText);
+        pathsTablePath.setCellFactory(TextFieldTableCell.forTableColumn());
+        pathsTablePath.setOnEditCommit(event -> {
+            PathTemp pathTemp = event.getTableView().getItems().get(event.getTablePosition().getRow());
+
+            if(editing){
+                if(!paths.checkPathExist(event.getNewValue()) || pathTemp.path.getPath().equals(event.getNewValue())){
+                    pathTemp.pathText.set(event.getNewValue());
+                }else{
+                    alertInformation.setTitle("Path already exist");
+                    alertInformation.setHeaderText("This path already exist");
+                    alertInformation.setContentText("");
+                    alertInformation.showAndWait();
+                    pathsTable.refresh();
+                }
+            }else{
+                boolean exists = false;
+
+                for(PathTemp pathTemp2: pathsTable.getItems()){
+                    if(pathTemp2.pathText.get().equals(event.getNewValue()) && pathTemp != pathTemp2){
+                        exists = true;
+                    }
+                }
+
+                System.out.println(exists);
+
+                if(!paths.checkPathExist(event.getNewValue()) && !exists){
+                    pathTemp.pathText.set(event.getNewValue());
+                }else{
+                    alertInformation.setTitle("Path already exist");
+                    alertInformation.setHeaderText("This path already exist");
+                    alertInformation.setContentText("");
+                    alertInformation.showAndWait();
+                    pathsTable.refresh();
+                }
+            }
+        });
 
         pathsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        pathsTable.setEditable(true);
     }
 
     public AddEditPathsDialog()throws Exception{}
@@ -90,11 +151,6 @@ public class AddEditPathsDialog {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setOnHidden(event -> savableStyledGui.save());
         stage.setOnShown(event -> onShown());
-        stage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if (event.getCode() == KeyCode.ESCAPE) {
-                onCancel();
-            }
-        });
 
         pathsTable.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if(event.isControlDown() && event.getCode() == KeyCode.V){
@@ -159,8 +215,8 @@ public class AddEditPathsDialog {
         });
 
         savableStyledGui = new SavableStyledGui(windowName, stage);
-        savableStyledGui.tableColumn(pathsTablePath, "pathsTablePath");
-        savableStyledGui.tableColumn(pathsTableName, "pathsTableName");
+        savableStyledGui.saveTableColumn(pathsTablePath, "pathsTablePath");
+        savableStyledGui.saveTableColumn(pathsTableName, "pathsTableName");
         savableStyledGui.load();
     }
 
@@ -199,36 +255,108 @@ public class AddEditPathsDialog {
     private void onOK() {
         List<Tag> addedTagsTemp = tags.getTagsByIds(addedTags.getItems());
 
+        boolean validPaths = true;
+        String NonexistentPaths = "";
+        for(PathTemp pathTemp: pathsTable.getItems()){
+            if(!(new File(pathTemp.pathText.get()).exists())){
+                NonexistentPaths += pathTemp.pathText.get() + "\n";
+                validPaths = false;
+            }
+        }
+
         if(editing){
             ArrayList<Tag> tagsToRemove = new ArrayList<>();
             tagsToRemove.addAll(tagsTemp);
             tagsToRemove.removeAll(addedTagsTemp);
 
-            for(PathTemp pathTemp: pathsTable.getItems()){
-                pathTemp.path.removeTags(tagsToRemove);
-                pathTemp.path.addTags(addedTagsTemp);
+            boolean save = false;
+
+            if(validPaths){
+                save = true;
+            }else{
+                alertConfirm.setTitle("Paths does not exists");
+                alertConfirm.setHeaderText("This paths does not exists, save anyway?");
+                alertConfirm.setContentText(NonexistentPaths);
+                alertConfirm.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node -> {
+                    ((Label)node).setWrapText(false);
+                    ((Label)node).setMinHeight(Region.USE_PREF_SIZE);
+                    ((Label)node).setTooltip(new Tooltip(((Label)node).getText()));
+                });
+                Optional<ButtonType> result = alertConfirm.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    save = true;
+                }
             }
 
-            stage.hide();
+            if(save){
+                for(PathTemp pathTemp: pathsTable.getItems()){
+                    pathTemp.path.removeTags(tagsToRemove);
+                    pathTemp.path.addTags(addedTagsTemp);
+
+                    if(!pathTemp.path.getName().equals(pathTemp.nameText.get())){
+                        pathTemp.path.setName(pathTemp.nameText.get());
+                    }
+
+                    if(!pathTemp.path.getPath().equals(pathTemp.pathText.get())){
+                        pathTemp.path.setPath(pathTemp.pathText.get());
+                    }
+                }
+
+                stage.hide();
+            }
         }else{
-            boolean b = true;
-            String existedPaths = "";
+            boolean pathsNotAdded = true;
+            boolean save = false;
+
+            String addedPaths = "";
             ArrayList<PathTemp> pathTemps = new ArrayList<>();
             for(PathTemp pathTemp: pathsTable.getItems()){
                 if(paths.checkPathExist(pathTemp.pathText.get())){
-                    b = false;
-                    existedPaths += pathTemp.pathText.get() + "\n";
+                    pathsNotAdded = false;
+                    addedPaths += pathTemp.pathText.get() + "\n";
                     pathTemps.add(pathTemp);
                 }
             }
 
-            if(b){
-                for(PathTemp pathTemp: pathsTable.getItems()){
+            if(pathsNotAdded && validPaths) {
+                save = true;
+            }else if(!validPaths){
+                alertConfirm.setTitle("Paths does not exists");
+                alertConfirm.setHeaderText("This paths does not exists, save anyway?");
+                alertConfirm.setContentText(NonexistentPaths);
+                alertConfirm.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node -> {
+                    ((Label)node).setWrapText(false);
+                    ((Label)node).setMinHeight(Region.USE_PREF_SIZE);
+                    ((Label)node).setTooltip(new Tooltip(((Label)node).getText()));
+                });
+                Optional<ButtonType> result = alertConfirm.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    save = true;
+                }
+            }else if(!pathsNotAdded){
+                alertInformation.setTitle("Paths already exists");
+                alertInformation.setHeaderText("This paths already exists:");
+                alertInformation.setContentText(addedPaths);
+                alertInformation.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node -> {
+                    ((Label)node).setWrapText(false);
+                    ((Label)node).setMinHeight(Region.USE_PREF_SIZE);
+                    ((Label)node).setTooltip(new Tooltip(((Label)node).getText()));
+                });
+                alertInformation.showAndWait();
+
+                pathsTable.getSelectionModel().clearSelection();
+                for(PathTemp pathTemp: pathTemps){
+                    pathsTable.getSelectionModel().select(pathTemp);
+                }
+            }
+
+            if(save){
+                for (PathTemp pathTemp : pathsTable.getItems()) {
                     Path newPath;
 
-                    if(pathTemp.nameText.get().isEmpty()){
+                    if (pathTemp.nameText.get().isEmpty()) {
                         newPath = paths.newPath(pathTemp.pathText.get());
-                    }else{
+                    } else {
                         newPath = paths.newPath(pathTemp.pathText.get(), pathTemp.nameText.get());
                     }
 
@@ -236,21 +364,6 @@ public class AddEditPathsDialog {
                 }
 
                 stage.hide();
-            }else{
-                alertConfirm.setTitle("Paths already exists");
-                alertConfirm.setHeaderText("This paths already exists:");
-                alertConfirm.setContentText(existedPaths);
-                alertConfirm.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node -> {
-                    ((Label)node).setWrapText(false);
-                    ((Label)node).setMinHeight(Region.USE_PREF_SIZE);
-                    ((Label)node).setTooltip(new Tooltip(((Label)node).getText()));
-                });
-                alertConfirm.showAndWait();
-
-                pathsTable.getSelectionModel().clearSelection();
-                for(PathTemp pathTemp: pathTemps){
-                    pathsTable.getSelectionModel().select(pathTemp);
-                }
             }
         }
     }
@@ -314,6 +427,16 @@ public class AddEditPathsDialog {
 
     public void open(){
         stage.showAndWait();
+    }
+
+    public boolean checkPathInTable(File pathIn){
+        for(PathTemp pathTemp: pathsTable.getItems()){
+            if(pathIn.getAbsolutePath().equals(pathTemp.pathText.get())){
+                return true;
+            }
+        }
+
+        return false;
     }
 
 

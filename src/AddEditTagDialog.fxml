@@ -37,23 +37,9 @@
                   <ComboBox fx:id="parent" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
-            <HBox alignment="BOTTOM_RIGHT" GridPane.rowIndex="4">
-               <children>
-                  <Button fx:id="ok" minWidth="65.0" mnemonicParsing="false" text="OK">
-                     <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="cancel" minWidth="65.0" mnemonicParsing="false" text="Cancel">
-                     <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
             <Label text="Description:" GridPane.rowIndex="1" />
             <TextArea fx:id="description" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
-            <TitledPane animated="false" text="HTML description" GridPane.rowIndex="3" GridPane.vgrow="NEVER">
+            <TitledPane animated="false" focusTraversable="false" text="HTML description" GridPane.rowIndex="3" GridPane.vgrow="NEVER">
               <content>
                 <AnchorPane>
                      <children>
@@ -76,6 +62,20 @@
                   </AnchorPane>
               </content>
             </TitledPane>
+            <HBox alignment="BOTTOM_RIGHT" GridPane.rowIndex="4">
+               <children>
+                  <Button fx:id="ok" minWidth="65.0" mnemonicParsing="false" text="OK">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="cancel" minWidth="65.0" mnemonicParsing="false" text="Cancel">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

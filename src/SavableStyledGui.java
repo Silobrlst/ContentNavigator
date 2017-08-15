@@ -22,4 +22,8 @@ public class SavableStyledGui extends SavableGui {
         styleFileName = styleFileNameIn;
         stage.getScene().getStylesheets().add(styleFileName);
     }
+
+    public String getStyle(){
+        return styleFileName;
+    }
 }

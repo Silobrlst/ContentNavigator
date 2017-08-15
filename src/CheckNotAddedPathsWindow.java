@@ -13,7 +13,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class CheckNotAddedPathsWindowController {
+public class CheckNotAddedPathsWindow {
     @FXML
     private TextField folder;
     @FXML
@@ -38,7 +38,7 @@ public class CheckNotAddedPathsWindowController {
     @FXML
     public void initialize() {}
 
-    public CheckNotAddedPathsWindowController(){}
+    public CheckNotAddedPathsWindow(){}
 
     public void init(FXMLLoader loaderIn, Paths pathsIn){
         paths = pathsIn;

@@ -7,21 +7,29 @@
           "height": 700
      },
      "mainWindow": {
+          "searchedPathsPath": 285,
+          "tagsPathsSplitPane": 0.22030825022665457,
           "maximized": false,
           "x": 659,
           "width": 1107,
           "y": 209,
+          "pathsTable": {
+               "sortColumn": "searchedPathsName",
+               "sortType": "DESCENDING"
+          },
+          "searchedPathsAdded": 100,
           "tagsPathsSplitPosition": 0.23118766999093382,
+          "searchedPathsName": 365,
           "height": 797
      },
      "searchedPathsAddedWidth": 123.99996948242188,
      "addEditPathDialog": {
           "pathsTableName": 205,
           "exploreCurrentDirectory": "/home/q/IdeaProjects/TagFileNavigator",
-          "x": 640,
-          "width": 641,
-          "y": 156,
-          "pathsTablePath": 384,
+          "x": 196,
+          "width": 758,
+          "y": 110,
+          "pathsTablePath": 460,
           "height": 585
      },
      "AddEditPathDialog": {
@@ -60,7 +68,7 @@
      },
      "recent": [
           "/home/q/IdeaProjects/TagFileNavigator/sdf.json",
-          "/home/q/IdeaProjects/TagFileNavigator/xcvxcv.json"
+          "/media/q/3Q HDD External/saved torrents/games (копия).json"
      ],
      "AddEditPathsDialog": {
           "pathsTableName": 283,

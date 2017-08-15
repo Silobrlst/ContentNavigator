@@ -9,7 +9,6 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AddEditPathsDialog">
    <children>
-      <HBox VBox.vgrow="NEVER" />
       <SplitPane dividerPositions="0.3" orientation="VERTICAL" VBox.vgrow="ALWAYS">
         <items>
           <AnchorPane>
@@ -34,7 +33,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" text="Avalilable tags">
+                        <TitledPane animated="false" collapsible="false" focusTraversable="false" maxHeight="1.7976931348623157E308" text="Avalilable tags">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="308.0" prefWidth="200.0">
                                  <children>
@@ -56,7 +55,7 @@
                               <Button fx:id="removeTags" mnemonicParsing="false" text="&lt;&lt;" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                            </children>
                         </GridPane>
-                        <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" text="Added tags" GridPane.columnIndex="2">
+                        <TitledPane animated="false" collapsible="false" focusTraversable="false" maxHeight="1.7976931348623157E308" text="Added tags" GridPane.columnIndex="2">
                           <content>
                             <AnchorPane>
                                  <children>

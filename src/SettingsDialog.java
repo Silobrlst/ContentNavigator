@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
 
-public class SettingsDialogController {
+public class SettingsDialog {
     @FXML
     private Button cancel;
     @FXML
@@ -33,17 +33,17 @@ public class SettingsDialogController {
     private Stage stage;
     private SavableStyledGui savableStyledGui;
 
-    private MainWindowController mainWindowController;
+    private MainWindow mainWindow;
     private SettingsDialogInterface settingsDialogInterface;
 
     @FXML
     public void initialize() {
     }
 
-    public SettingsDialogController(){}
+    public SettingsDialog(){}
 
-    public void init(Stage parentStageIn, FXMLLoader loaderIn, MainWindowController mainWindowControllerIn, SettingsDialogInterface settingsDialogInterfaceIn){
-        mainWindowController = mainWindowControllerIn;
+    public void init(Stage parentStageIn, FXMLLoader loaderIn, MainWindow mainWindowIn, SettingsDialogInterface settingsDialogInterfaceIn){
+        mainWindow = mainWindowIn;
         settingsDialogInterface = settingsDialogInterfaceIn;
 
         String windowName = "settingsDialog";
@@ -126,10 +126,10 @@ public class SettingsDialogController {
             }
         }
         style.getItems().sort(Comparator.naturalOrder());
-        style.getSelectionModel().select(mainWindowController.getStyle().replace("file:styles/", ""));
+        style.getSelectionModel().select(mainWindow.getStyle().replace("file:styles/", ""));
 
-        openInFolderCommand.setText(mainWindowController.getOpenInFolderCommand());
-        openInFolderArgument.setText(mainWindowController.getOpenInFolderArgument());
+        openInFolderCommand.setText(mainWindow.getOpenInFolderCommand());
+        openInFolderArgument.setText(mainWindow.getOpenInFolderArgument());
         stage.showAndWait();
     }
 }

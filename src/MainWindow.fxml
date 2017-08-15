@@ -7,11 +7,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainWindowController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainWindow">
    <center>
       <VBox prefHeight="400.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <TitledPane fx:id="searchPathsTitledPane" animated="false" collapsible="false" text="Search Paths">
+            <TitledPane fx:id="searchPathsTitledPane" animated="false" collapsible="false" focusTraversable="false" text="Search Paths">
                <content>
                   <AnchorPane>
                      <children>
@@ -68,11 +68,11 @@
                   </AnchorPane>
                </content>
             </TitledPane>
-            <SplitPane fx:id="tagsPathsSplitter" dividerPositions="0.2" prefHeight="160.0" VBox.vgrow="ALWAYS">
+            <SplitPane fx:id="tagsPathsSplitPane" dividerPositions="0.2" prefHeight="160.0" VBox.vgrow="ALWAYS">
                <items>
                   <AnchorPane minHeight="0.0" minWidth="0.0">
                      <children>
-                        <TitledPane fx:id="tagsTitledPane" animated="false" collapsible="false" layoutX="-23.0" text="Tags" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TitledPane fx:id="tagsTitledPane" animated="false" collapsible="false" focusTraversable="false" layoutX="-23.0" text="Tags" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0">
                                  <children>
@@ -84,7 +84,7 @@
                      </children></AnchorPane>
                   <AnchorPane>
                      <children>
-                        <TitledPane fx:id="searchedPathsTitledPane" animated="false" collapsible="false" layoutX="14.0" text="Searched Paths" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TitledPane fx:id="searchedPathsTitledPane" animated="false" collapsible="false" focusTraversable="false" layoutX="14.0" text="Searched Paths" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0">
                                  <children>

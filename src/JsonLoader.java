@@ -8,8 +8,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class JSONLoader {
-    public static String loadDataFromfile(File fileIn) {
+public class JsonLoader {
+    private static String loadDataFromFile(File fileIn) {
         try {
             fileIn.createNewFile();
 
@@ -22,7 +22,7 @@ public class JSONLoader {
         return null;
     }
 
-    public static void saveDataToFile(File fileIn, String dataIn) {
+    private static void saveDataToFile(File fileIn, String dataIn) {
         BufferedWriter bw = null;
         FileWriter fw = null;
 
@@ -48,7 +48,7 @@ public class JSONLoader {
     }
 
     public static JSONObject loadJSON(File fileIn) {
-        String data = loadDataFromfile(fileIn);
+        String data = loadDataFromFile(fileIn);
 
         if (data.isEmpty()) {
             data = "{}";
