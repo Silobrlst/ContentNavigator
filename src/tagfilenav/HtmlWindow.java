@@ -1,3 +1,5 @@
+package tagfilenav;
+
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -62,23 +64,23 @@ public class HtmlWindow {
     private void onShown(){
     }
 
-    public void setStyle(String styleFileNameIn){
+    void setStyle(String styleFileNameIn){
         savableStyledGui.setStyle(styleFileNameIn);
     }
 
-    public void openInternetLink(String urlIn){
+    void openInternetLink(String urlIn){
         stage.setTitle("HTML description");
         html.getEngine().load(urlIn);
         stage.show();
     }
 
-    public void openText(String textIn){
+    void openText(String textIn){
         stage.setTitle("Description");
         html.getEngine().loadContent(textIn);
         stage.show();
     }
 
-    public void close(){
+    void close(){
         stage.hide();
     }
 }

@@ -1,3 +1,5 @@
+package tagfilenav;
+
 import java.util.stream.Stream;
 
 import javafx.collections.FXCollections;
@@ -21,13 +23,13 @@ import javafx.stage.Window;
  *
  * @param <T>
  */
-public class ComboBoxAutoComplete<T> {
+class ComboBoxAutoComplete<T> {
 
     private ComboBox<T> cmb;
-    String filter = "";
+    private String filter = "";
     private ObservableList<T> originalItems;
 
-    public ComboBoxAutoComplete(ComboBox<T> cmb) {
+    ComboBoxAutoComplete(ComboBox<T> cmb) {
         this.cmb = cmb;
         originalItems = FXCollections.observableArrayList(cmb.getItems());
         cmb.setTooltip(new Tooltip());
@@ -35,7 +37,7 @@ public class ComboBoxAutoComplete<T> {
         cmb.setOnHidden(this::handleOnHiding);
     }
 
-    public void handleOnKeyPressed(KeyEvent e) {
+    private void handleOnKeyPressed(KeyEvent e) {
         ObservableList<T> filteredList = FXCollections.observableArrayList();
         KeyCode code = e.getCode();
 
@@ -54,7 +56,7 @@ public class ComboBoxAutoComplete<T> {
             cmb.getTooltip().hide();
         } else {
             Stream<T> items = cmb.getItems().stream();
-            String txtUsr = filter.toString().toLowerCase();
+            String txtUsr = filter.toLowerCase();
             items.filter(el -> el.toString().toLowerCase().contains(txtUsr)).forEach(filteredList::add);
             cmb.getTooltip().setText(txtUsr);
             Window stage = cmb.getScene().getWindow();
@@ -66,7 +68,7 @@ public class ComboBoxAutoComplete<T> {
         cmb.getItems().setAll(filteredList);
     }
 
-    public void handleOnHiding(Event e) {
+    private void handleOnHiding(Event e) {
         filter = "";
         cmb.getTooltip().hide();
         T s = cmb.getSelectionModel().getSelectedItem();

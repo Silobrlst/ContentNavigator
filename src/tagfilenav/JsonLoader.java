@@ -1,3 +1,5 @@
+package tagfilenav;
+
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
@@ -8,7 +10,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class JsonLoader {
+class JsonLoader {
     private static String loadDataFromFile(File fileIn) {
         try {
             fileIn.createNewFile();
@@ -47,7 +49,7 @@ public class JsonLoader {
         }
     }
 
-    public static JSONObject loadJSON(File fileIn) {
+    static JSONObject loadJSON(File fileIn) {
         String data = loadDataFromFile(fileIn);
 
         if (data.isEmpty()) {
@@ -57,7 +59,7 @@ public class JsonLoader {
         return new JSONObject(data);
     }
 
-    public static void saveJSON(File fileIn, JSONObject jsonObjectIn) {
+    static void saveJSON(File fileIn, JSONObject jsonObjectIn) {
         saveDataToFile(fileIn, jsonObjectIn.toString(5));
     }
 }

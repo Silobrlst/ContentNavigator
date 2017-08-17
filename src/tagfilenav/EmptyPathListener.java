@@ -1,3 +1,5 @@
+package tagfilenav;
+
 import java.util.Collection;
 
 public class EmptyPathListener implements PathListener {

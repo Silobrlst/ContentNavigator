@@ -1,3 +1,5 @@
+package tagfilenav;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
@@ -13,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SavableGui {
-    //<string names>======================
+    //<string names>====================================================================================================
     private static final String xJsonName = "x";
     private static final String yJsonName = "y";
     private static final String widthJsonName = "width";
@@ -22,7 +24,7 @@ public class SavableGui {
     private static final String sortColumnJsonName = "sortColumn";
     private static final String sortTypeJsonName = "sortType";
     private static final File guiSettings = new File("guiSettings.json");
-    //</string names>=====================
+    //</string names>===================================================================================================
 
     protected String windowName;
     protected Stage stage;
@@ -43,20 +45,20 @@ public class SavableGui {
     }
 
     //запоминать SplitPane
-    public void saveSplitPane(SplitPane splitPaneIn, String nameIn){
+    void saveSplitPane(SplitPane splitPaneIn, String nameIn){
         saveSplitPaneMap.put(nameIn, splitPaneIn);
     }
 
     //запоминать ширину для столбца таблицы
-    public void saveTableColumn(TableColumn tableColumnIn, String nameIn){
+    void saveTableColumn(TableColumn tableColumnIn, String nameIn){
         saveTableColumnMap.put(nameIn, tableColumnIn);
     }
 
-    public void saveTableSorting(TableView tableViewIn, String nameIn){
+    void saveTableSorting(TableView tableViewIn, String nameIn){
         saveTableViewMap.put(nameIn, tableViewIn);
     }
 
-    public void validateGuiSettings(JSONObject jsonIn) {
+    void validateGuiSettings(JSONObject jsonIn) {
         if (!jsonIn.has(windowName)) {
             jsonIn.put(windowName, new JSONObject());
         }
@@ -108,7 +110,7 @@ public class SavableGui {
         }
     }
 
-    public void load() {
+    void load() {
         JSONObject guiJSON = JsonLoader.loadJSON(guiSettings);
         validateGuiSettings(guiJSON);
 
@@ -155,7 +157,7 @@ public class SavableGui {
         })).play();
     }
 
-    public void save() {
+    void save() {
         JSONObject guiJSON = JsonLoader.loadJSON(guiSettings);
         validateGuiSettings(guiJSON);
 

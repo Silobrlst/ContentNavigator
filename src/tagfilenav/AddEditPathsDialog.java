@@ -1,3 +1,5 @@
+package tagfilenav;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
@@ -167,8 +169,8 @@ public class AddEditPathsDialog {
                 }
             }
         });
-        pathsTable.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if (event.getCode() == KeyCode.DELETE) {
+        pathsTable.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.DELETE && pathsTable.isFocused()) {
                 pathsTable.getItems().removeAll(pathsTable.getSelectionModel().getSelectedItems());
             }
         });
@@ -220,7 +222,7 @@ public class AddEditPathsDialog {
         savableStyledGui.load();
     }
 
-    //<on>====================================
+    //<on>==============================================================================================================
     private void onShown(){
         availableTags.getItems().clear();
         availableTags.getItems().addAll(tags.getTagsIds());
@@ -372,14 +374,14 @@ public class AddEditPathsDialog {
         // add your code here if necessary
         stage.hide();
     }
-    //</on>===================================
+    //</on>=============================================================================================================
 
-    //<set>===================================
-    public void setStyle(String styleFileNameIn){
+    //<set>=============================================================================================================
+    void setStyle(String styleFileNameIn){
         savableStyledGui.setStyle(styleFileNameIn);
     }
 
-    public void setAddPaths(List<File> pathsToAddIn, List<Tag> tagsIn){
+    void setAddPaths(List<File> pathsToAddIn, List<Tag> tagsIn){
         stage.setTitle("Add Paths");
         apply.setDisable(true);
         editing = false;
@@ -388,7 +390,7 @@ public class AddEditPathsDialog {
         tagsTemp = tagsIn;
     }
 
-    public void setEditPaths(List<Path> pathsIn){
+    void setEditPaths(List<Path> pathsIn){
         stage.setTitle("Edit Paths");
         apply.setDisable(false);
         editing = true;
@@ -396,7 +398,7 @@ public class AddEditPathsDialog {
 
         getTagsFromPaths(pathsIn);
     }
-    //</set>==================================
+    //</set>============================================================================================================
 
     private void getTagsFromPaths(List<Path> pathsIn){
         if(pathsIn.size() == 0){
@@ -425,7 +427,7 @@ public class AddEditPathsDialog {
         }
     }
 
-    public void open(){
+    void open(){
         stage.showAndWait();
     }
 

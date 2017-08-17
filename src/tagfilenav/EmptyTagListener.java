@@ -1,3 +1,5 @@
+package tagfilenav;
+
 public class EmptyTagListener implements TagListener {
     public void createdTag(Tag tagIn, Tag parentIn) {}
     public void renamedTag(Tag tagIn) {}

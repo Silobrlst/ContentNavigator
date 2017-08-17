@@ -1,6 +1,9 @@
+package tagfilenav;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import tagfilenav.MainWindow;
 
 public class Main extends Application {
 

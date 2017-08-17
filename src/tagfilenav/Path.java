@@ -1,3 +1,5 @@
+package tagfilenav;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -32,6 +34,7 @@ public class Path implements Comparable<Path> {
         init(pathListenersIn, pathIn, splited[splited.length-1]);
     }
 
+    //<set>=============================================================================================================
     public void setPath(String pathIn){
         path.set(pathIn);
         pathListeners.forEach(pathListener -> pathListener.changedPath(this));
@@ -42,18 +45,20 @@ public class Path implements Comparable<Path> {
         pathListeners.forEach(pathListener -> pathListener.renamed(this));
     }
 
-    public void setDateAdded(String dateTimeIn){
+    void setDateAdded(String dateTimeIn){
         date.set(dateTimeIn);
     }
 
-    public void setDescription(String descriptionIn){
+    void setDescription(String descriptionIn){
         description = descriptionIn;
     }
 
-    public void setHtmlDescription(String htmlDescriptionIn){
+    void setHtmlDescription(String htmlDescriptionIn){
         htmlDescription = htmlDescriptionIn;
     }
+    //</set>============================================================================================================
 
+    //<get>=============================================================================================================
     public String getPath(){
         return path.get();
     }
@@ -62,39 +67,43 @@ public class Path implements Comparable<Path> {
         return name.get();
     }
 
-    public String getDateAdded(){
+    String getDateAdded(){
         return date.get();
     }
 
-    public String getDescription(){
+    String getDescription(){
         return description;
     }
 
-    public String getHtmlDescription(){
+    String getHtmlDescription(){
         return htmlDescription;
     }
 
-    public StringProperty getNameProperty(){
+    StringProperty getNameProperty(){
         return name;
     }
 
-    public StringProperty getPathProperty(){
+    StringProperty getPathProperty(){
         return path;
     }
 
-    public StringProperty getDateProperty(){
+    StringProperty getDateProperty(){
         return date;
     }
 
-    public void addTagWithoutNotifing(Tag tagIn){
+    public ArrayList<Tag> getTags(){
+        return tags;
+    }
+    //</get>============================================================================================================
+
+    void addTagWithoutNotify(Tag tagIn){
         if(!tags.contains(tagIn)){
             tags.add(tagIn);
             tagIn.addPathWithoutNotifing(this);
         }
     }
 
-
-    public void addTags(Collection<Tag> tagsIn){
+    void addTags(Collection<Tag> tagsIn){
         for(Tag tag: tagsIn){
             if(!tags.contains(tag)){
                 tags.add(tag);
@@ -105,7 +114,8 @@ public class Path implements Comparable<Path> {
         pathListeners.forEach(pathListener -> pathListener.addedTags(this, tagsIn));
     }
 
-    public void removeTagsWithoutNotifing(Collection<Tag> tagsIn){
+
+    void removeTagsWithoutNotifing(Collection<Tag> tagsIn){
         for(Tag tag: tagsIn){
             tag.removePathWithoutNotifing(this);
         }
@@ -114,7 +124,7 @@ public class Path implements Comparable<Path> {
     }
 
     //удаляет все теги
-    public void removeTagsWithoutNotifing(){
+    void removeTagsWithoutNotifing(){
         for(Tag tag: tags){
             tag.removePathOnly(this);
         }
@@ -122,27 +132,23 @@ public class Path implements Comparable<Path> {
         tags.clear();
     }
 
-    public void removeTags(Collection<Tag> tagsIn){
+    void removeTags(Collection<Tag> tagsIn){
         removeTagsWithoutNotifing(tagsIn);
         pathListeners.forEach(pathListener -> pathListener.removedTags(this, tagsIn));
     }
 
-    public void removeTagWithoutNotifing(Tag tagIn){
+    void removeTagWithoutNotifing(Tag tagIn){
         if(tags.contains(tagIn)){
             tags.remove(tagIn);
             tagIn.removePathOnly(this);
         }
     }
 
-    public void removeTag(Tag tagIn){
+    void removeTag(Tag tagIn){
         if(tags.contains(tagIn)){
             removeTagWithoutNotifing(tagIn);
             pathListeners.forEach(pathListener -> pathListener.removedTag(this, tagIn));
         }
-    }
-
-    public ArrayList<Tag> getTags(){
-        return tags;
     }
 
     @Override

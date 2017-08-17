@@ -66,10 +66,6 @@
           "y": 70,
           "height": 842
      },
-     "recent": [
-          "/home/q/IdeaProjects/TagFileNavigator/sdf.json",
-          "/media/q/3Q HDD External/saved torrents/games (копия).json"
-     ],
      "AddEditPathsDialog": {
           "pathsTableName": 283,
           "x": 548,
@@ -77,5 +73,6 @@
           "y": 131,
           "pathsTablePath": 527,
           "height": 659
-     }
+     },
+     "recent": ["/home/q/IdeaProjects/TagFileNavigator/sdf.json"]
 }

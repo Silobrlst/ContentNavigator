@@ -1,3 +1,5 @@
+package tagfilenav;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -74,7 +76,7 @@ public class AddEditTagDialog {
         savableStyledGui.load();
     }
 
-    //<on>====================================
+    //<on>==============================================================================================================
     private void onExploreHtmlFile(){
         File file = fileChooser.showOpenDialog(stage);
         if(file != null){
@@ -173,14 +175,14 @@ public class AddEditTagDialog {
     private void onCancel() {
         stage.hide();
     }
-    //</on>===================================
+    //</on>=============================================================================================================
 
-    //<set>===================================
-    public void setAddTag(){
+    //<set>=============================================================================================================
+    void setAddTag(){
         setAddTag(null);
     }
 
-    public void setAddTag(Tag parentIn){
+    void setAddTag(Tag parentIn){
         stage.setTitle("Add Tag");
         editing = false;
         editingTag = null;
@@ -193,18 +195,18 @@ public class AddEditTagDialog {
         tagName.setText("");
     }
 
-    public void setEditTag(Tag tagIn){
+    void setEditTag(Tag tagIn){
         stage.setTitle("Edit Tag");
         editing = true;
         editingTag = tagIn;
     }
 
-    public void setStyle(String styleFileNameIn){
+    void setStyle(String styleFileNameIn){
         savableStyledGui.setStyle(styleFileNameIn);
     }
-    //</set>==================================
+    //</set>============================================================================================================
 
-    public void open() {
+    void open() {
         stage.showAndWait();
     }
 }

@@ -1,3 +1,5 @@
+package tagfilenav;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
@@ -71,7 +73,7 @@ public class MainWindow {
 
     private final Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
 
-    //<icons>=================================
+    //<icons>===========================================================================================================
     private final Image openIcon = new Image("file:images/openIcon.png");
     private final Image settingsIcon = new Image("file:images/settingsIcon.png");
     private final Image addIcon = new Image("file:images/addIcon.png");
@@ -79,9 +81,9 @@ public class MainWindow {
     private final Image searchIcon = new Image("file:images/searchIcon.png");
     private final Image editIcon = new Image("file:images/editIcon.png");
     private final Image showIcon = new Image("file:images/showIcon.png");
-    //</icons>================================
+    //</icons>==========================================================================================================
 
-    //<JSON names>============================
+    //<JSON names>======================================================================================================
     private static final String tagsJSONName = "tags";
     private static final String pathsJSONName = "paths";
     private static final String nameJsonName = "name";
@@ -89,7 +91,7 @@ public class MainWindow {
     private static final String htmlDescriptionJsonName = "descriptionHtml";
     private static final File guiSettings = new File("guiSettings.json");
     private static final File tagFilesGuiSettings = new File("tagFilesGuiSettings.json");
-    //</JSON names>===========================
+    //</JSON names>=====================================================================================================
 
     private Menu openRecentMenu;
 
@@ -212,9 +214,7 @@ public class MainWindow {
 
             @Override
             public void renamedTag(Tag tagIn) {
-                getTreeItemByTag(tagIn.getParent()).getChildren().sort((o1, o2) -> {
-                    return o1.getValue().getName().compareTo(o2.getValue().getName());
-                });
+                getTreeItemByTag(tagIn.getParent()).getChildren().sort((o1, o2) -> o1.getValue().getName().compareTo(o2.getValue().getName()));
                 tagsTree.refresh();
                 saveTagsFile(tagFile);
             }
@@ -575,7 +575,7 @@ public class MainWindow {
         JsonLoader.saveJSON(new File("settings.json"), settingsJSON);
     }
 
-    //<GUI settings i/o>======================
+    //<GUI settings i/o>================================================================================================
     private void validateGuiSettings(JSONObject appGuiSettingsJsonIn) {
         if (!appGuiSettingsJsonIn.has("recent")) {
             appGuiSettingsJsonIn.put("recent", new JSONArray());
@@ -664,9 +664,11 @@ public class MainWindow {
     }
 
     private void saveAppGuiSettings() {
-        saveTagFilesGuiSettings();
+        if(tagFile != null){
+            saveTagFilesGuiSettings();
+        }
 
-        //загружаем из файла данные, т.к. другие окна тоже сохраняют свои данные в этот файл
+        //загружаем из файла gui-настройки, т.к. другие окна тоже сохраняют свои данные в этот файл
         JSONObject appGuiJson = JsonLoader.loadJSON(guiSettings);
         validateGuiSettings(appGuiJson);
 
@@ -704,7 +706,7 @@ public class MainWindow {
             JsonLoader.saveJSON(tagFilesGuiSettings, tagFilesGuiSettingsJson);
         }
     }
-    //</GUI settings i/o>=====================
+    //</GUI settings i/o>===============================================================================================
 
     private void addRecent(File fileIn, boolean saveIn) {
         for (MenuItem recentItem : openRecentMenu.getItems()) {
@@ -870,7 +872,7 @@ public class MainWindow {
         }
     }
 
-    //<Tag file i/o>==========================
+    //<Tag file i/o>====================================================================================================
     private void validateTagsFile(JSONObject jsonIn) {
         if (!jsonIn.has(tagsJSONName)) {
             jsonIn.put(tagsJSONName, new JSONObject());
@@ -928,9 +930,7 @@ public class MainWindow {
             }
         }
 
-        getTreeItemByTag(parentIn).getChildren().sort((o1, o2) -> {
-            return o1.getValue().getName().compareTo(o2.getValue().getName());
-        });
+        getTreeItemByTag(parentIn).getChildren().sort((o1, o2) -> o1.getValue().getName().compareTo(o2.getValue().getName()));
     }
 
     private void loadTagFile(File fileIn) {
@@ -963,9 +963,7 @@ public class MainWindow {
             loadTags(tagsJSON.getJSONObject(tagName), tag);
         }
 
-        tagsTree.getRoot().getChildren().sort((o1, o2) -> {
-            return o1.getValue().getName().compareTo(o2.getValue().getName());
-        });
+        tagsTree.getRoot().getChildren().sort((o1, o2) -> o1.getValue().getName().compareTo(o2.getValue().getName()));
         //</load tags>===============================
 
         //<load paths>===============================
@@ -975,9 +973,9 @@ public class MainWindow {
             JSONObject pathJSON = pathsJSON.getJSONObject(pathJSONKey);
 
             if(pathJSON.getString(nameJsonName).length() > 0){
-                path = paths.newPathWithoutNotifing(pathJSONKey, pathJSON.getString(nameJsonName));
+                path = paths.newPathWithoutNotify(pathJSONKey, pathJSON.getString(nameJsonName));
             }else{
-                path = paths.newPathWithoutNotifing(pathJSONKey);
+                path = paths.newPathWithoutNotify(pathJSONKey);
             }
 
             if(!pathJSON.has("dateAdded")){
@@ -998,7 +996,7 @@ public class MainWindow {
                 Tag tag = tags.getTagById(tagJSON);
 
                 if(tag != null){
-                    path.addTagWithoutNotifing(tag);
+                    path.addTagWithoutNotify(tag);
                 }
             }
         }
@@ -1080,7 +1078,7 @@ public class MainWindow {
 
         tagFile = null;
     }
-    //</Tag file i/o>=========================
+    //</Tag file i/o>===================================================================================================
 
     private void removeSelectedTagsConfirm() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1345,9 +1343,7 @@ public class MainWindow {
             content.putString(copied);
             clipboard.setContent(content);
         });
-        checkNotAddedPaths.setOnAction(event -> {
-            checkNotAddedPathsWindow.open();
-        });
+        checkNotAddedPaths.setOnAction(event -> checkNotAddedPathsWindow.open());
         showNonexistentPathsItem.setOnAction(event -> showNonexistentPaths());
         PasteCopiedPathsItem.setOnAction(event -> {
             final Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -1540,7 +1536,7 @@ public class MainWindow {
         //</tags ContextMenu>============================
     }
 
-    public void setStyle(String styleIn){
+    private void setStyle(String styleIn){
         savableStyledGui.setStyle(styleIn);
         addEditTagDialogController.setStyle(savableStyledGui.getStyle());
         addEditPathDialogController.setStyle(savableStyledGui.getStyle());
@@ -1550,14 +1546,14 @@ public class MainWindow {
         htmlWindow.setStyle(savableStyledGui.getStyle());
     }
 
-    public String getStyle(){
+    String getStyle(){
         return savableStyledGui.getStyle();
     }
 
-    public String getOpenInFolderCommand(){
+    String getOpenInFolderCommand(){
         return openInFolderCommand;
     }
-    public String getOpenInFolderArgument(){
+    String getOpenInFolderArgument(){
         return openInFolderArgument;
     }
 }

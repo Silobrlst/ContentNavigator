@@ -1,3 +1,5 @@
+package tagfilenav;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -8,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import tagfilenav.SettingsDialogInterface;
 
 import java.awt.*;
 import java.io.File;
@@ -81,7 +84,7 @@ public class SettingsDialog {
         savableStyledGui.load();
     }
 
-    //<set>===================================
+    //<set>=============================================================================================================
     private void onCancel() {
         stage.hide();
     }
@@ -90,20 +93,20 @@ public class SettingsDialog {
         settingsDialogInterface.applied();
         stage.hide();
     }
-    //</set>==================================
+    //</set>============================================================================================================
 
-    public void setStyle(String styleFileNameIn) {
+    void setStyle(String styleFileNameIn) {
         savableStyledGui.setStyle(styleFileNameIn);
     }
 
-    //<get>===================================
-    public String getOpenInFolderCommand(){
+    //<get>=============================================================================================================
+    String getOpenInFolderCommand(){
         return openInFolderCommand.getText();
     }
-    public String getOpenInFolderArgument(){
+    String getOpenInFolderArgument(){
         return openInFolderArgument.getText();
     }
-    public String getSelectedStyle(){
+    String getSelectedStyle(){
         String selectedStyle = style.getSelectionModel().getSelectedItem();
 
         if(selectedStyle.equals("default")){
@@ -112,17 +115,17 @@ public class SettingsDialog {
 
         return "file:styles/" + style.getSelectionModel().getSelectedItem();
     }
-    //</get>==================================
+    //</get>============================================================================================================
 
-    public void open() {
+    void open() {
         File folder = new File("styles");
         File[] listOfFiles = folder.listFiles();
 
         style.getItems().clear();
         style.getItems().add("default");
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isFile() && listOfFiles[i].getName().endsWith(".css")) {
-                style.getItems().add(listOfFiles[i].getName());
+        for(File file: listOfFiles){
+            if (file.isFile() && file.getName().endsWith(".css")) {
+                style.getItems().add(file.getName());
             }
         }
         style.getItems().sort(Comparator.naturalOrder());

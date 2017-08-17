@@ -1,3 +1,5 @@
+package tagfilenav;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -148,7 +150,7 @@ public class AddEditPathDialog {
         setAddPath();
     }
 
-    //<on>====================================
+    //<on>==============================================================================================================
     private void onShown(){
         pathValidation.setText("");
 
@@ -226,10 +228,10 @@ public class AddEditPathDialog {
         // add your code here if necessary
         stage.hide();
     }
-    //</on>===================================
+    //</on>=============================================================================================================
 
-    //<set>===================================
-    public void setAddPath(List<Tag> tagsIn){
+    //<set>=============================================================================================================
+    void setAddPath(List<Tag> tagsIn){
         stage.setTitle("Add Path");
         apply.setDisable(true);
         editing = false;
@@ -239,17 +241,17 @@ public class AddEditPathDialog {
         tagsTemp = tagsIn;
     }
 
-    public void setAddPath(List<Tag> tagsIn, File pathIn){
+    void setAddPath(List<Tag> tagsIn, File pathIn){
         setAddPath(tagsIn);
         path.setText(pathIn.getAbsolutePath());
         name.setText(pathIn.getName());
     }
 
-    public void setAddPath(){
+    void setAddPath(){
         setAddPath(null);
     }
 
-    public void setEditPath(Path pathIn){
+    void setEditPath(Path pathIn){
         stage.setTitle("Edit Path");
         apply.setDisable(false);
         editing = true;
@@ -260,10 +262,10 @@ public class AddEditPathDialog {
         tagsTemp = pathIn.getTags();
     }
 
-    public void setStyle(String styleFileNameIn){
+    void setStyle(String styleFileNameIn){
         savableStyledGui.setStyle(styleFileNameIn);
     }
-    //</set>==================================
+    //</set>============================================================================================================
 
     private void saveAndExit(){
         List<Tag> addedTagsTemp = tags.getTagsByIds(addedTags.getItems());
@@ -304,7 +306,7 @@ public class AddEditPathDialog {
         }
     }
 
-    public void open(){
+    void open(){
         stage.showAndWait();
     }
 }

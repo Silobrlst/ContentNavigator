@@ -1,3 +1,5 @@
+package tagfilenav;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,72 +30,95 @@ public class Tag {
         init(tagListenersIn, nameIn, null);
     }
 
-    public void addPath(Path pathIn){
+
+    void addPath(Path pathIn){
         if(!paths.contains(pathIn)) {
             addPathWithoutNotifing(pathIn);
             tagListeners.forEach(tagListener -> tagListener.addedPathToTag(this, pathIn));
         }
     }
-    public void addPathWithoutNotifing(Path pathIn){
+
+    void addPathWithoutNotifing(Path pathIn){
         if(!paths.contains(pathIn)){
-            pathIn.addTagWithoutNotifing(this);
+            pathIn.addTagWithoutNotify(this);
             paths.add(pathIn);
         }
     }
 
-    public void removePathWithoutNotifing(Path pathIn){
+    void addChildWithoutNotify(Tag tagIn){
+        children.add(tagIn);
+    }
+
+
+    void removePathWithoutNotifing(Path pathIn){
         if(paths.contains(pathIn)){
             removePathOnly(pathIn);
             pathIn.removeTagWithoutNotifing(this);
         }
     }
 
-    public void removePathOnly(Path pathIn){
+    void removePathOnly(Path pathIn){
         paths.remove(pathIn);
     }
 
-    public void removePath(Path pathIn){
+    void removePath(Path pathIn){
         if(paths.contains(pathIn)){
             removePathWithoutNotifing(pathIn);
             tagListeners.forEach(tagListener -> tagListener.removedPathFromTag(this, pathIn));
         }
     }
 
-    public void removePaths(Collection<Path> pathsIn){
+    void removePaths(Collection<Path> pathsIn){
         for(Path path: pathsIn){
             path.removeTag(this);
             removePath(path);
         }
     }
 
-    public void rename(String nameIn){
+    void removeChild(Tag tagIn){
+        children.remove(tagIn);
+    }
+
+
+    void rename(String nameIn){
         name = nameIn;
         tagListeners.forEach(tagListener -> tagListener.renamedTag(this));
     }
 
-    public void setDescriptionWithoutNotify(String descriptionIn){
+    //<set>=============================================================================================================
+    void setDescriptionWithoutNotify(String descriptionIn){
         description = descriptionIn;
     }
 
-    public void setHtmlDescriptionWithoutNotify(String htmlDescriptionIn){
+    void setHtmlDescriptionWithoutNotify(String htmlDescriptionIn){
         htmlDescription = htmlDescriptionIn;
     }
 
-    public void setDescription(String descriptionIn){
+    void setDescription(String descriptionIn){
         setDescriptionWithoutNotify(descriptionIn);
         tagListeners.forEach(tagListener -> tagListener.changedDescriptions(this));
     }
 
-    public void setHtmlDescription(String htmlDescriptionIn){
+    void setHtmlDescription(String htmlDescriptionIn){
         setHtmlDescriptionWithoutNotify(htmlDescriptionIn);
         tagListeners.forEach(tagListener -> tagListener.changedDescriptions(this));
     }
 
-    public String getDescription(){
+    void setParentTag(Tag tagIn){
+        Tag prevParent = parent;
+        parent = tagIn;
+        parent.getChildren().add(this);
+        prevParent.getChildren().remove(this);
+        tagListeners.forEach(tagListener -> tagListener.changedParent(this, prevParent));
+    }
+    //</set>============================================================================================================
+
+    //<get>=============================================================================================================
+    String getDescription(){
         return description;
     }
 
-    public String getHtmlDescription(){
+    String getHtmlDescription(){
         return htmlDescription;
     }
 
@@ -105,27 +130,12 @@ public class Tag {
         return name;
     }
 
-    public void setParentTag(Tag tagIn){
-        Tag prevParent = parent;
-        parent = tagIn;
-        parent.getChildren().add(this);
-        prevParent.getChildren().remove(this);
-        tagListeners.forEach(tagListener -> tagListener.changedParent(this, prevParent));
-    }
-
-    public Tag getParent(){
+    Tag getParent(){
         return parent;
     }
 
-    public List<Tag> getChildren(){
+    List<Tag> getChildren(){
         return children;
     }
-
-    public void addChildWithoutNotify(Tag tagIn){
-        children.add(tagIn);
-    }
-
-    public void removeChild(Tag tagIn){
-        children.remove(tagIn);
-    }
+    //</get>============================================================================================================
 }

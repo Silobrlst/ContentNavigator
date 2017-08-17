@@ -1,3 +1,5 @@
+package tagfilenav;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -92,8 +94,8 @@ public class CheckNotAddedPathsWindow {
             String pathsListText = "";
 
             ArrayList<String> pathsStr = new ArrayList<>();
-            for (int i = 0; i < listOfFiles.length; i++) {
-                pathsStr.add(listOfFiles[i].getAbsolutePath());
+            for(File file: listOfFiles){
+                pathsStr.add(file.getAbsolutePath());
             }
             pathsStr.sort(Comparator.naturalOrder());
 
@@ -111,15 +113,15 @@ public class CheckNotAddedPathsWindow {
         }
     }
 
-    public void setStyle(String styleFileNameIn){
+    void setStyle(String styleFileNameIn){
         savableStyledGui.setStyle(styleFileNameIn);
     }
 
-    public void open(){
+    void open(){
         stage.show();
     }
 
-    public void close(){
+    void close(){
         stage.hide();
     }
 }

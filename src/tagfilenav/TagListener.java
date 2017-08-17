@@ -1,3 +1,5 @@
+package tagfilenav;
+
 public interface TagListener {
     /**
      * сообщает о создании тега
