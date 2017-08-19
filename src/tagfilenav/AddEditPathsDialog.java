@@ -101,7 +101,7 @@ public class AddEditPathsDialog {
             PathTemp pathTemp = event.getTableView().getItems().get(event.getTablePosition().getRow());
 
             if(editing){
-                if(!paths.checkPathExist(event.getNewValue()) || pathTemp.path.getPath().equals(event.getNewValue())){
+                if(!paths.checkPathAdded(event.getNewValue()) || pathTemp.path.getPath().equals(event.getNewValue())){
                     pathTemp.pathText.set(event.getNewValue());
                 }else{
                     alertInformation.setTitle("Path already exist");
@@ -121,7 +121,7 @@ public class AddEditPathsDialog {
 
                 System.out.println(exists);
 
-                if(!paths.checkPathExist(event.getNewValue()) && !exists){
+                if(!paths.checkPathAdded(event.getNewValue()) && !exists){
                     pathTemp.pathText.set(event.getNewValue());
                 }else{
                     alertInformation.setTitle("Path already exist");
@@ -313,7 +313,7 @@ public class AddEditPathsDialog {
             String addedPaths = "";
             ArrayList<PathTemp> pathTemps = new ArrayList<>();
             for(PathTemp pathTemp: pathsTable.getItems()){
-                if(paths.checkPathExist(pathTemp.pathText.get())){
+                if(paths.checkPathAdded(pathTemp.pathText.get())){
                     pathsNotAdded = false;
                     addedPaths += pathTemp.pathText.get() + "\n";
                     pathTemps.add(pathTemp);

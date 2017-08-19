@@ -99,13 +99,15 @@ public class CheckNotAddedPathsWindow {
             }
             pathsStr.sort(Comparator.naturalOrder());
 
+            int num = 0;
             for(String path: pathsStr){
-                if(!paths.checkPathExist(path)){
+                if(!paths.checkPathAdded(path)){
                     pathsListText += path + "\n";
+                    num++;
                 }
             }
 
-            resultLabel.setText("paths count: " + pathsStr.size());
+            resultLabel.setText("paths count: " + num);
 
             pathsList.setText(pathsListText);
         }else{

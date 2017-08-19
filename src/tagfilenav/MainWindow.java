@@ -107,6 +107,7 @@ public class MainWindow {
     private AddEditPathsDialog addEditPathsDialogController;
     private CheckNotAddedPathsWindow checkNotAddedPathsWindow;
     private HtmlWindow htmlWindow;
+    private ReplacePathsWindow replacePathsWindow;
 
     private File tagFile = null;
 
@@ -128,6 +129,7 @@ public class MainWindow {
             //закрываем все окна которые не являются диалоговыми
             checkNotAddedPathsWindow.close();
             htmlWindow.close();
+            replacePathsWindow.close();
         });
         stage.setScene(new Scene(loaderIn.getRoot()));
         stage.getIcons().add(new Image("file:images/appIcon.png"));
@@ -190,6 +192,11 @@ public class MainWindow {
                 pathsTable.requestFocus();
                 pathsTable.scrollTo(pathIn);
             }
+
+            @Override
+            public void changedPaths() {
+                saveTagsFile(tagFile);
+            }
         });
         tags.addTagObserver(new EmptyTagListener(){
             @Override
@@ -241,7 +248,7 @@ public class MainWindow {
             }
         });
 
-        //<tagsTree>============================================
+        //<tagsTree>====================================================================================================
         TreeItem<Tag> root = new TreeItem<>(tags);
         root.setExpanded(true);
         tagsTree.setRoot(root);
@@ -322,9 +329,9 @@ public class MainWindow {
                 return treeCell;
             }
         });
-        //</tagsTree>===========================================
+        //</tagsTree>===================================================================================================
 
-        //<pathsTable>==========================================
+        //<pathsTable>==================================================================================================
         pathsTable.setDisable(true);
         pathsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         pathsTable.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
@@ -378,30 +385,30 @@ public class MainWindow {
         searchedPathsName.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         searchedPathsPath.setCellValueFactory(cellData -> cellData.getValue().getPathProperty());
         searchedPathsAdded.setCellValueFactory(cellData -> cellData.getValue().getDateProperty());
-        //</pathsTable>=========================================
+        //</pathsTable>=================================================================================================
 
-        //<addEditTagDialogController>==========================
+        //<addEditTagDialogController>==================================================================================
         FXMLLoader loader = new FXMLLoader(getClass().getResource("AddEditTagDialog.fxml"));
         loader.load();
         addEditTagDialogController = loader.getController();
         addEditTagDialogController.init(stage, loader, tags);
-        //</addEditTagDialogController>=========================
+        //</addEditTagDialogController>=================================================================================
 
-        //<addEditPathDialogController>=========================
+        //<addEditPathDialogController>=================================================================================
         loader = new FXMLLoader(getClass().getResource("AddEditPathDialog.fxml"));
         loader.load();
         addEditPathDialogController = loader.getController();
         addEditPathDialogController.init(stage, loader, paths, tags);
-        //</addEditPathDialogController>========================
+        //</addEditPathDialogController>================================================================================
 
-        //<addEditPathsDialogController>========================
+        //<addEditPathsDialogController>================================================================================
         loader = new FXMLLoader(getClass().getResource("AddEditPathsDialog.fxml"));
         loader.load();
         addEditPathsDialogController = loader.getController();
         addEditPathsDialogController.init(stage, loader, paths, tags);
-        //</addEditPathsDialogController>=======================
+        //</addEditPathsDialogController>===============================================================================
 
-        //<SettingsDialogController>============================
+        //<SettingsDialogController>====================================================================================
         loader = new FXMLLoader(getClass().getResource("SettingsDialog.fxml"));
         loader.load();
         settingsDialog = loader.getController();
@@ -413,21 +420,28 @@ public class MainWindow {
             mainWindowContext.setStyle(settingsDialog.getSelectedStyle());
             saveSettings();
         });
-        //</SettingsDialogController>===========================
+        //</SettingsDialogController>===================================================================================
 
-        //<CheckNotAddedPathsWindowController===================
+        //<CheckNotAddedPathsWindowController>==========================================================================
         loader = new FXMLLoader(getClass().getResource("CheckNotAddedPathsWindow.fxml"));
         loader.load();
         checkNotAddedPathsWindow = loader.getController();
         checkNotAddedPathsWindow.init(loader, paths);
-        //</CheckNotAddedPathsWindowController==================
+        //</CheckNotAddedPathsWindowController.=========================================================================
 
-        //<htmlWindow===========================================
+        //<htmlWindow>==================================================================================================
         loader = new FXMLLoader(getClass().getResource("HtmlWindow.fxml"));
         loader.load();
         htmlWindow = loader.getController();
         htmlWindow.init(loader);
-        //</htmlWindow==========================================
+        //</htmlWindow>=================================================================================================
+
+        //<replacePathsWindow>==========================================================================================
+        loader = new FXMLLoader(getClass().getResource("ReplacePathsWindow.fxml"));
+        loader.load();
+        replacePathsWindow = loader.getController();
+        replacePathsWindow.init(loader, paths);
+        //<replacePathsWindow>==========================================================================================
 
         searchByName.setGraphic(new ImageView(searchIcon));
         searchByPath.setGraphic(new ImageView(searchIcon));
@@ -454,22 +468,6 @@ public class MainWindow {
         }
     }
 
-
-    private void removeSelectedTags() {
-        Collection<TreeItem<Tag>> selectedTags = tagsTree.getSelectionModel().getSelectedItems();
-
-        for (TreeItem<Tag> selectedTag: selectedTags) {
-            if(selectedTag != tagsTree.getRoot()){
-                tags.removeTag(selectedTag.getValue());
-            }
-        }
-
-        for (TreeItem<Tag> selectedTag: selectedTags) {
-            if(selectedTag != tagsTree.getRoot()){
-                selectedTag.getParent().getChildren().removeAll(selectedTags);
-            }
-        }
-    }
 
     private TreeItem<Tag> getTreeItemByTag(Tag tagIn, TreeItem<Tag> treeItemParentIn){
         if(treeItemParentIn.getValue() == tagIn){
@@ -866,7 +864,7 @@ public class MainWindow {
         pathsTable.getItems().clear();
 
         for(Path path: paths){
-            if(!paths.checkPathExist(path.getPath())){
+            if(!new File(path.getPath()).exists()){
                 pathsTable.getItems().add(path);
             }
         }
@@ -1080,6 +1078,23 @@ public class MainWindow {
     }
     //</Tag file i/o>===================================================================================================
 
+    //<remove>==========================================================================================================
+    private void removeSelectedTags() {
+        Collection<TreeItem<Tag>> selectedTags = tagsTree.getSelectionModel().getSelectedItems();
+
+        for (TreeItem<Tag> selectedTag: selectedTags) {
+            if(selectedTag != tagsTree.getRoot()){
+                tags.removeTag(selectedTag.getValue());
+            }
+        }
+
+        for (TreeItem<Tag> selectedTag: selectedTags) {
+            if(selectedTag != tagsTree.getRoot()){
+                selectedTag.getParent().getChildren().removeAll(selectedTags);
+            }
+        }
+    }
+
     private void removeSelectedTagsConfirm() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Remove Tags");
@@ -1130,6 +1145,7 @@ public class MainWindow {
             saveTagsFile(tagFile);
         }
     }
+    //</remove>=========================================================================================================
 
     private void desktopOpenInFolder(File fileIn){
         if(!fileIn.exists()){
@@ -1204,7 +1220,7 @@ public class MainWindow {
         fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.setSelectedExtensionFilter(extensionFilter);
 
-        //<events>=======================================
+        //<events>======================================================================================================
         EventHandler<ActionEvent> addTag = (event) -> {
             if(tagsTree.getSelectionModel().getSelectedItems().size() == 1){
                 addEditTagDialogController.setAddTag(tagsTree.getSelectionModel().getSelectedItem().getValue());
@@ -1268,9 +1284,9 @@ public class MainWindow {
                 event.consume();
             }
         };
-        //</events>======================================
+        //</events>=====================================================================================================
 
-        //<menu file>====================================
+        //<menu file>===================================================================================================
         MenuItem newItem = new MenuItem("New");
         newItem.setOnAction(event -> {
             fileChooser.setTitle("New content info file");
@@ -1313,13 +1329,14 @@ public class MainWindow {
         menuFile.getItems().add(settingsItem);
         menuFile.getItems().add(new SeparatorMenuItem());
         menuFile.getItems().add(exitItem);
-        //</menu file>===================================
+        //</menu file>==================================================================================================
 
-        //<menu utils>===================================
+        //<menu utils>==================================================================================================
         MenuItem copyPathsAsListItem = new MenuItem("Copy selected paths as list");
         MenuItem PasteCopiedPathsItem = new MenuItem("Paste copied paths");
         MenuItem checkNotAddedPaths = new MenuItem("Check not added paths");
         MenuItem showNonexistentPathsItem = new MenuItem("Show nonexistent paths");
+        MenuItem replacePathsItem = new MenuItem("Replace paths");
 
         copyPathsAsListItem.setAccelerator(KeyCombination.keyCombination("Ctrl+C"));
         PasteCopiedPathsItem.setAccelerator(KeyCombination.keyCombination("Ctrl+V"));
@@ -1330,6 +1347,7 @@ public class MainWindow {
         menuUtilsItems.add(PasteCopiedPathsItem);
         menuUtilsItems.add(checkNotAddedPaths);
         menuUtilsItems.add(showNonexistentPathsItem);
+        menuUtilsItems.add(replacePathsItem);
 
         copyPathsAsListItem.setOnAction(event -> {
             String copied = "";
@@ -1373,12 +1391,13 @@ public class MainWindow {
                 }
             }
         });
-        //</menu utils>==================================
+        replacePathsItem.setOnAction(event -> replacePathsWindow.open());
+        //</menu utils>=================================================================================================
 
         menuBar.getMenus().add(menuFile);
         menuBar.getMenus().add(menuUtils);
 
-        //<paths ContextMenu>============================
+        //<paths ContextMenu>===========================================================================================
         ContextMenu searchedPathsContextMenu = new ContextMenu();
         MenuItem openPathsContext = new MenuItem("Open");
         openPathsContext.setGraphic(new ImageView(openIcon));
@@ -1465,9 +1484,9 @@ public class MainWindow {
         });
         pathsTable.setOnDragDropped(dropFiles);
         pathsTable.setOnDragOver(dragOverFiles);
-        //</paths ContextMenu>===========================
+        //</paths ContextMenu>==========================================================================================
 
-        //<tags ContextMenu>=============================
+        //<tags ContextMenu>============================================================================================
         ContextMenu tagsTreeContextMenu = new ContextMenu();
         MenuItem renameTagTagsContext = new MenuItem("Edit Tag");
         renameTagTagsContext.setGraphic(new ImageView(editIcon));
@@ -1533,17 +1552,20 @@ public class MainWindow {
         });
         tagsTree.setOnDragDropped(dropFiles);
         tagsTree.setOnDragOver(dragOverFiles);
-        //</tags ContextMenu>============================
+        //</tags ContextMenu>===========================================================================================
     }
 
     private void setStyle(String styleIn){
         savableStyledGui.setStyle(styleIn);
-        addEditTagDialogController.setStyle(savableStyledGui.getStyle());
-        addEditPathDialogController.setStyle(savableStyledGui.getStyle());
-        settingsDialog.setStyle(savableStyledGui.getStyle());
-        addEditPathsDialogController.setStyle(savableStyledGui.getStyle());
-        checkNotAddedPathsWindow.setStyle(savableStyledGui.getStyle());
-        htmlWindow.setStyle(savableStyledGui.getStyle());
+        String style = savableStyledGui.getStyle();
+
+        addEditTagDialogController.setStyle(style);
+        addEditPathDialogController.setStyle(style);
+        settingsDialog.setStyle(style);
+        addEditPathsDialogController.setStyle(style);
+        checkNotAddedPathsWindow.setStyle(style);
+        htmlWindow.setStyle(style);
+        replacePathsWindow.setStyle(style);
     }
 
     String getStyle(){

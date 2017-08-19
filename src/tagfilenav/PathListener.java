@@ -5,6 +5,7 @@ import java.util.Collection;
 public interface PathListener {
     void created(Path pathIn);
     void changedPath(Path pathIn);
+    void changedPaths();
     void renamed(Path pathIn);
     void addedTags(Path pathIn, Collection<Tag> tagsIn);
     void removedTag(Path pathIn, Tag tagIn);

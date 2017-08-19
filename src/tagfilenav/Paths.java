@@ -45,7 +45,11 @@ public class Paths extends ArrayList<Path> {
         listeners.forEach(pathListener -> pathListener.removedPath(pathIn));
     }
 
-    boolean checkPathExist(String pathIn){
+    void pathsChanged(){
+        listeners.forEach(pathListener -> pathListener.changedPaths());
+    }
+
+    boolean checkPathAdded(String pathIn){
         for(Path path: this){
             if(pathIn.equals(path.getPath())){
                 return true;

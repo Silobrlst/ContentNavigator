@@ -285,7 +285,7 @@ public class AddEditPathDialog {
 
             stage.hide();
         }else{
-            if(!paths.checkPathExist(path.getText())){
+            if(!paths.checkPathAdded(path.getText())){
                 Path newPath;
 
                 if(name.getText().isEmpty()){

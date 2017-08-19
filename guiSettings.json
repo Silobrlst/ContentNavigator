@@ -22,6 +22,12 @@
           "searchedPathsName": 365,
           "height": 797
      },
+     "replacePathsWindow": {
+          "x": 340,
+          "width": 981,
+          "y": 147,
+          "height": 657
+     },
      "searchedPathsAddedWidth": 123.99996948242188,
      "addEditPathDialog": {
           "pathsTableName": 205,
