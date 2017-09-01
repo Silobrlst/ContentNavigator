@@ -31,7 +31,7 @@ public class AddEditTagDialog {
     private TextArea description;
 
     private Stage stage;
-    private SavableStyledGui savableStyledGui;
+    private StyledGuiSaver savableStyledGui;
 
     private boolean editing;
     private Tag editingTag;
@@ -72,7 +72,7 @@ public class AddEditTagDialog {
             }
         });
 
-        savableStyledGui = new SavableStyledGui(windowName, stage);
+        savableStyledGui = new StyledGuiSaver(windowName, stage);
         savableStyledGui.load();
     }
 

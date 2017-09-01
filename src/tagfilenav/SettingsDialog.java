@@ -10,7 +10,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import tagfilenav.SettingsDialogInterface;
 
 import java.awt.*;
 import java.io.File;
@@ -34,7 +33,7 @@ public class SettingsDialog {
     private ComboBox<String> style;
 
     private Stage stage;
-    private SavableStyledGui savableStyledGui;
+    private StyledGuiSaver savableStyledGui;
 
     private MainWindow mainWindow;
     private SettingsDialogInterface settingsDialogInterface;
@@ -80,7 +79,7 @@ public class SettingsDialog {
             }
         });
 
-        savableStyledGui = new SavableStyledGui(windowName, stage);
+        savableStyledGui = new StyledGuiSaver(windowName, stage);
         savableStyledGui.load();
     }
 

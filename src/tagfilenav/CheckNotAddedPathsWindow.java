@@ -30,7 +30,7 @@ public class CheckNotAddedPathsWindow {
     private Label resultLabel;
 
     private Stage stage;
-    private SavableStyledGui savableStyledGui;
+    private StyledGuiSaver savableStyledGui;
 
     private Paths paths;
 
@@ -73,7 +73,7 @@ public class CheckNotAddedPathsWindow {
             }
         });
 
-        savableStyledGui = new SavableStyledGui(windowName, stage);
+        savableStyledGui = new StyledGuiSaver(windowName, stage);
         savableStyledGui.load();
     }
 

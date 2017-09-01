@@ -21,7 +21,7 @@ public class HtmlWindow {
     private ProgressBar loadProgress;
 
     private Stage stage;
-    private SavableStyledGui savableStyledGui;
+    private StyledGuiSaver savableStyledGui;
 
     @FXML
     public void initialize() {}
@@ -57,7 +57,7 @@ public class HtmlWindow {
             }
         });
 
-        savableStyledGui = new SavableStyledGui(windowName, stage);
+        savableStyledGui = new StyledGuiSaver(windowName, stage);
         savableStyledGui.load();
     }
 

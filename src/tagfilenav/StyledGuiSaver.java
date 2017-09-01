@@ -2,10 +2,10 @@ package tagfilenav;
 
 import javafx.stage.Stage;
 
-class SavableStyledGui extends SavableGui {
+class StyledGuiSaver extends GuiSaver {
     private String styleFileName = "";
 
-    SavableStyledGui(String windowNameIn, Stage stageIn){
+    StyledGuiSaver(String windowNameIn, Stage stageIn){
         super(windowNameIn, stageIn);
     }
 

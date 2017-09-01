@@ -42,7 +42,7 @@ public class AddEditPathsDialog {
     private TableView<PathTemp> pathsTable;
 
     private Stage stage;
-    private SavableStyledGui savableStyledGui;
+    private StyledGuiSaver savableStyledGui;
 
     private boolean editing;
     private List<Path> editingPaths;
@@ -216,7 +216,7 @@ public class AddEditPathsDialog {
             }
         });
 
-        savableStyledGui = new SavableStyledGui(windowName, stage);
+        savableStyledGui = new StyledGuiSaver(windowName, stage);
         savableStyledGui.saveTableColumn(pathsTablePath, "pathsTablePath");
         savableStyledGui.saveTableColumn(pathsTableName, "pathsTableName");
         savableStyledGui.load();

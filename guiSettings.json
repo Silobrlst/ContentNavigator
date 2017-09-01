@@ -7,7 +7,10 @@
           "height": 700
      },
      "mainWindow": {
-          "searchedPathsPath": 285,
+          "searchedPathsPath": {
+               "visibility": false,
+               "width": 314
+          },
           "tagsPathsSplitPane": 0.22030825022665457,
           "maximized": false,
           "x": 659,
@@ -15,11 +18,17 @@
           "y": 209,
           "pathsTable": {
                "sortColumn": "searchedPathsName",
-               "sortType": "DESCENDING"
+               "sortType": "ASCENDING"
           },
-          "searchedPathsAdded": 100,
+          "searchedPathsAdded": {
+               "visibility": false,
+               "width": 157
+          },
           "tagsPathsSplitPosition": 0.23118766999093382,
-          "searchedPathsName": 365,
+          "searchedPathsName": {
+               "visibility": true,
+               "width": 805
+          },
           "height": 797
      },
      "replacePathsWindow": {

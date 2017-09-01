@@ -14,7 +14,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SavableGui {
+public class GuiSaver {
     //<string names>====================================================================================================
     private static final String xJsonName = "x";
     private static final String yJsonName = "y";
@@ -23,6 +23,7 @@ public class SavableGui {
     private static final String maximizedJsonName = "maximized";
     private static final String sortColumnJsonName = "sortColumn";
     private static final String sortTypeJsonName = "sortType";
+    private static final String visibilityJsonName = "visibility";
     private static final File guiSettings = new File("guiSettings.json");
     //</string names>===================================================================================================
 
@@ -35,7 +36,7 @@ public class SavableGui {
     private Map<String, SplitPane> saveSplitPaneMap = new HashMap<>();
     private Map<String, TableView> saveTableViewMap = new HashMap<>();
 
-    SavableGui(String windowNameIn, Stage stageIn){
+    GuiSaver(String windowNameIn, Stage stageIn){
         windowName = windowNameIn;
         stage = stageIn;
     }
@@ -49,7 +50,7 @@ public class SavableGui {
         saveSplitPaneMap.put(nameIn, splitPaneIn);
     }
 
-    //запоминать ширину для столбца таблицы
+    //запоминать ширину и видимость для столбца таблицы
     void saveTableColumn(TableColumn tableColumnIn, String nameIn){
         saveTableColumnMap.put(nameIn, tableColumnIn);
     }
@@ -58,55 +59,56 @@ public class SavableGui {
         saveTableViewMap.put(nameIn, tableViewIn);
     }
 
-    void validateGuiSettings(JSONObject jsonIn) {
+    private void validateJsonKey(JSONObject jsonIn, String nameIn, Object defaultIn){
+        if (!jsonIn.has(nameIn)) {
+            jsonIn.put(nameIn, defaultIn);
+        }
+    }
+
+    private void validateJsonKey(JSONObject jsonIn, String nameIn, JSONObject defaultIn){
+        if (!jsonIn.has(nameIn)) {
+            jsonIn.put(nameIn, defaultIn);
+        }
+
+        if(jsonIn.optJSONObject(nameIn) == null){
+            jsonIn.put(nameIn, defaultIn);
+        }
+    }
+
+    private void validateGuiSettings(JSONObject jsonIn) {
         if (!jsonIn.has(windowName)) {
             jsonIn.put(windowName, new JSONObject());
         }
 
         JSONObject windowJSON = jsonIn.getJSONObject(windowName);
-        if (!windowJSON.has(xJsonName)) {
-            windowJSON.put(xJsonName, 0.d);
-        }
-        if (!windowJSON.has(yJsonName)) {
-            windowJSON.put(yJsonName, 0.d);
-        }
-        if (!windowJSON.has(widthJsonName)) {
-            windowJSON.put(widthJsonName, 0.d);
-        }
-        if (!windowJSON.has(heightJsonName)) {
-            windowJSON.put(heightJsonName, 0.d);
-        }
+        validateJsonKey(windowJSON, xJsonName, 0.d);
+        validateJsonKey(windowJSON, yJsonName, 0.d);
+        validateJsonKey(windowJSON, widthJsonName, 0.d);
+        validateJsonKey(windowJSON, heightJsonName, 0.d);
 
         if(windowMaximizedSave){
-            if (!windowJSON.has(maximizedJsonName)) {
-                windowJSON.put(maximizedJsonName, false);
-            }
+            validateJsonKey(windowJSON, maximizedJsonName, false);
         }
 
         for (String columnName: saveTableColumnMap.keySet()){
-            if (!windowJSON.has(columnName)) {
-                windowJSON.put(columnName, 0);
-            }
+            validateJsonKey(windowJSON, columnName, new JSONObject());
+
+            JSONObject columnJson = windowJSON.optJSONObject(columnName);
+            validateJsonKey(columnJson, widthJsonName, 0);
+            validateJsonKey(columnJson, visibilityJsonName, true);
         }
 
         for (String splitPaneName: saveSplitPaneMap.keySet()){
-            if (!windowJSON.has(splitPaneName)) {
-                windowJSON.put(splitPaneName, 0.5d);
-            }
+            validateJsonKey(windowJSON, splitPaneName, 0.5d);
         }
 
         for(String tableViewName: saveTableViewMap.keySet()){
-            if (!windowJSON.has(tableViewName)) {
-                windowJSON.put(tableViewName, new JSONObject());
-            }
+            validateJsonKey(windowJSON, tableViewName, new JSONObject());
 
             JSONObject tableViewJson = windowJSON.getJSONObject(tableViewName);
-            if (!tableViewJson.has(sortColumnJsonName)) {
-                tableViewJson.put(sortColumnJsonName, "");
-            }
-            if (!tableViewJson.has(sortTypeJsonName)) {
-                tableViewJson.put(sortTypeJsonName, TableColumn.SortType.DESCENDING.name());
-            }
+
+            validateJsonKey(tableViewJson, sortColumnJsonName, "");
+            validateJsonKey(tableViewJson, sortTypeJsonName, TableColumn.SortType.DESCENDING.name());
         }
     }
 
@@ -138,9 +140,13 @@ public class SavableGui {
             }
 
             for (String columnName: saveTableColumnMap.keySet()){
-                if (windowJson.getDouble(columnName) > 0) {
-                    saveTableColumnMap.get(columnName).setPrefWidth(windowJson.getInt(columnName));
+                JSONObject columnJson = windowJson.getJSONObject(columnName);
+
+                if (columnJson.getDouble(widthJsonName) > 0) {
+                    saveTableColumnMap.get(columnName).setPrefWidth(columnJson.getInt(widthJsonName));
                 }
+
+                saveTableColumnMap.get(columnName).setVisible(columnJson.getBoolean(visibilityJsonName));
             }
 
             for(String tableViewName: saveTableViewMap.keySet()){
@@ -177,7 +183,11 @@ public class SavableGui {
         }
 
         for(String columnName: saveTableColumnMap.keySet()){
-            windowJson.put(columnName, saveTableColumnMap.get(columnName).getWidth());
+            JSONObject columnJson = new JSONObject();
+            windowJson.put(columnName, columnJson);
+
+            columnJson.put(widthJsonName, saveTableColumnMap.get(columnName).getWidth());
+            columnJson.put(visibilityJsonName, saveTableColumnMap.get(columnName).isVisible());
         }
 
         for(String tableViewName: saveTableViewMap.keySet()){

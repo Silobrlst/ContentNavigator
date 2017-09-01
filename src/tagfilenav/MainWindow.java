@@ -99,7 +99,7 @@ public class MainWindow {
     private Paths paths = new Paths();
 
     private Stage stage;
-    private SavableStyledGui savableStyledGui;
+    private StyledGuiSaver savableStyledGui;
 
     private SettingsDialog settingsDialog;
     private AddEditPathDialog addEditPathDialogController;
@@ -151,7 +151,7 @@ public class MainWindow {
             }
         });
 
-        savableStyledGui = new SavableStyledGui(windowName, stage);
+        savableStyledGui = new StyledGuiSaver(windowName, stage);
         savableStyledGui.saveWindowMaximized(true);
         savableStyledGui.saveSplitPane(tagsPathsSplitPane, "tagsPathsSplitPane");
         savableStyledGui.saveTableColumn(searchedPathsName, "searchedPathsName");
@@ -353,9 +353,9 @@ public class MainWindow {
                             message += "\n" + tags.getTagId(tag);
                         }
 
-                        message += "\n\nPath:\n" + pathIn.getPath();
+                        message += "\n\nPath: " + pathIn.getPath();
 
-                        message += "\n\nDescription:\n";
+                        message += "\n\nDescription: ";
 
                         if(pathIn.getDescription() != null){
                             if(pathIn.getDescription().length() > 100){
@@ -365,7 +365,7 @@ public class MainWindow {
                             }
                         }
 
-                        message += "\n\nHTML description:\n";
+                        message += "\n\nHTML description: ";
                         message += pathIn.getHtmlDescription();
 
                         tooltip.setText(message);
@@ -1484,6 +1484,31 @@ public class MainWindow {
         });
         pathsTable.setOnDragDropped(dropFiles);
         pathsTable.setOnDragOver(dragOverFiles);
+
+
+
+        CheckMenuItem nameVisibleContextItem = new CheckMenuItem("Name");
+        CheckMenuItem pathVisibleContextItem = new CheckMenuItem("Path");
+        CheckMenuItem addedVisibleContextItem = new CheckMenuItem("Added");
+
+        nameVisibleContextItem.setOnAction(event -> searchedPathsName.setVisible(nameVisibleContextItem.isSelected()));
+        pathVisibleContextItem.setOnAction(event -> searchedPathsPath.setVisible(pathVisibleContextItem.isSelected()));
+        addedVisibleContextItem.setOnAction(event -> searchedPathsAdded.setVisible(addedVisibleContextItem.isSelected()));
+
+        ContextMenu pathsTableHeaderContextMenu = new ContextMenu();
+        pathsTableHeaderContextMenu.getItems().add(nameVisibleContextItem);
+        pathsTableHeaderContextMenu.getItems().add(pathVisibleContextItem);
+        pathsTableHeaderContextMenu.getItems().add(addedVisibleContextItem);
+
+        pathsTableHeaderContextMenu.setOnShown(event -> {
+            nameVisibleContextItem.setSelected(searchedPathsName.isVisible());
+            pathVisibleContextItem.setSelected(searchedPathsPath.isVisible());
+            addedVisibleContextItem.setSelected(searchedPathsAdded.isVisible());
+        });
+
+        searchedPathsName.setContextMenu(pathsTableHeaderContextMenu);
+        searchedPathsPath.setContextMenu(pathsTableHeaderContextMenu);
+        searchedPathsAdded.setContextMenu(pathsTableHeaderContextMenu);
         //</paths ContextMenu>==========================================================================================
 
         //<tags ContextMenu>============================================================================================
