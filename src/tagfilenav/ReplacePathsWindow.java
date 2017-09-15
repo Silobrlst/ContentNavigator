@@ -11,18 +11,16 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Optional;
 
 public class ReplacePathsWindow {
-    @FXML
-    private TextField find;
-    @FXML
-    private TextField replaceBy;
-    @FXML
-    private Button replaceAll;
-    @FXML
-    private ListView<Path> pathsList;
+    @FXML private TextField find;
+    @FXML private TextField replaceBy;
+    @FXML private Button replaceAll;
+    @FXML private ListView<Path> pathsList;
+    @FXML private CheckBox onlyNonexistent;
 
     private Stage stage;
     private StyledGuiSaver savableStyledGui;
@@ -31,8 +29,7 @@ public class ReplacePathsWindow {
 
     private final Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
 
-    @FXML
-    public void initialize() {}
+    @FXML public void initialize() {}
 
     public ReplacePathsWindow(){}
 
@@ -85,6 +82,8 @@ public class ReplacePathsWindow {
             }
         });
 
+        onlyNonexistent.selectedProperty().addListener((observable, oldValue, newValue) -> onPathsUpdate());
+
         savableStyledGui = new StyledGuiSaver(windowName, stage);
         savableStyledGui.load();
     }
@@ -95,7 +94,13 @@ public class ReplacePathsWindow {
 
         for(Path path: paths){
             if(path.getPath().toLowerCase().contains(find.getText().toLowerCase())){
-                pathsList.getItems().add(path);
+                if(onlyNonexistent.isSelected()){
+                    if(!new File(path.getPath()).exists()){
+                        pathsList.getItems().add(path);
+                    }
+                }else{
+                    pathsList.getItems().add(path);
+                }
             }
         }
     }
@@ -122,20 +127,21 @@ public class ReplacePathsWindow {
             }
 
             if(existedPaths.size() > 0){
-                String existedPathsStr = "";
+                StringBuilder stringBuilder = new StringBuilder();
                 for(Path path: existedPaths){
-                    existedPathsStr += path.getPath() + "\n";
+                    stringBuilder.append(path.getPath());
+                    stringBuilder.append("\n");
                 }
 
                 alertConfirm.setTitle("Paths can not be replaced");
-                alertConfirm.setContentText(existedPathsStr);
+                alertConfirm.setContentText(stringBuilder.toString());
 
                 if(pathsToReplace.size() == 0){
                     alertConfirm.setAlertType(Alert.AlertType.WARNING);
-                    alertConfirm.setHeaderText("These paths can not be replaced, because such paths already exist.");
+                    alertConfirm.setHeaderText("These paths can not be replaced, because such paths already exist in tag-file.");
                 }else{
                     alertConfirm.setAlertType(Alert.AlertType.CONFIRMATION);
-                    alertConfirm.setHeaderText("These paths can not be replaced, because such paths already exist. Save others?");
+                    alertConfirm.setHeaderText("These paths can not be replaced, because such paths already exist in tag-file. Save others?");
                 }
 
                 Optional<ButtonType> result2 = alertConfirm.showAndWait();

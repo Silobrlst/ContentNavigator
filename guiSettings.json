@@ -45,6 +45,7 @@
           "width": 758,
           "y": 110,
           "pathsTablePath": 460,
+          "initialDirectory": "/home/q/IdeaProjects",
           "height": 585
      },
      "AddEditPathDialog": {
@@ -76,9 +77,10 @@
      "searchedPathsPathWidth": 271.9999694824219,
      "checkNotAddedPathsDialog": {
           "exploreCurrentDirectory": "/home/q/IdeaProjects/TagFileNavigator",
-          "x": 407,
+          "x": 498,
           "width": 1106,
-          "y": 70,
+          "y": 76,
+          "initialDirectory": "/home/q/IdeaProjects/libgdx/out/production",
           "height": 842
      },
      "AddEditPathsDialog": {

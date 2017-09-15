@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class AddEditPathsDialog {
-    @FXML
-    private ListView<String> availableTags;
+    @FXML private ListView<String> availableTags;
     @FXML
     private ListView<String> addedTags;
     @FXML
@@ -54,8 +53,7 @@ public class AddEditPathsDialog {
     private final Alert alertInformation = new Alert(Alert.AlertType.INFORMATION);
     private final Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
 
-    @FXML
-    public void initialize() {
+    @FXML public void initialize() {
         ok.setOnAction(event -> onOK());
 
         cancel.setOnAction(event -> onCancel());

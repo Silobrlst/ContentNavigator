@@ -33,38 +33,22 @@ import java.util.*;
 import java.util.List;
 
 public class MainWindow {
-    @FXML
-    private TableView<Path> pathsTable;
-    @FXML
-    private TableColumn<Path, String> searchedPathsName;
-    @FXML
-    private TableColumn<Path, String> searchedPathsPath;
-    @FXML
-    private TableColumn<Path, String> searchedPathsAdded;
-    @FXML
-    private TreeView<Tag> tagsTree;
-    @FXML
-    private SplitPane tagsPathsSplitPane;
-    @FXML
-    private MenuBar menuBar;
-    @FXML
-    private Button searchByName;
-    @FXML
-    private Button searchByPath;
-    @FXML
-    private Button searchByTags;
-    @FXML
-    private Button searchByAll;
-    @FXML
-    private Button showAllPaths;
-    @FXML
-    private TextField byNameSearch;
-    @FXML
-    private TextField byPathSearch;
-    @FXML
-    private TextField byTagsSearch;
-    @FXML
-    private Label searchValidation;
+    @FXML private TableView<Path> pathsTable;
+    @FXML private TableColumn<Path, String> searchedPathsName;
+    @FXML private TableColumn<Path, String> searchedPathsPath;
+    @FXML private TableColumn<Path, String> searchedPathsAdded;
+    @FXML private TreeView<Tag> tagsTree;
+    @FXML private SplitPane tagsPathsSplitPane;
+    @FXML private MenuBar menuBar;
+    @FXML private Button searchByName;
+    @FXML private Button searchByPath;
+    @FXML private Button searchByTags;
+    @FXML private Button searchByAll;
+    @FXML private Button showAllPaths;
+    @FXML private TextField byNameSearch;
+    @FXML private TextField byPathSearch;
+    @FXML private TextField byTagsSearch;
+    @FXML private Label searchValidation;
 
     private String openInFolderCommand;
     private String openInFolderArgument;
@@ -114,8 +98,7 @@ public class MainWindow {
     //проверяем что Enter был нажат пока фокус был на таблице
     private boolean enterPressed = false;
 
-    @FXML
-    public void initialize() {}
+    @FXML public void initialize() {}
 
     public MainWindow(){}
 

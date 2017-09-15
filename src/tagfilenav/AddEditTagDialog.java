@@ -15,20 +15,13 @@ import java.util.Comparator;
 import java.util.Optional;
 
 public class AddEditTagDialog {
-    @FXML
-    private TextField tagName;
-    @FXML
-    private ComboBox<String> parent;
-    @FXML
-    private Button ok;
-    @FXML
-    private Button cancel;
-    @FXML
-    private Button exploreHtml;
-    @FXML
-    private TextField htmlFile;
-    @FXML
-    private TextArea description;
+    @FXML private TextField tagName;
+    @FXML private ComboBox<String> parent;
+    @FXML private Button ok;
+    @FXML private Button cancel;
+    @FXML private Button exploreHtml;
+    @FXML private TextField htmlFile;
+    @FXML private TextArea description;
 
     private Stage stage;
     private StyledGuiSaver savableStyledGui;
@@ -41,8 +34,7 @@ public class AddEditTagDialog {
     private final Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
     private final FileChooser fileChooser = new FileChooser();
 
-    @FXML
-    public void initialize() {
+    @FXML public void initialize() {
         ok.setOnAction(event -> onOK());
         cancel.setOnAction(event -> onCancel());
 

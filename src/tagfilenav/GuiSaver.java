@@ -2,6 +2,7 @@ package tagfilenav;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
@@ -35,30 +36,14 @@ public class GuiSaver {
     private Map<String, TableColumn> saveTableColumnMap = new HashMap<>();
     private Map<String, SplitPane> saveSplitPaneMap = new HashMap<>();
     private Map<String, TableView> saveTableViewMap = new HashMap<>();
+    private Map<String, StringProperty> saveStringMap = new HashMap<>();
 
     GuiSaver(String windowNameIn, Stage stageIn){
         windowName = windowNameIn;
         stage = stageIn;
     }
 
-    void saveWindowMaximized(boolean saveWindowMaximizedIn){
-        windowMaximizedSave = saveWindowMaximizedIn;
-    }
-
-    //запоминать SplitPane
-    void saveSplitPane(SplitPane splitPaneIn, String nameIn){
-        saveSplitPaneMap.put(nameIn, splitPaneIn);
-    }
-
-    //запоминать ширину и видимость для столбца таблицы
-    void saveTableColumn(TableColumn tableColumnIn, String nameIn){
-        saveTableColumnMap.put(nameIn, tableColumnIn);
-    }
-
-    void saveTableSorting(TableView tableViewIn, String nameIn){
-        saveTableViewMap.put(nameIn, tableViewIn);
-    }
-
+    //<validate>========================================================================================================
     private void validateJsonKey(JSONObject jsonIn, String nameIn, Object defaultIn){
         if (!jsonIn.has(nameIn)) {
             jsonIn.put(nameIn, defaultIn);
@@ -80,87 +65,64 @@ public class GuiSaver {
             jsonIn.put(windowName, new JSONObject());
         }
 
-        JSONObject windowJSON = jsonIn.getJSONObject(windowName);
-        validateJsonKey(windowJSON, xJsonName, 0.d);
-        validateJsonKey(windowJSON, yJsonName, 0.d);
-        validateJsonKey(windowJSON, widthJsonName, 0.d);
-        validateJsonKey(windowJSON, heightJsonName, 0.d);
+        JSONObject windowJson = jsonIn.getJSONObject(windowName);
+        validateJsonKey(windowJson, xJsonName, 0.d);
+        validateJsonKey(windowJson, yJsonName, 0.d);
+        validateJsonKey(windowJson, widthJsonName, 0.d);
+        validateJsonKey(windowJson, heightJsonName, 0.d);
 
         if(windowMaximizedSave){
-            validateJsonKey(windowJSON, maximizedJsonName, false);
+            validateJsonKey(windowJson, maximizedJsonName, false);
         }
 
         for (String columnName: saveTableColumnMap.keySet()){
-            validateJsonKey(windowJSON, columnName, new JSONObject());
+            validateJsonKey(windowJson, columnName, new JSONObject());
 
-            JSONObject columnJson = windowJSON.optJSONObject(columnName);
+            JSONObject columnJson = windowJson.optJSONObject(columnName);
             validateJsonKey(columnJson, widthJsonName, 0);
             validateJsonKey(columnJson, visibilityJsonName, true);
         }
 
         for (String splitPaneName: saveSplitPaneMap.keySet()){
-            validateJsonKey(windowJSON, splitPaneName, 0.5d);
+            validateJsonKey(windowJson, splitPaneName, 0.5d);
         }
 
         for(String tableViewName: saveTableViewMap.keySet()){
-            validateJsonKey(windowJSON, tableViewName, new JSONObject());
+            validateJsonKey(windowJson, tableViewName, new JSONObject());
 
-            JSONObject tableViewJson = windowJSON.getJSONObject(tableViewName);
+            JSONObject tableViewJson = windowJson.getJSONObject(tableViewName);
 
             validateJsonKey(tableViewJson, sortColumnJsonName, "");
             validateJsonKey(tableViewJson, sortTypeJsonName, TableColumn.SortType.DESCENDING.name());
         }
+
+        for(String stringName: saveStringMap.keySet()){
+            validateJsonKey(windowJson, stringName, System.getProperty("user.dir"));
+        }
+    }
+    //</validate>=======================================================================================================
+
+    //<save>============================================================================================================
+    void saveWindowMaximized(boolean saveWindowMaximizedIn){
+        windowMaximizedSave = saveWindowMaximizedIn;
     }
 
-    void load() {
-        JSONObject guiJSON = JsonLoader.loadJSON(guiSettings);
-        validateGuiSettings(guiJSON);
+    //запоминать SplitPane
+    void saveSplitPane(SplitPane splitPaneIn, String nameIn){
+        saveSplitPaneMap.put(nameIn, splitPaneIn);
+    }
 
-        JSONObject windowJson = guiJSON.getJSONObject(windowName);
-        if (windowJson.getDouble(widthJsonName) > 0) {
-            stage.setWidth(windowJson.getDouble(widthJsonName));
-        }
-        if (windowJson.getDouble(heightJsonName) > 0) {
-            stage.setHeight(windowJson.getDouble(heightJsonName));
-        }
-        if (windowJson.getDouble(xJsonName) > 0) {
-            stage.setX(windowJson.getDouble(xJsonName));
-        }
-        if (windowJson.getDouble(yJsonName) > 0) {
-            stage.setY(windowJson.getDouble(yJsonName));
-        }
+    //запоминать ширину и видимость для столбца таблицы
+    void saveTableColumn(TableColumn tableColumnIn, String nameIn){
+        saveTableColumnMap.put(nameIn, tableColumnIn);
+    }
 
-        if(windowMaximizedSave){
-            stage.setMaximized(windowJson.getBoolean(maximizedJsonName));
-        }
+    void saveTableSorting(TableView tableViewIn, String nameIn){
+        saveTableViewMap.put(nameIn, tableViewIn);
+    }
 
-        new Timeline(new KeyFrame(Duration.millis(1000), e -> {
-            for (String splitPaneName: saveSplitPaneMap.keySet()){
-                saveSplitPaneMap.get(splitPaneName).setDividerPosition(0, windowJson.getDouble(splitPaneName));
-            }
-
-            for (String columnName: saveTableColumnMap.keySet()){
-                JSONObject columnJson = windowJson.getJSONObject(columnName);
-
-                if (columnJson.getDouble(widthJsonName) > 0) {
-                    saveTableColumnMap.get(columnName).setPrefWidth(columnJson.getInt(widthJsonName));
-                }
-
-                saveTableColumnMap.get(columnName).setVisible(columnJson.getBoolean(visibilityJsonName));
-            }
-
-            for(String tableViewName: saveTableViewMap.keySet()){
-                TableView tableView = saveTableViewMap.get(tableViewName);
-                JSONObject tableViewJson = windowJson.getJSONObject(tableViewName);
-
-                TableColumn tableColumn = getColumnById(tableView, tableViewJson.getString(sortColumnJsonName));
-                if(tableColumn != null){
-                    tableView.getSortOrder().set(0, tableColumn);
-                    tableColumn.setSortType(TableColumn.SortType.valueOf(tableViewJson.getString(sortTypeJsonName)));
-                    tableColumn.setSortable(true);
-                }
-            }
-        })).play();
+    void saveString(StringProperty stringIn, String nameIn){
+        saveStringMap.put(nameIn, stringIn);
     }
 
     void save() {
@@ -203,8 +165,70 @@ public class GuiSaver {
             }
         }
 
+        for(String stringName: saveStringMap.keySet()){
+            windowJson.put(stringName, saveStringMap.get(stringName).get());
+        }
+
         JsonLoader.saveJSON(guiSettings, guiJSON);
     }
+    //</save>===========================================================================================================
+
+    void load() {
+        JSONObject guiJSON = JsonLoader.loadJSON(guiSettings);
+        validateGuiSettings(guiJSON);
+
+        JSONObject windowJson = guiJSON.getJSONObject(windowName);
+        if (windowJson.getDouble(widthJsonName) > 0) {
+            stage.setWidth(windowJson.getDouble(widthJsonName));
+        }
+        if (windowJson.getDouble(heightJsonName) > 0) {
+            stage.setHeight(windowJson.getDouble(heightJsonName));
+        }
+        if (windowJson.getDouble(xJsonName) > 0) {
+            stage.setX(windowJson.getDouble(xJsonName));
+        }
+        if (windowJson.getDouble(yJsonName) > 0) {
+            stage.setY(windowJson.getDouble(yJsonName));
+        }
+
+        if(windowMaximizedSave){
+            stage.setMaximized(windowJson.getBoolean(maximizedJsonName));
+        }
+
+
+        for(String stringName: saveStringMap.keySet()){
+            saveStringMap.get(stringName).set(windowJson.getString(stringName));
+        }
+
+        new Timeline(new KeyFrame(Duration.millis(1000), e -> {
+            for (String splitPaneName: saveSplitPaneMap.keySet()){
+                saveSplitPaneMap.get(splitPaneName).setDividerPosition(0, windowJson.getDouble(splitPaneName));
+            }
+
+            for (String columnName: saveTableColumnMap.keySet()){
+                JSONObject columnJson = windowJson.getJSONObject(columnName);
+
+                if (columnJson.getDouble(widthJsonName) > 0) {
+                    saveTableColumnMap.get(columnName).setPrefWidth(columnJson.getInt(widthJsonName));
+                }
+
+                saveTableColumnMap.get(columnName).setVisible(columnJson.getBoolean(visibilityJsonName));
+            }
+
+            for(String tableViewName: saveTableViewMap.keySet()){
+                TableView tableView = saveTableViewMap.get(tableViewName);
+                JSONObject tableViewJson = windowJson.getJSONObject(tableViewName);
+
+                TableColumn tableColumn = getColumnById(tableView, tableViewJson.getString(sortColumnJsonName));
+                if(tableColumn != null){
+                    tableView.getSortOrder().set(0, tableColumn);
+                    tableColumn.setSortType(TableColumn.SortType.valueOf(tableViewJson.getString(sortTypeJsonName)));
+                    tableColumn.setSortable(true);
+                }
+            }
+        })).play();
+    }
+
 
     private TableColumn getColumnById(TableView tableView, String columnIdIn){
         for(TableColumn tableColumn: (ObservableList<TableColumn>)tableView.getColumns()){

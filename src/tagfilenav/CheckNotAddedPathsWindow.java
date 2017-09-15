@@ -1,5 +1,7 @@
 package tagfilenav;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,18 +18,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class CheckNotAddedPathsWindow {
-    @FXML
-    private TextField folder;
-    @FXML
-    private Label validation;
-    @FXML
-    private Button explore;
-    @FXML
-    private Button checkNotAddedPaths;
-    @FXML
-    private TextArea pathsList;
-    @FXML
-    private Label resultLabel;
+    @FXML private TextField folder;
+    @FXML private Label validation;
+    @FXML private Button explore;
+    @FXML private Button checkNotAddedPaths;
+    @FXML private TextArea pathsList;
+    @FXML private Label resultLabel;
 
     private Stage stage;
     private StyledGuiSaver savableStyledGui;
@@ -35,10 +31,9 @@ public class CheckNotAddedPathsWindow {
     private Paths paths;
 
     private final DirectoryChooser directoryChooser = new DirectoryChooser();
-    private File initialDirectory = new File(System.getProperty("user.dir"));
+    private StringProperty initialDirectory = new SimpleStringProperty(System.getProperty("user.dir"));
 
-    @FXML
-    public void initialize() {}
+    @FXML public void initialize() {}
 
     public CheckNotAddedPathsWindow(){}
 
@@ -65,15 +60,17 @@ public class CheckNotAddedPathsWindow {
         folder.setOnAction(event -> onCheckNotAddedPaths());
 
         explore.setOnAction(event -> {
+            directoryChooser.setInitialDirectory(new File(initialDirectory.get()));
             File file = directoryChooser.showDialog(stage);
             if(file != null){
                 folder.setText(file.getAbsolutePath());
                 validation.setText("");
-                initialDirectory = new File(file.getAbsolutePath().split("[/\\\\][^\\\\/]*$")[0]);
+                initialDirectory.set(file.getAbsolutePath().split("[/\\\\][^\\\\/]*$")[0]);
             }
         });
 
         savableStyledGui = new StyledGuiSaver(windowName, stage);
+        savableStyledGui.saveString(initialDirectory, "initialDirectory");
         savableStyledGui.load();
     }
 

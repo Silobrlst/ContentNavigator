@@ -115,6 +115,7 @@ public class Path implements Comparable<Path> {
     }
 
 
+    //<remove>==========================================================================================================
     void removeTagsWithoutNotifing(Collection<Tag> tagsIn){
         for(Tag tag: tagsIn){
             tag.removePathWithoutNotifing(this);
@@ -150,6 +151,7 @@ public class Path implements Comparable<Path> {
             pathListeners.forEach(pathListener -> pathListener.removedTag(this, tagIn));
         }
     }
+    //</remove>=========================================================================================================
 
     @Override
     public String toString(){

@@ -13,12 +13,9 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 public class HtmlWindow {
-    @FXML
-    private TextField url;
-    @FXML
-    private WebView html;
-    @FXML
-    private ProgressBar loadProgress;
+    @FXML private TextField url;
+    @FXML private WebView html;
+    @FXML private ProgressBar loadProgress;
 
     private Stage stage;
     private StyledGuiSaver savableStyledGui;

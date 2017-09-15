@@ -1,5 +1,7 @@
 package tagfilenav;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,39 +23,24 @@ import java.util.List;
 import java.util.Optional;
 
 public class AddEditPathDialog {
-    @FXML
-    private ListView<String> availableTags;
-    @FXML
-    private ListView<String> addedTags;
-    @FXML
-    private Button ok;
-    @FXML
-    private Button cancel;
-    @FXML
-    private Button exploreFile;
-    @FXML
-    private Button exploreDirectory;
-    @FXML
-    private Button addTags;
-    @FXML
-    private Button removeTags;
-    @FXML
-    private Button apply;
-    @FXML
-    private Label pathValidation;
-    @FXML
-    private TextField path;
-    @FXML
-    private TextField name;
-    @FXML
-    private TextArea description;
-    @FXML
-    private TextField htmlFile;
-    @FXML
-    private Button exploreHtmlFile;
+    @FXML private ListView<String> availableTags;
+    @FXML private ListView<String> addedTags;
+    @FXML private Button ok;
+    @FXML private Button cancel;
+    @FXML private Button exploreFile;
+    @FXML private Button exploreDirectory;
+    @FXML private Button addTags;
+    @FXML private Button removeTags;
+    @FXML private Button apply;
+    @FXML private Label pathValidation;
+    @FXML private TextField path;
+    @FXML private TextField name;
+    @FXML private TextArea description;
+    @FXML private TextField htmlFile;
+    @FXML private Button exploreHtmlFile;
 
     private Stage stage;
-    private StyledGuiSaver savableStyledGui;
+    private StyledGuiSaver styledGuiSaver;
 
     private boolean editing;
     private Path editingPath;
@@ -64,10 +51,9 @@ public class AddEditPathDialog {
     private final Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
     private FileChooser fileChooser = new FileChooser();
     private final DirectoryChooser directoryChooser = new DirectoryChooser();
-    private File initialDirectory = new File(System.getProperty("user.dir"));
+    private StringProperty initialDirectory = new SimpleStringProperty(System.getProperty("user.dir"));
 
-    @FXML
-    public void initialize() {
+    @FXML public void initialize() {
         ok.setOnAction(event -> onOK());
 
         cancel.setOnAction(event -> onCancel());
@@ -137,15 +123,19 @@ public class AddEditPathDialog {
         stage.initOwner(parentStageIn);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setOnShown(event -> onShown());
-        stage.setOnHidden(event -> savableStyledGui.save());
+        stage.setOnHidden(event -> styledGuiSaver.save());
         stage.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
                 onCancel();
             }
         });
 
-        savableStyledGui = new StyledGuiSaver(windowName, stage);
-        savableStyledGui.load();
+        styledGuiSaver = new StyledGuiSaver(windowName, stage);
+        styledGuiSaver.saveString(initialDirectory, "initialDirectory");
+        styledGuiSaver.load();
+
+        fileChooser.setInitialDirectory(new File(initialDirectory.get()));
+        directoryChooser.setInitialDirectory(new File(initialDirectory.get()));
 
         setAddPath();
     }
@@ -181,6 +171,7 @@ public class AddEditPathDialog {
     }
 
     private void onExploreFile(){
+        fileChooser.setInitialDirectory(new File(initialDirectory.get()));
         File file = fileChooser.showOpenDialog(stage);
         if(file != null){
             path.setText(file.getAbsolutePath());
@@ -188,11 +179,12 @@ public class AddEditPathDialog {
                 name.setText(file.getName());
             }
             pathValidation.setText("");
-            initialDirectory = new File(file.getAbsolutePath().split("[/\\\\][^\\\\/]*$")[0]);
+            initialDirectory.set(file.getAbsolutePath().split("[/\\\\][^\\\\/]*$")[0]);
         }
     }
 
     private void onExploreDirectory(){
+        directoryChooser.setInitialDirectory(new File(initialDirectory.get()));
         File file = directoryChooser.showDialog(stage);
         if(file != null){
             path.setText(file.getAbsolutePath());
@@ -200,7 +192,7 @@ public class AddEditPathDialog {
                 name.setText(file.getName());
             }
             pathValidation.setText("");
-            initialDirectory = new File(file.getAbsolutePath().split("[/\\\\][^\\\\/]*$")[0]);
+            initialDirectory.set(file.getAbsolutePath().split("[/\\\\][^\\\\/]*$")[0]);
         }
     }
 
@@ -263,7 +255,7 @@ public class AddEditPathDialog {
     }
 
     void setStyle(String styleFileNameIn){
-        savableStyledGui.setStyle(styleFileNameIn);
+        styledGuiSaver.setStyle(styleFileNameIn);
     }
     //</set>============================================================================================================
 

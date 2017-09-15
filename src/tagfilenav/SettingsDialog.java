@@ -17,20 +17,13 @@ import java.io.IOException;
 import java.util.Comparator;
 
 public class SettingsDialog {
-    @FXML
-    private Button cancel;
-    @FXML
-    private Button ok;
-    @FXML
-    private Button apply;
-    @FXML
-    private Button openAppFolder;
-    @FXML
-    private TextField openInFolderCommand;
-    @FXML
-    private TextField openInFolderArgument;
-    @FXML
-    private ComboBox<String> style;
+    @FXML private Button cancel;
+    @FXML private Button ok;
+    @FXML private Button apply;
+    @FXML private Button openAppFolder;
+    @FXML private TextField openInFolderCommand;
+    @FXML private TextField openInFolderArgument;
+    @FXML private ComboBox<String> style;
 
     private Stage stage;
     private StyledGuiSaver savableStyledGui;
@@ -38,8 +31,7 @@ public class SettingsDialog {
     private MainWindow mainWindow;
     private SettingsDialogInterface settingsDialogInterface;
 
-    @FXML
-    public void initialize() {
+    @FXML public void initialize() {
     }
 
     public SettingsDialog(){}
